@@ -4,5 +4,5 @@
 - Ryan Leonard
 - Khoa Raisr
 - Andree Kolliegbo
-- Anh Nguyen
+- Anh Nguyen (Louis)
 - Tim Chou
