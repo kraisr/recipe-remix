@@ -1,5 +1,7 @@
-# Recipe Remix
-## Team 32: 
+<h1 align="center">Recipe Remix 👨‍🍳</h1>
+
+### Team 32: 
+
 - Michael Li
 - Ryan Leonard
 - Khoa Raisr
