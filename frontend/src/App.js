@@ -2,6 +2,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 //pages
 import Home from './pages/Home';
+import Pantry from "./pages/Pantry";
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
               element={<Home />}
             />
           </Routes>
-        </div>
+        </div> 
       </BrowserRouter>
     </div>
   );
