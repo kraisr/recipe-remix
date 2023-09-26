@@ -14,6 +14,10 @@ function App() {
               path="/"
               element={<Home />}
             />
+            <Route 
+              path="/pantry"
+              element={<Pantry />}
+            />
           </Routes>
         </div> 
       </BrowserRouter>
