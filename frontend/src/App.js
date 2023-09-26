@@ -3,21 +3,39 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 //pages
 import Home from './pages/Home';
 import Pantry from "./pages/Pantry";
+import Navbar from "./components/Navbar";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      
+        <Navbar />
         <div className="pages">
           <Routes>
             <Route 
               path="/"
               element={<Home />}
             />
+
             <Route 
               path="/pantry"
               element={<Pantry />}
+            />
+
+            {/* <Route 
+              path="/recipes"
+              element={<Recipes />}
+            />  
+
+            <Route 
+              path="/community"
+              element={<Community />}
+            /> */}
+
+            <Route 
+              path="/profile"
+              element={<Profile />}
             />
           </Routes>
         </div> 
