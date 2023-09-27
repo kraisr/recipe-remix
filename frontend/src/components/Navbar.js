@@ -11,13 +11,12 @@ const Navbar = () => {
     return (
         <nav>
             <div className="container">
-                <div className="navhome">
                 
-                    <Link to="/">
-                        <img href=".../images/logo.png" alt="logo" />
-                    </Link>
-                </div>
-
+                <Link to="/">
+                    <img href="\images\logo.png" alt="logo" />
+                </Link>
+                
+            
                 <Link to="/../pantry">
                     <h1>Pantry</h1>
                 </Link>
