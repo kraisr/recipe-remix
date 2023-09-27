@@ -6,14 +6,14 @@ const Navbar = () => {
 
     const toggleMenu = () => {
         setIsSubMenuOpen(!isSubMenuOpen);
-  } ;
+    };
 
     return (
         <nav>
             <div className="container">
                 <div className="navhome">
                     <Link to="/">
-                        <img src="../images/logo.png" alt="logo" />
+                        <img href=".../images/logo.png" alt="logo" />
                     </Link>
                 </div>
 
@@ -41,25 +41,25 @@ const Navbar = () => {
                         </div>
                         <hr />
 
-                        <Link to="/../profile" class="sub-menu-link">
+                        <Link to="/../profile" class="sub-menu-link" onClick={toggleMenu}>
                             <i class="fa-solid fa-user"></i>
                             <p>Profile</p>
                             <span>{'>'}</span>
                         </Link>
 
-                        <Link to="/" class="sub-menu-link">
+                        <Link to="/" class="sub-menu-link" onClick={toggleMenu}>
                             <i class="fa-solid fa-gear"></i>
                             <p>Settings</p>
                             <span>{'>'}</span>
                         </Link>
 
-                        <Link to="/" class="sub-menu-link">
+                        <Link to="/" class="sub-menu-link" onClick={toggleMenu}>
                             <i class="fa-solid fa-circle-info"></i>
                             <p>Help</p>
                             <span>{'>'}</span>
                         </Link>
 
-                        <Link to="/" class="sub-menu-link">
+                        <Link to="/" class="sub-menu-link" onClick={toggleMenu}>
                             <i class="fa-solid fa-right-from-bracket"></i>
                             <p>Logout</p>
                             <span>{'>'}</span>
