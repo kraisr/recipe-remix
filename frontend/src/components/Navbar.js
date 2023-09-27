@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import { Link } from "react-router-dom"
+import logoImg from '../images/logo.png'
 
 const Navbar = () => {
     const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
@@ -13,7 +14,7 @@ const Navbar = () => {
             <div className="container">
                 
                 <Link to="/">
-                    <img href="\images\logo.png" alt="logo" />
+                    <img alt="logo" src={logoImg} height="150px" width="150px" />
                 </Link>
                 
             
