@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Pantry from "./pages/Pantry";
 import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -36,6 +37,11 @@ function App() {
             <Route 
               path="/profile"
               element={<Profile />}
+            />
+
+            <Route
+              path="/settings"
+              element={<Settings />}
             />
           </Routes>
         </div> 
