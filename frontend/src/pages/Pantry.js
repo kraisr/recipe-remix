@@ -1,9 +1,11 @@
 const Pantry = () => {
     return (
-        <div className="pantry">
-        <h2>
-            Pantry
-        </h2>
+        <div className="container">
+            <div className="left-container">
+                <h2>
+                Pantry
+                </h2>
+            </div>
         </div>
 
     )
