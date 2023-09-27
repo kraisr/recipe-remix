@@ -7,7 +7,7 @@ const Profile = () => {
                 <h2>profile</h2>
             </div>
             <div className="center-container">
-                
+        
             </div>
             <div className="right-container">
                 
