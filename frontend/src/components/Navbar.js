@@ -47,7 +47,7 @@ const Navbar = () => {
                             <span>{'>'}</span>
                         </Link>
 
-                        <Link to="/" class="sub-menu-link">
+                        <Link to="/../settings" class="sub-menu-link">
                             <i class="fa-solid fa-gear"></i>
                             <p>Settings</p>
                             <span>{'>'}</span>
