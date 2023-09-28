@@ -1,22 +1,24 @@
 import "../css/pantry.css";
-
+import logoImg from '../images/Vector.png'
 const Pantry = () => {
     return (
         <div className="pantry-container">
             <div className="pantry-left-container">
                 <h2>
-                    Pantry
+                    My Pantry
                 </h2>
             </div>
 
-            <div className="pantry-left-container">
-                <h2>
-                    Pantry
-                </h2>
+            <div className="pantry-center-container">
+                <img alt="remix" src={logoImg} height="325px" width="270px" />
+                
+                <button type="button" class="pantry-button">
+                        REMIX
+                </button>
             </div>
-            <div className="pantry-left-container">
+            <div className="pantry-right-container">
                 <h2>
-                    Pantry
+                    Matched Recipes
                 </h2>
             </div>
         </div>
