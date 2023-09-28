@@ -1,0 +1,55 @@
+.container{
+    display:flex;
+    justify-content: space-between;
+}
+
+.user-profile-header{
+    margin:10px 10px 20px 20px;
+}
+
+.user-profile-card{
+    background-color: #FBF2CF;
+    margin: 20px 20px 20px 20px;
+    width: 200%;
+    height: 600px;
+    border-radius: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pfp-container{
+    /* border: red solid 1px; */
+}
+
+.profile-picture{
+    
+    margin:50px;
+    padding: 40px;
+    border-radius: 120%;
+    background-color: #C6EBC5;
+}
+
+.profile-picture i {
+    font-size: 5rem;
+}
+
+.add-pic{
+    /* position: absolute; */
+    position:relative;
+    background-color: rgb(247, 192, 186);
+    border-radius: 90%;
+    padding: 5px;
+    width:43px;
+    right: -150px;
+    top:-100px;
+}
+.add-pic:hover{
+    cursor: pointer;
+}
+
+.add-pic i {
+    font-size: 1.5rem;
+    padding: 10px;
+}

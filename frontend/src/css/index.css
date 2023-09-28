@@ -21,6 +21,7 @@ nav {
 }
 nav .container {
   max-width: 1400px;
+  height: 80px;
   margin: 0 auto;
   padding: 10px 20px;
   display: flex;

@@ -32,7 +32,6 @@ const Navbar = () => {
 
                 <div className="profileImage" onClick={toggleMenu}>
                     <i class="fa-solid fa-user" ></i>
-
                 </div>
 
                 <div className={`sub-menu-wrap ${isSubMenuOpen ? 'open-menu' : ''}`} id='subMenu'>
