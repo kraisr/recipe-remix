@@ -27,7 +27,7 @@
     
     margin:50px;
     padding: 40px;
-    border-radius: 120%;
+    border-radius: 100%;
     background-color: #C6EBC5;
 }
 
@@ -41,15 +41,30 @@
     background-color: rgb(247, 192, 186);
     border-radius: 90%;
     padding: 5px;
-    width:43px;
+    width: 30px;
+    height:30px;
     right: -150px;
-    top:-100px;
+    top:-70px;
 }
-.add-pic:hover{
+.add-pic:hover .remove-pic:hover{
     cursor: pointer;
 }
 
-.add-pic i {
+.add-pic i .remove-pic i{
     font-size: 1.5rem;
     padding: 10px;
+    cursor: pointer;
 }
+
+.remove-pic {
+    /* position: absolute; */
+    position:relative;
+    background-color: rgb(247, 192, 186);
+    border-radius: 90%;
+    padding: 5px;
+    width:43px;
+    right: -180px;
+    top:-100px;
+}
+
+

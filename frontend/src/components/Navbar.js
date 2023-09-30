@@ -20,15 +20,14 @@ const Navbar = () => {
         const clickedElement = event.target;
         const isProfileImageClicked = (clickedElement && clickedElement.classList?.contains('profileImage')) || ((clickedElement && clickedElement.parentElement) && clickedElement.classList?.contains('fa-user'));        
         if (isProfileImageClicked) {
-            console.log("test1");
             toggleMenu();
         }
         else {
-            console.log("test2")
+            
             isSubMenuOpen = false;
             setIsSubMenuOpen(isSubMenuOpen);
         }   
-        console.log(isSubMenuOpen);
+        //console.log(isSubMenuOpen);
     };
 
     useEffect(() => {
