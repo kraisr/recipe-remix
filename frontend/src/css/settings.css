@@ -1,0 +1,141 @@
+.settings {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    margin-left: 10px;
+}
+
+.toggle-switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 15px;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: '';
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(30px);
+}
+
+/* Additional Styles for Email Input */
+.email-input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.input-title {
+    margin-right: 10px;
+    width: auto;
+}
+
+.input-title h2 {
+    font-size: 16px;
+}
+
+.input-field {
+    flex: 1;
+}
+
+/* Style the email input box */
+.input-field input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px; /* You can adjust the font size as needed */
+    outline: none; /* Remove the outline on focus */
+}
+
+/* Add some additional styles for better appearance */
+.input-field input[type="text"]:focus {
+    border-color: #2196F3; /* Change the border color on focus */
+    box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); /* Add a subtle box shadow on focus */
+}
+
+.everyday-at-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Remove the width property from .input-title */
+.input-title {
+    /* text-align: right; Remove this line */
+    margin-right: 10px;
+    width: auto; /* Add this line to make the width auto-adjust */
+}
+
+.input-title h2 {
+    font-size: 16px;
+}
+
+.input-field select {
+    width: 100%; /* Set the width to 100% to fill the available space */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Additional Styles for Save Button */
+.save-button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.save-button {
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.save-button:hover {
+    background-color: #0e77d4;
+}
