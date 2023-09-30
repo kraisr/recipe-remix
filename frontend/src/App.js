@@ -1,4 +1,5 @@
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import React, { useEffect, useRef } from 'react'
 
 //pages
 import Home from './pages/Home';
@@ -9,7 +10,7 @@ import Settings from "./pages/Settings";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" onClick={console.log('test')}>
       <BrowserRouter>
         <Navbar />
         <div className="pages">
@@ -51,3 +52,4 @@ function App() {
 }
 
 export default App;
+
