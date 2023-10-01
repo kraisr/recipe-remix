@@ -4,6 +4,7 @@ import cors from 'cors';
 
 import connectDB from './mongoDB/connect.js'
 
+// Load environment variables from .env file
 dotenv.config();
 
 // create express app

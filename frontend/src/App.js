@@ -7,6 +7,7 @@ import Pantry from "./pages/Pantry";
 import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -43,6 +44,11 @@ function App() {
             <Route
               path="/settings"
               element={<Settings />}
+            />
+
+            <Route
+              path="/login"
+              element={<Login />}
             />
           </Routes>
         </div> 
