@@ -29,6 +29,7 @@
     padding: 40px;
     border-radius: 100%;
     background-color: #C6EBC5;
+    max-width: 100px;
 }
 
 .profile-picture i {
@@ -46,6 +47,7 @@
     right: -150px;
     top:-70px;
 }
+
 .add-pic:hover .remove-pic:hover{
     cursor: pointer;
 }

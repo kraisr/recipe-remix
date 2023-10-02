@@ -4,7 +4,6 @@ import "../css/profile.css";
 
 
 //components
-//import AddProfile from "../components/AddProfile";
 
 const Profile = () => {
 
@@ -41,13 +40,16 @@ const Profile = () => {
                     <div className="pfp-container">
                         
                         <div className="profile-picture">
-                        {image && (
-                            <img
-                                alt="not found"
-                                width={"250px"}
-                                src={URL.createObjectURL(image)}  // Check if image is not null
-                            />
-                        )}          
+                            {image ? (
+                                <img
+                                    alt="not found"
+                                    max-width={"5px"}
+                                    height={"30px"}
+                                    src={URL.createObjectURL(image)}  // Check if image is not null
+                                />
+                            ) : (
+                                <i className="fa-solid fa-user"></i>
+                            )}          
                         </div>
 
                         <input
