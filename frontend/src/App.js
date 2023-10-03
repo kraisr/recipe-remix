@@ -7,11 +7,13 @@ import Pantry from "./pages/Pantry";
 import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import Landing from "./pages/Landing";
 
 function App() {
   return (
     <div className="App" onClick={console.log('test')}>
       <BrowserRouter>
+        
         <Navbar />
         <div className="pages">
           <Routes>
