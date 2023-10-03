@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css');
+
 .container{
     display:flex;
     justify-content: space-between;
@@ -10,7 +13,7 @@
 .user-profile-card{
     background-color: #FBF2CF;
     margin: 20px 20px 20px 20px;
-    width: 200%;
+    width: 150%;
     height: 600px;
     border-radius: 10%;
     display: flex;
@@ -34,6 +37,31 @@
 
 .profile-picture i {
     font-size: 5rem;
+}
+
+
+.profile-info{
+    display:flex;
+    flex-direction: column;
+    position:relative;
+    border:red solid 1px;
+    top: -10%;
+    align-items: center;
+}
+
+
+
+
+
+
+.edit-profile{
+    padding: 0px 20px 0px 20px;
+    margin: 15px;
+    background-color: #9addf0;
+    border-radius: 10%;
+}
+.edit-profile:hover{
+    cursor: pointer;
 }
 
 .add-pic{

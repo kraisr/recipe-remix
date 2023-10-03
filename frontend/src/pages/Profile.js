@@ -4,28 +4,35 @@ import "../css/profile.css";
 
 
 //components
+import EditProfile from "../components/EditProfile";
+
 
 const Profile = () => {
 
   const [image, setImage] = useState(null);
+  const [editModal, setEditModal] = useState(false);
   const inputFile = useRef(null);
 
-  const handleFileUpload = e => {
-    const { files } = e.target;
-    if (files && files.length) {
-      const filename = files[0].name;
+  const toggleModal = () => {
+    setEditModal(true);
+  }
 
-      var parts = filename.split(".");
-      const fileType = parts[parts.length - 1];
-      console.log("fileType", fileType); //ex: zip, rar, jpg, svg etc.
+//   const handleFileUpload = e => {
+//     const { files } = e.target;
+//     if (files && files.length) {
+//       const filename = files[0].name;
 
-      setImage(files[0]);
-    }
-  };
+//       var parts = filename.split(".");
+//       const fileType = parts[parts.length - 1];
+//       console.log("fileType", fileType); //ex: zip, rar, jpg, svg etc.
 
-  const onButtonClick = () => {
-    inputFile.current.click();
-  };
+//       setImage(files[0]);
+//     }
+//   };
+
+//   const onButtonClick = () => {
+//     inputFile.current.click();
+//   };
 
     
     return(
@@ -45,35 +52,49 @@ const Profile = () => {
                                     alt="not found"
                                     max-width={"5px"}
                                     height={"30px"}
-                                    src={URL.createObjectURL(image)}  // Check if image is not null
+                                    src={URL.createObjectURL(image)}
                                 />
                             ) : (
                                 <i className="fa-solid fa-user"></i>
                             )}          
                         </div>
 
-                        <input
+                        {/* <input
                             style={{ display: "none" }}
-                            // accept=".zip,.rar"
                             ref={inputFile}
                             onChange={handleFileUpload}
                             type="file"
-                        />
+                        /> */}
                         
-                        <div className="add-pic" onClick={onButtonClick}>
+                        {/* <div className="add-pic" onClick={onButtonClick}>
                             <i class="fa-solid fa-camera"></i>
                         </div>
 
                         <div className="remove-pic" onClick={() => setImage(null) }>
                             <i class="fa-solid fa-trash"></i>
-                        </div>
+                        </div> */}
                         
                     </div>
                     
 
                     <div className="profile-info">
-                        <h2>user</h2>
+                        <div className="name">
+                            <h2>User's Name</h2>
+                        </div>
+                        <div className="bio-container">
+                            <p>Test bio test etst testst</p>
+                        </div>
+
+                        <div className="link-container">
+                            <p>Links</p>
+                        </div>
                     </div>
+
+                    <div className="edit-profile" onClick={toggleModal}>
+                        <h3>Edit Profile</h3>
+                    </div>
+
+                    {editModal && <EditProfile closeModal={setEditModal}/>}
                 </div>
                 
             </div>
