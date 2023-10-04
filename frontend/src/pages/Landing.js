@@ -20,15 +20,28 @@ const Landing = () => {
             </div>
 
             <div className="landing-center-container">
-
+                <h2>Find Recipes you can make, 
+                    Fast and Simple
+                </h2>
             </div>
 
             <div className="landing-bottom-container">
+                <div className="box1">
 
+                </div>
+
+                <div className="box2">
+
+                </div>
+
+                <div className="box3">
+
+                </div>
+
+                <div className="box4">
+                    
+                </div>
             </div>
-            <h2>
-            Landing
-            </h2>
         </div>
     )
 }
