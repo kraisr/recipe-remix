@@ -1,7 +1,7 @@
 import "../css/landing.css";
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-const Landing = () => {
+const Landing = (loggedIn) => {
     return (
         <div className="landing-container">
             <div className="landing-nav">

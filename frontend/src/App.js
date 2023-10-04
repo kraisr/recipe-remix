@@ -20,7 +20,7 @@ function App() {
       <Routes>
         <Route 
           path="/landing"
-          element={<Landing />}
+          element={<Landing loggedIn={loggedIn}/>}
         />
 
         {loggedIn && 
