@@ -2,8 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import logoImg from '../images/logo.png';
 
+
+//components
+import Logout from "./Logout";
+
 const Navbar = () => {
     let [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+    const [editModal, setEditModal] = useState(false);
     let submenuRef = useRef(null);
 
     const toggleMenu = () => {
@@ -64,10 +69,10 @@ const Navbar = () => {
 
                     <div className={`sub-menu-wrap ${isSubMenuOpen ? 'open-menu' : ''}`} ref={submenuRef}>
                         <div className="sub-menu">
-                            <div className="user-info">
+                            {/* <div className="user-info">
                                 <h2>Test Name</h2>
                             </div>
-                            <hr />
+                            <hr /> */}
 
                             <Link to="/../profile" className="sub-menu-link" onClick={toggleMenu}>
                                 <i className="fa-solid fa-user"></i>
@@ -76,10 +81,16 @@ const Navbar = () => {
                             </Link>
 
                             <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
-                                <i className="fa-solid fa-user"></i>
+                                <i className="fa-solid fa-gear"></i>
                                 <p>Settings</p>
                                 <span>{'>'}</span>
                             </Link>
+
+                            {/* <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
+                                <i className="fa-solid fa-gear"></i>
+                                <p>Preferences</p>
+                                <span>{'>'}</span>
+                            </Link> */}
 
                             <Link to="/../help" className="sub-menu-link" onClick={toggleMenu}>
                                 <i className="fa-solid fa-user"></i>
