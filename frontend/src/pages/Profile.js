@@ -47,7 +47,7 @@ const Profile = () => {
                 <div className="user-profile-card">
                     <div className="pfp-container">
                         
-                    <div className={`${!image ? "profile-picture": " "}`} onClick={toggleModal}>
+                    <div className={`${!image ? "profile-picture": " uploaded-pfp"}`} onClick={toggleModal}>
                     {image ? (
                         <img src={image} alt="Profile Picture" />
                       ) : (
