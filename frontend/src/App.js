@@ -10,23 +10,24 @@ import Settings from "./pages/Settings";
 import Landing from "./pages/Landing";
 
 function App() {
-
-  //use state to check if user is logged in
   const [loggedIn, setLoggedIn] = useState(false);
 
+  setLoggedIn(true);
   return (
     <div className="App" onClick={console.log('test')}>
       <BrowserRouter>
-      <Routes>
-        <Route 
-          path="/landing"
-          element={<Landing loggedIn={loggedIn}/>}
-        />
 
-        {loggedIn && 
-        <Navbar /> &&
-        <div className="pages">
-          
+        <Routes>
+          <Route
+              path="/landing"
+              element={<Landing />}
+          />
+        </Routes>
+        
+      {loggedIn && 
+      <Navbar /> &&
+      <div className="pages">
+          <Routes>
             <Route 
               path="/"
               element={<Home />}
@@ -36,7 +37,7 @@ function App() {
               path="/pantry"
               element={<Pantry />}
             />
-            
+
             {/* <Route 
               path="/recipes"
               element={<Recipes />}
@@ -56,10 +57,10 @@ function App() {
               path="/settings"
               element={<Settings />}
             />
-          
-        </div> }
-        </Routes>
-        
+          </Routes>
+        </div> 
+      }
+      
       </BrowserRouter>
     </div>
   );
