@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import "../css/editprofile.css";
 
+
 //components
 import UploadProfile from "./UploadProfile"
 
 
 function EditProfile({closeModal}) {
   const [editModal, setEditModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const toggleModal = () => {
     setEditModal(true);
@@ -15,6 +17,11 @@ function EditProfile({closeModal}) {
   const exitModal = () => {
     closeModal()
   }
+
+  const handleImageChange = (image) => {
+    setSelectedImage(image);
+  }
+
   return (
     <div className="modal-background">
         <div className="modal-container">
@@ -28,12 +35,15 @@ function EditProfile({closeModal}) {
 
             <div className="body">
               <div className="profile-pic-section">
-                  <div className="picture" onClick={toggleModal}>
-                    {/* <i className="fa-solid fa-user"></i> */}
-                    <UploadProfile></UploadProfile>
+                  <div className={`${!selectedImage ? "picture": " "}`} onClick={toggleModal}>
+                    {selectedImage ? (
+                        <img src={selectedImage} alt="Profile Picture" />
+                      ) : (
+                        <i className="fa-solid fa-user"></i>
+                    )}
                   </div>
 
-                  {/* {editModal && <UploadProfile closeModal={editModal}/>} */}
+                   {editModal && <UploadProfile closeModal={setEditModal} onImageChange={handleImageChange}/>}
 
                   <div className="picture-text">
                       <p>Change profile picture</p>

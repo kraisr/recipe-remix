@@ -2,7 +2,7 @@
     position: absolute;
     background-color: aliceblue;
     left: 25%;
-    bottom: 10%;
+    top:10%;
     border-radius:30px;
     display: flex;
     min-width: 60%;
@@ -10,6 +10,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    
     
 }
 
@@ -47,7 +48,7 @@
     right: 80px;
 }
 
-/* .picture{
+.picture{
     align-self: center;
     padding: 40px 40px 40px 40px;
     border-radius: 100%;
@@ -58,7 +59,7 @@
 .picture i {
     align-self: center;
     font-size: 5rem;
-} */
+}
 
 
 .user-info{
@@ -93,4 +94,38 @@
 .apply:hover, .cancel:hover, .picture:hover, .picture-text:hover{
     cursor: pointer;
 }
+
+
+.change-picture{
+    position:absolute;
+    bottom:-60%;
+    left:-40%;
+    border-radius:30px;
+    display: flex;
+    min-width: 300%;
+    min-height: 100%;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(219, 238, 254);
+    z-index: 1;
+}
+
+.crop-container{
+    padding:50px;
+}
+
+/* .change-picture-profile{
+    position:absolute;
+    bottom:25%;
+    left: 40%;
+    border-radius:30px;
+    display: flex;
+    min-width: 50%;
+    min-height: 65%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(193, 81, 44);
+    z-index: 1;
+} */
 

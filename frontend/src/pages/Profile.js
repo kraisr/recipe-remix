@@ -5,6 +5,7 @@ import "../css/profile.css";
 
 //components
 import EditProfile from "../components/EditProfile";
+import UploadProfile from "../components/UploadProfile"
 
 
 const Profile = () => {
@@ -17,24 +18,7 @@ const Profile = () => {
     setEditModal(true);
   }
 
-//   const handleFileUpload = e => {
-//     const { files } = e.target;
-//     if (files && files.length) {
-//       const filename = files[0].name;
-
-//       var parts = filename.split(".");
-//       const fileType = parts[parts.length - 1];
-//       console.log("fileType", fileType); //ex: zip, rar, jpg, svg etc.
-
-//       setImage(files[0]);
-//     }
-//   };
-
-//   const onButtonClick = () => {
-//     inputFile.current.click();
-//   };
-
-    
+ 
     return(
         <div className="container">
             
@@ -58,7 +42,7 @@ const Profile = () => {
                                 <i className="fa-solid fa-user"></i>
                             )}          
                         </div>
-
+                        
                         {/* <input
                             style={{ display: "none" }}
                             ref={inputFile}
