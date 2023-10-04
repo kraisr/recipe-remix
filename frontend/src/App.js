@@ -46,11 +46,6 @@ function App() {
               path="/settings"
               element={<Settings />}
             />
-
-            <Route
-              path="/diatarypreference"
-              element={<Preference />}
-            />
           </Routes>
         </div>
       </BrowserRouter>
