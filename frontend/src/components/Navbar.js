@@ -56,6 +56,9 @@ const Navbar = () => {
                 <Link to="/">
                     <h1>Community</h1>
                 </Link>
+                <Link to="/../landing">
+                    <h1>Landing</h1>
+                </Link>
 
                 <div className="profile-container">
                     <div className="profileImage">

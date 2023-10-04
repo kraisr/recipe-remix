@@ -26,7 +26,10 @@ function App() {
               path="/pantry"
               element={<Pantry />}
             />
-
+            <Route 
+              path="/landing"
+              element={<Landing />}
+            />
             {/* <Route 
               path="/recipes"
               element={<Recipes />}

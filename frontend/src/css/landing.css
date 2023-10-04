@@ -1,0 +1,52 @@
+.landing-container {
+    background: #C6EBC5;
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+}
+.landing-nav {
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+    padding: 50px 95px 160px;
+}
+
+.landing-nav-button {
+    display: flex;
+    justify-content: space-between;
+    /* justify-content: space-between; */
+    padding-left: 20px;
+}
+
+
+.landing-login {
+    width: 178px;
+    height: 77px;
+    flex-shrink: 0;
+    border-radius: 36px;
+    border: 1px solid #255418;
+    background: #C6EBC5;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    color: #000;
+    /* font-family: Inter; */
+    margin-right: 20px;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.landing-signup {
+    width: 178px;
+    height: 77px;
+    flex-shrink: 0;
+    border-radius: 36px;
+    background: #FA7070;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    color: #000;
+    /* font-family: Inter; */
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
