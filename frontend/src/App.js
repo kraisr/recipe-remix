@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Landing from "./pages/Landing";
+import "./css/app.css"
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(null);
