@@ -1,3 +1,5 @@
+/* settings.css */
+
 .settings {
     width: 100%;
     max-width: 600px;
@@ -59,7 +61,6 @@ input:checked + .slider:before {
     transform: translateX(30px);
 }
 
-/* Additional Styles for Email Input */
 .email-input-container {
     display: flex;
     align-items: center;
@@ -79,20 +80,18 @@ input:checked + .slider:before {
     flex: 1;
 }
 
-/* Style the email input box */
 .input-field input[type="text"] {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px; /* You can adjust the font size as needed */
-    outline: none; /* Remove the outline on focus */
+    font-size: 14px;
+    outline: none;
 }
 
-/* Add some additional styles for better appearance */
 .input-field input[type="text"]:focus {
-    border-color: #2196F3; /* Change the border color on focus */
-    box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); /* Add a subtle box shadow on focus */
+    border-color: #2196F3;
+    box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
 }
 
 .everyday-at-container {
@@ -101,11 +100,9 @@ input:checked + .slider:before {
     margin-bottom: 20px;
 }
 
-/* Remove the width property from .input-title */
 .input-title {
-    /* text-align: right; Remove this line */
     margin-right: 10px;
-    width: auto; /* Add this line to make the width auto-adjust */
+    width: auto;
 }
 
 .input-title h2 {
@@ -113,19 +110,19 @@ input:checked + .slider:before {
 }
 
 .input-field select {
-    width: 100%; /* Set the width to 100% to fill the available space */
+    width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-/* Additional Styles for Save Button */
 .save-button-container {
     margin-top: 20px;
     text-align: center;
 }
 
-.save-button {
+/* Save and Cancel Button Styles */
+.save-button, .cancel-button {
     padding: 10px 20px;
     background-color: #2196F3;
     color: #fff;
@@ -134,8 +131,26 @@ input:checked + .slider:before {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-right: 2px; /* Updated margin-right to 2px */
 }
 
-.save-button:hover {
+.save-button:hover, .cancel-button:hover {
     background-color: #0e77d4;
+}
+
+/* Additional Button Styles */
+.another-button {
+    padding: 10px 20px;
+    background-color: #FF5722;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.another-button:hover {
+    background-color: #E64A19;
 }
