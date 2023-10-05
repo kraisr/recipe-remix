@@ -36,6 +36,7 @@ nav .container {
 
 .profileImage{
   position: relative;
+  top: -10px;
   right: -60px;
   background-color: #ffffff;
   padding: 20px;
