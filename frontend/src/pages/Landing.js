@@ -1,6 +1,7 @@
 import "../css/landing.css";
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import Slider from "../components/Slider";
 const Landing = ({setLoggedIn}) => {
     return (
         <div className="landing-container">
@@ -25,22 +26,10 @@ const Landing = ({setLoggedIn}) => {
                 </h2>
             </div>
 
+            
+
             <div className="landing-bottom-container">
-                <div className="box1">
-
-                </div>
-
-                <div className="box2">
-
-                </div>
-
-                <div className="box3">
-
-                </div>
-
-                <div className="box4">
-                    
-                </div>
+                <Slider />
             </div>
         </div>
     )
