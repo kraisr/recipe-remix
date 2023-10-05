@@ -1,7 +1,12 @@
 
+
+
 const Home = () => {
     return(
-        <h2>hi</h2>
+        <div className="home-container">
+            <h1>Recipe Remix</h1>
+            {/* <h1>test</h1> */}
+        </div>
     )
 }
 

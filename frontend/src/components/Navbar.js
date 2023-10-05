@@ -21,9 +21,14 @@ const Navbar = () => {
         setIsSubMenuOpen(isSubMenuOpen);
     };
 
+    const toggleModal = () => {
+        setEditModal(true);
+        toggleMenu();
+    }
+
     const handleOutsideClick = (event) => {
         const clickedElement = event.target;
-        const isProfileImageClicked = (clickedElement && clickedElement.classList?.contains('profileImage')) || ((clickedElement && clickedElement.parentElement) && clickedElement.classList?.contains('fa-user'));        
+        const isProfileImageClicked = (clickedElement && clickedElement.classList?.contains('profileImage')) || ((clickedElement && clickedElement.parentElement) && clickedElement.classList?.contains('corner-profile'));        
         if (isProfileImageClicked) {
             toggleMenu();
         }
@@ -32,7 +37,6 @@ const Navbar = () => {
             isSubMenuOpen = false;
             setIsSubMenuOpen(isSubMenuOpen);
         }   
-        //console.log(isSubMenuOpen);
     };
 
     useEffect(() => {
@@ -64,7 +68,7 @@ const Navbar = () => {
 
                 <div className="profile-container">
                     <div className="profileImage">
-                        <i className="fa-solid fa-user"></i>
+                        <i className="fa-solid fa-user corner-profile"></i>
                     </div>
 
                     <div className={`sub-menu-wrap ${isSubMenuOpen ? 'open-menu' : ''}`} ref={submenuRef}>
@@ -98,11 +102,13 @@ const Navbar = () => {
                                 <span>{'>'}</span>
                             </Link>
 
-                            <Link to="/../profile" className="sub-menu-link" onClick={toggleMenu}>
+                            <Link to="/../profile" className="sub-menu-link" onClick={toggleModal}>
                                 <i className="fa-solid fa-user"></i>
                                 <p>Logout</p>
                                 <span>{'>'}</span>
                             </Link>
+
+                            {editModal && <Logout />}
 
                         </div>
                     </div>
