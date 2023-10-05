@@ -1,7 +1,7 @@
 import "../css/landing.css";
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-const Landing = (loggedIn) => {
+const Landing = ({setLoggedIn}) => {
     return (
         <div className="landing-container">
             <div className="landing-nav">
@@ -10,7 +10,7 @@ const Landing = (loggedIn) => {
                     <h2>About</h2>
                 </Link>
                 <div className="landing-nav-button" >
-                    <button type="button" class="landing-login">
+                    <button type="button" class="landing-login" onClick={() => setLoggedIn(prevState => !prevState)}>
                         Login
                     </button>
                     <button type="button" class="landing-signup">

@@ -10,7 +10,7 @@ import Settings from './pages/Settings';
 import Landing from './pages/Landing';
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(null);
 
   return (
     <div className="App">
@@ -19,13 +19,13 @@ function App() {
         <Routes>
           {loggedIn ? (
             <>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Home setLoggedIn={setLoggedIn}/>} />
               <Route path="/pantry" element={<Pantry />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
             </>
           ) : (
-            <Route path="/" element={<Landing />} />
+            <Route path="/" element={<Landing setLoggedIn={setLoggedIn}/>} />
           )}
         </Routes>
         
