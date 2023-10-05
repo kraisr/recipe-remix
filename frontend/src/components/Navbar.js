@@ -9,7 +9,23 @@ import Logout from "./Logout";
 const Navbar = () => {
     let [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
     const [editModal, setEditModal] = useState(false);
+    const [click, setClick] = useState(false);
+    
     let submenuRef = useRef(null);
+
+    const handleClick = () =>setClick(!click);
+    const closeMobileMenu = () => setClick(false);
+
+    const [button, setButton,] = useState(true);
+    const showButton = () => {
+      if(window.innerWidth <= 960){
+        setButton(false);
+      }else{
+        setButton(true);
+      }
+    };
+  
+    window.addEventListener('resize', showButton);
 
     const toggleMenu = () => {
         if(isSubMenuOpen){
@@ -48,11 +64,14 @@ const Navbar = () => {
     }, []);
 
     return (
-        <nav>
-            <div className="container">
-                <Link to="/">
+        <div className="container">
+            <Link to="/">
                     <img alt="logo" src={logoImg}/>
                 </Link>
+
+                <div className='menu-icon' onClick={handleClick}>
+                  <i className={click ? 'fas fa-times' : 'fas fa-bars'}></i>
+                </div>
                 
                 <Link to="/../pantry">
                     <h1>Pantry</h1>
@@ -113,8 +132,7 @@ const Navbar = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </nav>
+        </div>
     );
 }
 
