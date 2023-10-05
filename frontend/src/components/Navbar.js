@@ -27,7 +27,6 @@ const Navbar = () => {
             isSubMenuOpen = false;
             setIsSubMenuOpen(isSubMenuOpen);
         }   
-        //console.log(isSubMenuOpen);
     };
 
     useEffect(() => {
