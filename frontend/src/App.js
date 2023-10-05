@@ -1,15 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 
-//pages
-import Home from './pages/Home';
-import Pantry from './pages/Pantry';
-import Navbar from './components/Navbar';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
-import Landing from './pages/Landing';
-import DietaryPreferences from "./pages/Settings";
-
+// Import pages and components
+import Home from "./pages/Home";
+import Pantry from "./pages/Pantry";
+import Navbar from "./components/Navbar";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import Landing from "./pages/Landing";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(null);
@@ -31,40 +29,6 @@ function App() {
           )}
         </Routes>
         
-        <Navbar />
-        <div className="pages">
-          <Routes>
-            <Route
-              path="/"
-              element={<Home />}
-            />
-
-            <Route
-              path="/pantry"
-              element={<Pantry />}
-            />
-
-            {/* <Route 
-              path="/recipes"
-              element={<Recipes />}
-            />  
-
-            <Route 
-              path="/community"
-              element={<Community />}
-            /> */}
-
-            <Route
-              path="/profile"
-              element={<Profile />}
-            />
-
-            <Route
-              path="/settings"
-              element={<Settings />}
-            />
-          </Routes>
-        </div>
       </BrowserRouter>
     </div>
   );
