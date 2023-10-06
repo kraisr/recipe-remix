@@ -14,7 +14,8 @@ const Navbar = () => {
     let submenuRef = useRef(null);
 
     const handleClick = () =>setClick(!click);
-    const closeMobileMenu = () => setClick(false);
+
+  const closeMobileMenu = () => setClick(false);
 
     const [button, setButton,] = useState(true);
     const showButton = () => {
@@ -64,75 +65,83 @@ const Navbar = () => {
     }, []);
 
     return (
-        <div className="container">
-            <Link to="/">
+        <nav>
+            <div className="container">
+                <Link to="/">
                     <img alt="logo" src={logoImg}/>
                 </Link>
 
-                <div className='menu-icon' onClick={handleClick}>
-                  <i className={click ? 'fas fa-times' : 'fas fa-bars'}></i>
-                </div>
-                
-                <Link to="/../pantry">
-                    <h1>Pantry</h1>
-                </Link>
+                <div className={click ? 'nav-menu active' : 'nav-menu'}>
+                    
+                    
+                    <Link to="/../pantry">
+                        <h1 className="nav-links" onClick={closeMobileMenu}>Pantry</h1>
+                    </Link>
 
-                <Link to="/">
-                    <h1>Recipes</h1>
-                </Link>
+                    <Link to="/">
+                        <h1 className="nav-links" onClick={closeMobileMenu}>Recipes</h1>
+                    </Link>
 
-                <Link to="/">
-                    <h1>Community</h1>
-                </Link>
+                    <Link to="/">
+                        <h1 className="nav-links" onClick={closeMobileMenu}>Community</h1>
+                    </Link>
 
-                <div className="profile-container">
-                    <div className="profileImage">
-                        <i className="fa-solid fa-user corner-profile"></i>
-                    </div>
+                    <div className="profile-container nav-links">
+                        <div className="profileImage">
+                            <i className="fa-solid fa-user corner-profile"></i>
+                        </div>
 
-                    <div className={`sub-menu-wrap ${isSubMenuOpen ? 'open-menu' : ''}`} ref={submenuRef}>
-                        <div className="sub-menu">
-                            {/* <div className="user-info">
-                                <h2>Test Name</h2>
+                        <div className={`sub-menu-wrap ${isSubMenuOpen ? 'open-menu' : ''}`} ref={submenuRef}>
+                            <div className="sub-menu">
+                                {/* <div className="user-info">
+                                    <h2>Test Name</h2>
+                                </div>
+                                <hr /> */}
+
+                                <Link to="/../profile" className="sub-menu-link" onClick={toggleMenu}>
+                                    <i className="fa-solid fa-user"></i>
+                                    <p>Profile</p>
+                                    <span>{'>'}</span>
+                                </Link>
+
+                                <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
+                                    <i className="fa-solid fa-gear"></i>
+                                    <p>Settings</p>
+                                    <span>{'>'}</span>
+                                </Link>
+
+                                {/* <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
+                                    <i className="fa-solid fa-gear"></i>
+                                    <p>Preferences</p>
+                                    <span>{'>'}</span>
+                                </Link> */}
+
+                                <Link to="/../help" className="sub-menu-link" onClick={toggleMenu}>
+                                    <i className="fa-solid fa-user"></i>
+                                    <p>Help</p>
+                                    <span>{'>'}</span>
+                                </Link>
+
+                                <Link to="/../profile" className="sub-menu-link" onClick={toggleModal}>
+                                    <i className="fa-solid fa-user"></i>
+                                    <p>Logout</p>
+                                    <span>{'>'}</span>
+                                </Link>
+
+                                {editModal && <Logout />}
+
                             </div>
-                            <hr /> */}
-
-                            <Link to="/../profile" className="sub-menu-link" onClick={toggleMenu}>
-                                <i className="fa-solid fa-user"></i>
-                                <p>Profile</p>
-                                <span>{'>'}</span>
-                            </Link>
-
-                            <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
-                                <i className="fa-solid fa-gear"></i>
-                                <p>Settings</p>
-                                <span>{'>'}</span>
-                            </Link>
-
-                            {/* <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
-                                <i className="fa-solid fa-gear"></i>
-                                <p>Preferences</p>
-                                <span>{'>'}</span>
-                            </Link> */}
-
-                            <Link to="/../help" className="sub-menu-link" onClick={toggleMenu}>
-                                <i className="fa-solid fa-user"></i>
-                                <p>Help</p>
-                                <span>{'>'}</span>
-                            </Link>
-
-                            <Link to="/../profile" className="sub-menu-link" onClick={toggleModal}>
-                                <i className="fa-solid fa-user"></i>
-                                <p>Logout</p>
-                                <span>{'>'}</span>
-                            </Link>
-
-                            {editModal && <Logout />}
-
                         </div>
                     </div>
                 </div>
-        </div>
+                
+                <div className='menu-icon' onClick={handleClick}>
+                    <i className={click ? 'fas fa-times' : 'fas fa-bars'}></i>
+                </div>
+            </div>
+
+            
+        </nav>
     );
 }
 
