@@ -1,0 +1,131 @@
+.modal-background{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: aliceblue;
+    border-radius: 30px;
+    display: flex;
+    min-width: 60%;
+    min-height: 70%;
+    flex-direction: column;
+    align-items: center;
+    
+    
+}
+
+.title{
+    margin: 0px;
+    margin-right:auto;
+    display: flex;
+    justify-content: center;
+    
+}
+.title h1{
+    font-size: 50px;
+}
+
+
+.body{
+    display: flex;
+    margin-top: 0px;
+    margin:0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    
+    padding-left: 150px;
+    padding-right: 150px;
+}
+
+.profile-pic-section{
+    display:flex;
+    flex-direction: column;
+    
+    padding: 20px;
+    position: relative;
+    top:-60px;
+    right: 80px;
+}
+
+.picture{
+    align-self: center;
+    padding: 40px 40px 40px 40px;
+    border-radius: 100%;
+    background-color: #C6EBC5;
+    max-width: 100px;
+}
+
+.picture i {
+    align-self: center;
+    font-size: 5rem;
+}
+
+
+.user-info{
+    
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    position: relative;
+    right: -80px;
+    top:-40px;
+}
+
+.footer{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.cancel{
+    padding: 10px;
+    background-color: rgb(247, 155, 155);
+    border-radius: 30%;
+    margin-bottom:20px;
+}
+.apply{
+    padding: 10px;
+    background-color: rgb(117, 155, 250);
+    border-radius: 30%;
+    margin-bottom:20px;
+}
+
+.apply:hover, .cancel:hover, .picture:hover, .picture-text:hover{
+    cursor: pointer;
+}
+
+
+.change-picture{
+    position:absolute;
+    bottom:-60%;
+    left:-40%;
+    border-radius:30px;
+    display: flex;
+    min-width: 300%;
+    min-height: 100%;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(219, 238, 254);
+    z-index: 1;
+}
+
+.crop-container{
+    padding:50px;
+}
+
+/* .change-picture-profile{
+    position:absolute;
+    bottom:25%;
+    left: 40%;
+    border-radius:30px;
+    display: flex;
+    min-width: 50%;
+    min-height: 65%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(193, 81, 44);
+    z-index: 1;
+} */
+
