@@ -70,12 +70,11 @@ nav h1 {
 .profileImage{
   position: relative;
   top:10%;
-  right: -70%;
   background-color: #ffffff;
   padding: 20px;
   border-radius: 100%;
   width:30px;
-  margin-right: 20px;
+  right:-50%;
 }
 .profileImage i{
   font-size: 2rem;
@@ -97,27 +96,28 @@ nav a {
 
 /*sub menu*/
 .sub-menu-wrap{
-  position:absolute;
-  top:100px;
-  right:-40px;
-  max-width: 180px;
-  max-height: 0px;
+  position: absolute;
+  top: calc(100% - 30px); /* Adjust the spacing as needed */
+  
+  width: 180px; /* Set the width as needed */
+  max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s;
+  
 }
 
 .sub-menu-wrap.open-menu{
-  max-height: 600px;
+  max-height: 600px; /* Adjust the maximum height as needed */
   position: absolute;
-  top:100px;
-  right:10px;
+  top: calc(100% - 30px); /* Adjust the spacing as needed */
+  right:0%;
 }
 
 .sub-menu{
   display: flex;
   flex-direction: column;
   background-color: white;
-  margin: 0;
+  margin-right:20px;
   padding: 20px;
   border-radius: 5%;
 }
@@ -255,8 +255,8 @@ nav a {
 
   .sub-menu-wrap{
     position:absolute;
-    top:60%;
-    right:50%;
+    top:-5%;
+    right:40%;
     max-width: 180px;
     max-height: 0px;
     overflow: hidden;
@@ -266,13 +266,13 @@ nav a {
 
   .sub-menu-wrap.open-menu{
     position: absolute;
-    top:60%;
-    right:50%;
+    top:-5%;
+    right:40%;
   }
 
   .profileImage{
     position: relative;
-    top:-40%;
+    top:-120px;
     right: -5%;
     background-color: #ffffff;
     padding: 20px;
