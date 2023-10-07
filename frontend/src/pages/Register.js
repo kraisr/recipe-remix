@@ -1,10 +1,13 @@
 import * as React from 'react';
 import "../css/login.css";
 import Box from '@mui/material/Box';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Button, TextField, Container } from '@mui/material';
-import LoginForm from "../components/LoginForm";
+import RegisterForm from "../components/RegisterForm";
 
-function Login() {
+function Register() {
   return (
     <Box>
       <Box
@@ -14,11 +17,11 @@ function Login() {
         borderRadius="1.5rem"
         // backgroundColor={theme.palette.background.alt}
       >
-        <LoginForm />
+        <RegisterForm />
       </Box>
     </Box>
   );
 };
 
-export default Login;
+export default Register;
 
