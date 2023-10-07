@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import "../css/editprofile.css";
+import axios from 'axios';
 
 
 //components
@@ -43,6 +44,26 @@ function EditProfile({closeModal, applyChanges, profileData}) {
   const handleApplyChanges = () => {
     // Pass the updated data to the parent component
     applyChanges({ name, username, bio, link, selectedImage });
+
+    const updatedUserData = {
+      name,
+      username,
+      bio,
+      link,
+      selectedImage
+    };
+
+      // Send a POST request to your API endpoint to save the updated user data
+    axios.post('/api/saveProfile', updatedUserData)
+    .then(response => {
+      // Handle the response if needed
+      console.log('Profile data saved successfully:', response.data);
+    })
+    .catch(error => {
+      // Handle errors
+      console.error('Error saving profile data:', error);
+    });
+
     closeModal();
   }
 
