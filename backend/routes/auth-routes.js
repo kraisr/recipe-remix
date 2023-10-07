@@ -1,22 +1,31 @@
-import { Router } from 'express';
-import passport from 'passport';
+import express from "express";
+import { login } from "../controllers/auth.js";
 
-router.get('/google',
-  passport.authenticate('google', { scope: ['profile'] })
-);
 
-router.get('/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => res.redirect('/profile')
-);
+const router = express.Router();
 
-router.get('/facebook',
-  passport.authenticate('facebook')
-);
+router.post("/login", login);
 
-router.get('/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/' }),
-  (req, res) => res.redirect('/profile')
-);
+export default router;
 
-module.exports = router;
+
+
+// router.get('/google',
+//   passport.authenticate('google', { scope: ['profile'] })
+// );
+
+// router.get('/google/callback',
+//   passport.authenticate('google', { failureRedirect: '/' }),
+//   (req, res) => res.redirect('/profile')
+// );
+
+// router.get('/facebook',
+//   passport.authenticate('facebook')
+// );
+
+// router.get('/facebook/callback',
+//   passport.authenticate('facebook', { failureRedirect: '/' }),
+//   (req, res) => res.redirect('/profile')
+// );
+
+// module.exports = router;
