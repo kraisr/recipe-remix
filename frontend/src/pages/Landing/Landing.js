@@ -1,7 +1,8 @@
-import "../css/landing.css";
+import "./landing.css";
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import Slider from "../components/Slider";
+import Slider from "../../components/Slider";
+
 const Landing = ({setLoggedIn}) => {
     return (
         <div className="landing-container">

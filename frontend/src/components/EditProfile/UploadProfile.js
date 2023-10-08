@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Avatar from 'react-avatar-edit';
-import "../css/editprofile.css";
-import logoImg from '../images/logo.png';
+import "./editProfile.css";
+import logoImg from '../../images/logo.png';
 
 function UploadProfile({ closeModal, onImageChange}) {
   const [src, setSrc] = useState(null); 

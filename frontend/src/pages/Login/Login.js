@@ -1,8 +1,8 @@
 import * as React from 'react';
-import "../css/login.css";
+import "./login.css";
 import Box from '@mui/material/Box';
 import { Button, TextField, Container } from '@mui/material';
-import LoginForm from "../components/LoginForm";
+import LoginForm from "./LoginForm";
 
 function Login() {
   return (

@@ -1,18 +1,18 @@
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
-import "./css/app.css";
+import "./app.css";
 
 // Import pages and components
-import Home from "./pages/Home";
-import Pantry from "./pages/Pantry";
-import Navbar from "./components/Navbar";
-import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
+import Home from "./pages/Home/Home";
+import Pantry from "./pages/Pantry/Pantry";
+import Navbar from "./components/Navbar/Navbar";
+import Profile from "./pages/Profile/Profile";
+import Settings from "./pages/Settings/Settings";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
 
-import Landing from "./pages/Landing";
+import Landing from "./pages/Landing/Landing";
 
 
 function App() {

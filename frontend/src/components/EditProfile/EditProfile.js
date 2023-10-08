@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import "../css/editprofile.css";
+import "./editProfile.css";
 
 
 //components

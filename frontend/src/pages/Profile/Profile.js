@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom"
-import "../css/profile.css";
+import "./profile.css";
 
 
 //components
-import EditProfile from "../components/EditProfile";
-import UploadProfile from "../components/UploadProfile"
+import EditProfile from "../../components/EditProfile/EditProfile";
+import UploadProfile from "../../components/EditProfile/UploadProfile"
 
 
 const Profile = () => {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import logoImg from '../images/logo.png';
+import logoImg from '../../images/logo.png';
 
 
-//components
-import Logout from "./Logout";
+// components
+import Logout from "../Logout/Logout";
 
 const Navbar = () => {
     let [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
