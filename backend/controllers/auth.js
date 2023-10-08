@@ -6,12 +6,19 @@ import User from "../models/User.js";
 export const register = async (req, res) => {
     // calls to mongoDB are asynchronous, so we need to use async/await
     try {
+        // console.log(req.body);
         const { 
             firstName, 
             lastName, 
             email, 
             password 
         } = req.body;
+
+        /* Testing request body */
+        // console.log(firstName);
+        // console.log(lastName);
+        // console.log(email);
+        // console.log(password);
 
         // Password encryption with bcrypt salt and hash
         const salt = await bcrypt.genSalt();
@@ -27,7 +34,7 @@ export const register = async (req, res) => {
         // Send back the saved user to the frontend
         const savedUser = await newUser.save();
         // 201 = status for successful creation
-        req.status(201).json(savedUser);
+        res.status(201).json(savedUser);
     } catch (err) {
         // 500 = status for server error + send error message returned by mongoDB
         res.status(500).json({ error: err.message });
