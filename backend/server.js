@@ -3,8 +3,9 @@ import * as dotenv from "dotenv";
 import cors from "cors";
 
 import connectDB from "./mongoDB/connect.js";
-import authRoutes from "./routes/auth-routes.js";
+import authRoutes from "./routes/auth.js";
 import suggesticRoutes from "./routes/suggesticRoutes.js";
+import bodyParser from "body-parser";
 
 dotenv.config();
 // import { GraphQLClient } from 'graphql-request';
@@ -15,8 +16,9 @@ dotenv.config();
 const app = express(); 
 
 /* add middlewares */
+app.use(express.json());
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(cors());
-app.use(express.json({ limit: '50mb' }));
 
 /* add routes */
 app.use("/auth", authRoutes);

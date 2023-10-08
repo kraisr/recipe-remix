@@ -16,9 +16,9 @@ import Landing from "./pages/Landing/Landing";
 
 
 function App() {
-  // Set to false to show landing page
+  // Set to false to show landing page, register, and login
   // Set to true to show pantry, and user home page
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <div className="App">

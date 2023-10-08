@@ -1,28 +1,28 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    fistName: {
+    firstName: {
         type: String,
-        required: [true, "Your first name is required"],
+        required: true,
         min: 2,
         max: 50,
     },
     lastName: {
         type: String,
-        required: [true, "Your last name is required"],
+        required: true,
         min: 2,
         max: 50,
     },
     email: {
         type: String,
-        required: [true, "Your email is required"],
+        required: true,
         unique: true,
         max: 50,
     },
     password: {
         type: String,
-        required: [true, "Your password is required"],
-        min: 8,
+        required: true,
+        min: 2,
         // Add more configuration for password requirements
     },
     createdAt: {
