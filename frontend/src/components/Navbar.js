@@ -2,8 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import logoImg from '../images/logo.png';
 
+
+//components
+import Logout from "./Logout";
+
 const Navbar = () => {
     let [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+    const [editModal, setEditModal] = useState(false);
     let submenuRef = useRef(null);
 
     const toggleMenu = () => {
@@ -16,9 +21,14 @@ const Navbar = () => {
         setIsSubMenuOpen(isSubMenuOpen);
     };
 
+    const toggleModal = () => {
+        setEditModal(true);
+        toggleMenu();
+    }
+
     const handleOutsideClick = (event) => {
         const clickedElement = event.target;
-        const isProfileImageClicked = (clickedElement && clickedElement.classList?.contains('profileImage')) || ((clickedElement && clickedElement.parentElement) && clickedElement.classList?.contains('fa-user'));        
+        const isProfileImageClicked = (clickedElement && clickedElement.classList?.contains('profileImage')) || ((clickedElement && clickedElement.parentElement) && clickedElement.classList?.contains('corner-profile'));        
         if (isProfileImageClicked) {
             toggleMenu();
         }
@@ -27,7 +37,6 @@ const Navbar = () => {
             isSubMenuOpen = false;
             setIsSubMenuOpen(isSubMenuOpen);
         }   
-        //console.log(isSubMenuOpen);
     };
 
     useEffect(() => {
@@ -59,15 +68,15 @@ const Navbar = () => {
 
                 <div className="profile-container">
                     <div className="profileImage">
-                        <i className="fa-solid fa-user"></i>
+                        <i className="fa-solid fa-user corner-profile"></i>
                     </div>
 
                     <div className={`sub-menu-wrap ${isSubMenuOpen ? 'open-menu' : ''}`} ref={submenuRef}>
                         <div className="sub-menu">
-                            <div className="user-info">
+                            {/* <div className="user-info">
                                 <h2>Test Name</h2>
                             </div>
-                            <hr />
+                            <hr /> */}
 
                             <Link to="/../profile" className="sub-menu-link" onClick={toggleMenu}>
                                 <i className="fa-solid fa-user"></i>
@@ -76,10 +85,16 @@ const Navbar = () => {
                             </Link>
 
                             <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
-                                <i className="fa-solid fa-user"></i>
+                                <i className="fa-solid fa-gear"></i>
                                 <p>Settings</p>
                                 <span>{'>'}</span>
                             </Link>
+
+                            {/* <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
+                                <i className="fa-solid fa-gear"></i>
+                                <p>Preferences</p>
+                                <span>{'>'}</span>
+                            </Link> */}
 
                             <Link to="/../help" className="sub-menu-link" onClick={toggleMenu}>
                                 <i className="fa-solid fa-user"></i>
@@ -87,13 +102,14 @@ const Navbar = () => {
                                 <span>{'>'}</span>
                             </Link>
 
-                            <Link to="/../profile" className="sub-menu-link" onClick={toggleMenu}>
+                            <Link to="/../profile" className="sub-menu-link" onClick={toggleModal}>
                                 <i className="fa-solid fa-user"></i>
                                 <p>Logout</p>
                                 <span>{'>'}</span>
                             </Link>
 
-                            {/* Other submenu links */}
+                            {editModal && <Logout />}
+
                         </div>
                     </div>
                 </div>

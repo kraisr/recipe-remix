@@ -7,7 +7,6 @@ const Settings = () => {
     const [emailValue, setEmailValue] = useState('');
     const [reminderTime, setReminderTime] = useState('0:00');
 
-    // Function to toggle dark mode
     const toggleDarkMode = () => {
         setIsDarkMode(!isDarkMode);
     };
@@ -25,14 +24,17 @@ const Settings = () => {
     };
 
     const handleSaveSettings = () => {
+        // Handle saving settings here
+    };
+
+    const handleCancelButtonClick = () => {
+        // Handle the click event for the Cancel button here
     };
 
     const modeClass = isDarkMode ? 'dark-mode' : 'light-mode';
 
     return (
         <div className={`settings ${modeClass}`}>
-            //<h1 style={{ fontSize: '24px' }}>Settings</h1>
-
             {/* Dark Mode Toggle */}
             <div className="toggle-container">
                 <h2 style={{ fontSize: '18px' }}>Toggle between light / dark mode</h2>
@@ -114,9 +116,12 @@ const Settings = () => {
                 </div>
             )}
 
-            {/* Save Button */}
+            {/* Button Container */}
             {areRemindersEnabled && (
                 <div className="save-button-container">
+                    <button className="cancel-button" onClick={handleCancelButtonClick}>
+                        Cancel
+                    </button>
                     <button className="save-button" onClick={handleSaveSettings}>
                         Save
                     </button>

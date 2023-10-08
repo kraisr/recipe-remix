@@ -4,74 +4,88 @@ import "../css/profile.css";
 
 
 //components
-//import AddProfile from "../components/AddProfile";
+import EditProfile from "../components/EditProfile";
+import UploadProfile from "../components/UploadProfile"
+
 
 const Profile = () => {
 
   const [image, setImage] = useState(null);
-  const inputFile = useRef(null);
+  const [editModal, setEditModal] = useState(false);
+  const [name, setName] = useState(null);
+  const [username, setUsername] = useState(null);
+  const [bio, setBio] = useState(null);
+  const [link, setlink] = useState(null);
 
-  const handleFileUpload = e => {
-    const { files } = e.target;
-    if (files && files.length) {
-      const filename = files[0].name;
+  const toggleModal = () => {
+    setEditModal(true);
+  }
 
-      var parts = filename.split(".");
-      const fileType = parts[parts.length - 1];
-      console.log("fileType", fileType); //ex: zip, rar, jpg, svg etc.
+  const applyChanges = (data) => {
+    // Update the profile data
+    setName(data.name);
+    setUsername(data.username);
+    setBio(data.bio);
+    setlink(data.link);
+    setImage(data.selectedImage)
+  }
 
-      setImage(files[0]);
-    }
-  };
-
-  const onButtonClick = () => {
-    inputFile.current.click();
-  };
-
-    
+ 
     return(
         <div className="container">
             
             <div className="left-container">
                 <div className="user-profile-header">
-                    <h1>User's Profile</h1>
+                    {!username ? (
+                        <h2>User's Profile</h2>
+                    ): (
+                        <h2>{username}'s Profile</h2>
+                    )}
+                    
                 </div>
 
                 <div className="user-profile-card">
                     <div className="pfp-container">
                         
-                        <div className="profile-picture">
-                        {image && (
-                            <img
-                                alt="not found"
-                                width={"250px"}
-                                src={URL.createObjectURL(image)}  // Check if image is not null
-                            />
-                        )}          
-                        </div>
-
-                        <input
-                            style={{ display: "none" }}
-                            // accept=".zip,.rar"
-                            ref={inputFile}
-                            onChange={handleFileUpload}
-                            type="file"
-                        />
-                        
-                        <div className="add-pic" onClick={onButtonClick}>
-                            <i class="fa-solid fa-camera"></i>
-                        </div>
-
-                        <div className="remove-pic" onClick={() => setImage(null) }>
-                            <i class="fa-solid fa-trash"></i>
-                        </div>
+                    <div className={`${!image ? "profile-picture": " uploaded-pfp"}`} onClick={toggleModal}>
+                    {image ? (
+                        <img src={image} alt="Profile Picture" />
+                      ) : (
+                        <i className="fa-solid fa-user"></i>
+                    )}
+                  </div>
                         
                     </div>
                     
 
                     <div className="profile-info">
-                        <h2>user</h2>
+                        <div className="profile-field">
+                        <span className="field-label">Name</span>
+                        <span className="field-value">{name}</span>
+                        </div>
+                        <hr class="field-divider" />
+                        
+                        <div className="profile-field">
+                        <span className="field-label">Bio</span>
+                        <span className="field-value">{bio}</span>
+                        </div>
+                        <hr class="field-divider" />
+                        
+                        <div className="profile-field">
+                        <span className="field-label">Link</span>
+                        <span className="field-value">{link}</span>
+                        </div>
                     </div>
+
+                    <div className="edit-profile" onClick={toggleModal}>
+                        <h3>Edit Profile</h3>
+                    </div>
+
+                    {editModal && <EditProfile 
+                                    closeModal={setEditModal} 
+                                    applyChanges={applyChanges}
+                                     profileData={{ name, username, bio, link, image }}
+                                    />}
                 </div>
                 
             </div>
