@@ -5,7 +5,8 @@ const Settings = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [areRemindersEnabled, setRemindersEnabled] = useState(false);
     const [emailValue, setEmailValue] = useState('');
-    const [reminderTime, setReminderTime] = useState('0:00');
+    const [reminderTime, setReminderTime] = useState('');
+    const [emailError, setEmailError] = useState('');
 
     const toggleDarkMode = () => {
         setIsDarkMode(!isDarkMode);
@@ -17,14 +18,26 @@ const Settings = () => {
 
     const handleEmailChange = (event) => {
         setEmailValue(event.target.value);
+        setEmailError(''); // Clear any previous error message when the email input changes
     };
 
     const handleReminderTimeChange = (event) => {
         setReminderTime(event.target.value);
     };
 
+    const validateEmail = (email) => {
+        // Basic email format validation using a regular expression
+        const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+        return emailRegex.test(email);
+    };
+
     const handleSaveSettings = () => {
-        // Handle saving settings here
+        if (areRemindersEnabled && !validateEmail(emailValue)) {
+            setEmailError('Incorrect Email Format');
+        } else {
+            setEmailError(''); // Clear any previous error message
+            // Handle saving settings here
+        }
     };
 
     const handleCancelButtonClick = () => {
@@ -78,6 +91,13 @@ const Settings = () => {
                 </div>
             )}
 
+            {/* Error Message */}
+            {areRemindersEnabled && emailError && (
+                <div className="error-message">
+                    <p style={{ color: 'red' }}>{emailError}</p>
+                </div>
+            )}
+
             {/* Everyday at [] */}
             {areRemindersEnabled && (
                 <div className="everyday-at-container">
@@ -89,6 +109,8 @@ const Settings = () => {
                             value={reminderTime}
                             onChange={handleReminderTimeChange}
                         >
+                            {/* Add the default option */}
+                            <option value="">Select an option</option>
                             {/* Options for every 30 minutes */}
                             {Array.from({ length: 48 }, (_, index) => (
                                 <option key={index} value={`${String(Math.floor(index / 2)).padStart(2, '0')}:${index % 2 === 0 ? '00' : '30'}`}>
@@ -98,13 +120,15 @@ const Settings = () => {
                         </select>
                     </div>
                     <div className="input-title">
-                        <h2 style={{ fontSize: '16px' }}>Or Every</h2>
+                        <h2 style={{ fontSize: '16px' }}>or Every</h2> {/* Updated title */}
                     </div>
                     <div className="input-field">
                         <select
                             value={reminderTime}
                             onChange={handleReminderTimeChange}
                         >
+                            {/* Add the default option */}
+                            <option value="">Select an option</option>
                             {/* Options for every 1 to 24 hours */}
                             {Array.from({ length: 24 }, (_, index) => (
                                 <option key={index} value={`${index + 1}`}>

@@ -7,6 +7,7 @@ import Home from "./pages/Home/Home";
 import Pantry from "./pages/Pantry/Pantry";
 import Navbar from "./components/Navbar/Navbar";
 import Profile from "./pages/Profile/Profile";
+import Preferences from "./pages/Preferences/Preferences";
 import Settings from "./pages/Settings/Settings";
 
 import Login from "./pages/Login/Login";
@@ -18,7 +19,7 @@ import Landing from "./pages/Landing/Landing";
 function App() {
   // Set to false to show landing page, register, and login
   // Set to true to show pantry, and user home page
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
 
   return (
     <div className="App">
@@ -31,6 +32,7 @@ function App() {
               <Route path="/" element={<Home setLoggedIn={setLoggedIn}/>} />
               <Route path="/pantry" element={<Pantry />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/preferences" element={<Preferences />} />
               <Route path="/settings" element={<Settings />} />
             </>
           ) : (
