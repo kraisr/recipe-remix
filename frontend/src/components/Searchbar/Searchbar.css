@@ -1,0 +1,51 @@
+
+/* Style for the parent container */
+.searchBar {
+    display: grid;
+    place-items: center;  
+    height: 100vh;        
+    position: relative;   /* Important for dropdown positioning */
+    width: 300px;         /* Set a fixed width or adjust as needed */
+    margin: 0 auto;       /* Center the searchBar horizontally */
+}
+
+/* Style for the search bar input */
+input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;          /* Make the input take the full width of its container */
+}
+
+/* Dropdown styles */
+.dropdown {
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;   /* Position it right below the input */
+    top: 100%;            
+    left: 0;              
+    width: 100%;          /* Make the dropdown take the full width of its container */
+    z-index: 1;
+    list-style-type: none; /* Remove bullet points */
+    margin: 0;            /* Remove default margin */
+    padding: 0;           /* Remove default padding */
+    background-color: #fff; /* Set a background color for the dropdown */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Add a subtle shadow for depth */
+}
+
+.dropdown li {
+    padding: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s; /* Smooth transition for hover effect */
+}
+
+.dropdown li:hover {
+    background-color: #f5f5f5;
+}
+
+.highlight {
+    background-color: yellow;
+}
+
