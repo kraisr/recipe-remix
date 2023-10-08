@@ -25,11 +25,6 @@ const initialValuesRegister = {
 };
 
 const RegisterForm = () => {
-  // const [firstName, setFirstName] = useState("");
-  // const [lastName, setLastName] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -74,14 +69,7 @@ const RegisterForm = () => {
     }
   };
 
-  const handleFormSubmit = async (values, onSubmitProps) => {
-    // event.preventDefault();
-    // console.log("First Name:", firstName);
-    // console.log("Last Name:", lastName);
-    // console.log("Email:", email);
-    // console.log("Password:", password);
-    // console.log("Confirm Password:", confirmPassword);
-
+  const handleSubmit = async (values, onSubmitProps) => {
     await register(values, onSubmitProps);
   };
 
@@ -89,7 +77,7 @@ const RegisterForm = () => {
     <Container component="main" maxWidth="xs">
       <Typography variant="h5">Register</Typography>
       <Formik 
-        onSubmit={handleFormSubmit} 
+        onSubmit={handleSubmit} 
         initialValues={initialValuesRegister} 
         validationSchema={registerSchema}
       >
