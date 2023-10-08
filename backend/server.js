@@ -1,23 +1,27 @@
-import express from 'express';
-import * as dotenv from 'dotenv';
-import cors from 'cors';
-import connectDB from './mongoDB/connect.js'
-import suggesticRoutes from './routes/suggesticRoutes.js';
+import express from "express";
+import * as dotenv from "dotenv";
+import cors from "cors";
+
+import connectDB from "./mongoDB/connect.js";
+import authRoutes from "./routes/auth-routes.js";
+import suggesticRoutes from "./routes/suggesticRoutes.js";
+
 dotenv.config();
 // import { GraphQLClient } from 'graphql-request';
 // import axios from 'axios';
 
 
-
 // create express app
 const app = express(); 
 
-// add middlewares
+/* add middlewares */
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 
+/* add routes */
+app.use("/auth", authRoutes);
 
-//SUGGESTIC API
+/* SUGGESTIC API */
 app.use('/api', suggesticRoutes);
 
 
@@ -32,7 +36,7 @@ app.get('/', (req, res) => {
   res.send({ message: 'Hello World!' });
 });
 
-
+/* start express server */
 
 //////
 
@@ -113,6 +117,7 @@ app.get('/', (req, res) => {
 // });
 
 // start express server
+
 const startServer = async () => {
   try {
     // connect to MongoDB using .env variable
