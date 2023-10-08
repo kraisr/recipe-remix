@@ -74,7 +74,8 @@ const LoginForm = ({ onNavigateToRegister }) => {
             handleChange,
             handleSubmit,
             setFieldValue,
-            resetForm 
+            resetForm,
+            submitCount,
         }) => (
           <form onSubmit={handleSubmit}>
             <TextField
@@ -83,8 +84,8 @@ const LoginForm = ({ onNavigateToRegister }) => {
               onChange={handleChange}
               value={values.email}
               name="email"
-              error={Boolean(touched.email) && Boolean(errors.email)}
-              helperText={touched.email && errors.email}
+              error={Boolean(touched.email) && Boolean(errors.email) && submitCount > 0}
+              helperText={(touched.email && errors.email && submitCount > 0) ? errors.email : ""}
               variant="outlined"
               margin="normal"
               required
@@ -100,11 +101,11 @@ const LoginForm = ({ onNavigateToRegister }) => {
               variant="outlined"
               margin="normal"
               name="password"
-              error={Boolean(touched.password) && Boolean(errors.password)}
-              helperText={touched.password && errors.password}
+              error={Boolean(touched.password) && Boolean(errors.password) && submitCount > 0}
+              helperText={(touched.password && errors.password && submitCount > 0) ? errors.password : ""}
               required
               fullWidth
-              autoFocus
+              // autoFocus
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
               sx={{ bgcolor: "#fbf2cf" }}
@@ -150,7 +151,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
               }}
               onClick={handleRegisterClick}
             >
-              Don"t have an account? Register
+              Don't have an account? Register
             </Button>
           </form>
         )}

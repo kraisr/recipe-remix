@@ -18,10 +18,10 @@ const registerSchema = yup.object().shape({
 });
 
 const initialValuesRegister = {
-  firstName: "dsad",
-  lastName: "dasdas",
-  email: "dsadas@asda",
-  password: "dsadas",
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
 };
 
 const RegisterForm = () => {
@@ -88,7 +88,8 @@ const RegisterForm = () => {
             handleChange,
             handleSubmit,
             setFieldValue,
-            resetForm 
+            resetForm,
+            submitCount, 
         }) => (
           <form onSubmit={handleSubmit}>
             <TextField
@@ -99,8 +100,8 @@ const RegisterForm = () => {
               variant="outlined"
               margin="normal"
               name="firstName"
-              error={Boolean(touched.firstName) && Boolean(errors.firstName)}
-              helperText={touched.firstName && errors.firstName}
+              error={Boolean(touched.firstName) && Boolean(errors.firstName) && submitCount > 0}
+              helperText={(touched.firstName && errors.firstName && submitCount > 0) ? errors.firstName : ""}
               required
               fullWidth
               autoFocus
@@ -114,11 +115,10 @@ const RegisterForm = () => {
               variant="outlined"
               margin="normal"
               name="lastName"
-              error={Boolean(touched.lastName) && Boolean(errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
+              error={Boolean(touched.lastName) && Boolean(errors.lastName) && submitCount > 0}
+              helperText={(touched.lastName && errors.lastName && submitCount > 0) ? errors.lastName : ""}
               required
               fullWidth
-              autoFocus
               sx={{ bgcolor: "#fbf2cf" }}
             />
             <TextField
@@ -127,13 +127,12 @@ const RegisterForm = () => {
               onChange={handleChange}
               value={values.email}
               name="email"
-              error={Boolean(touched.email) && Boolean(errors.email)}
-              helperText={touched.email && errors.email}
+              error={Boolean(touched.email) && Boolean(errors.email) && submitCount > 0}
+              helperText={(touched.email && errors.email && submitCount > 0) ? errors.email : ""}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              autoFocus
               sx={{ bgcolor: "#fbf2cf" }}
             />
             <TextField
@@ -144,11 +143,10 @@ const RegisterForm = () => {
               variant="outlined"
               margin="normal"
               name="password"
-              error={Boolean(touched.password) && Boolean(errors.password)}
-              helperText={touched.password && errors.password}
+              error={Boolean(touched.password) && Boolean(errors.password) && submitCount > 0}
+              helperText={(touched.password && errors.password && submitCount > 0) ? errors.password : ""}
               required
               fullWidth
-              autoFocus
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
               sx={{ bgcolor: "#fbf2cf" }}
