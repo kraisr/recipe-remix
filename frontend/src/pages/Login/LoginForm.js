@@ -4,6 +4,20 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 
+// Validation schema for Yup
+import * as yup from "yup";
+
+/* Validation of input in the login form */
+const loginSchema = yup.object().shape({
+  email: yup.string().email("Invalid email address").required("Email is required"),
+  password: yup.string().required("Password is required"),
+});
+
+const initialValuesRegister = {
+  email: "",
+  password: "",
+};
+
 const LoginForm = ({ onNavigateToRegister }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
