@@ -1,9 +1,19 @@
 import "./landing.css";
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Slider from "../../components/Slider";
 
 const Landing = ({setLoggedIn}) => {
+    const navigate = useNavigate();
+
+    const handleRegisterClick = () => {
+        navigate('/Register');
+    };
+    
+    const handleLoginClick = () => {
+        navigate('/Login');
+    };
+
     return (
         <div className="landing-container">
             <div className="landing-nav">
@@ -12,10 +22,10 @@ const Landing = ({setLoggedIn}) => {
                     <h2>About</h2>
                 </Link>
                 <div className="landing-nav-button" >
-                    <button type="button" class="landing-login" onClick={() => setLoggedIn(prevState => !prevState)}>
+                    <button type="button" class="landing-login" onClick={handleLoginClick}>
                         Login
                     </button>
-                    <button type="button" class="landing-signup">
+                    <button type="button" class="landing-signup" onClick={handleRegisterClick}>
                         Sign Up
                     </button>
                 </div>

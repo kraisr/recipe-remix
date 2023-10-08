@@ -16,7 +16,9 @@ import Landing from "./pages/Landing/Landing";
 
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(true);
+  // Set to false to show landing page
+  // Set to true to show pantry, and user home page
+  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <div className="App">
@@ -24,16 +26,20 @@ function App() {
         {loggedIn && <Navbar />}
         <Routes>
           {loggedIn ? (
+            // If logged in, show these pages
             <>
               <Route path="/" element={<Home setLoggedIn={setLoggedIn}/>} />
               <Route path="/pantry" element={<Pantry />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
+            </>
+          ) : (
+            // If not logged in, show these pages
+            <>
+              <Route path="/" element={<Landing setLoggedIn={setLoggedIn}/>} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </>
-          ) : (
-            <Route path="/" element={<Landing setLoggedIn={setLoggedIn}/>} />
           )}
         </Routes>
       </BrowserRouter>
