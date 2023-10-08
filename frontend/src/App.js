@@ -1,6 +1,6 @@
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import React, { useEffect, useRef } from 'react'
-import "./css/app.css"
+import React, { useEffect, useRef, useState } from "react";
+import "./css/app.css";
 
 // Import pages and components
 import Home from "./pages/Home";
@@ -16,7 +16,7 @@ import Landing from "./pages/Landing";
 
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(true);
 
   return (
     <div className="App">
