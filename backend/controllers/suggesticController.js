@@ -1,8 +1,8 @@
-import { GraphQLClient } from 'graphql-request';
-import fetch from 'node-fetch';
+import { GraphQLClient } from "graphql-request";
+import fetch from "node-fetch";
 
 
-// const graphqlEndpoint = 'https://production.suggestic.com/graphql';
+// const graphqlEndpoint = "https://production.suggestic.com/graphql";
 // const client = new GraphQLClient(graphqlEndpoint, {
 //     headers: {
 //         Authorization: "Token " + process.env.SUGGESTIC_TOKEN,
@@ -36,9 +36,9 @@ import fetch from 'node-fetch';
 //         res.json(data);
 
 //     } catch (error) {
-//         console.error('Detailed Error:', error);
-//         console.error('Error Stack:', error.stack);
-//         res.status(500).json({ error: 'Internal Server Error', details: error.message });
+//         console.error("Detailed Error:", error);
+//         console.error("Error Stack:", error.stack);
+//         res.status(500).json({ error: "Internal Server Error", details: error.message });
 //     }
 // };
 
@@ -65,12 +65,12 @@ export const searchIngredients = async (req, res) => {
 // databaseId
 //id
 
-        const response = await fetch('https://production.suggestic.com/graphql', {
-            method: 'POST',
+        const response = await fetch("https://production.suggestic.com/graphql", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
                 Authorization: `Token ${process.env.SUGGESTIC_TOKEN}`,
-                'sg-user': process.env.SUGGESTIC_USER_ID
+                "sg-user": process.env.SUGGESTIC_USER_ID
             },
             body: JSON.stringify({ query })
         });
@@ -82,7 +82,7 @@ export const searchIngredients = async (req, res) => {
         res.json(data);
 
     } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
 };

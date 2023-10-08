@@ -1,5 +1,5 @@
-import "./pantry.css";
-import logoImg from "../../images/Vector.png"
+import "../css/pantry.css";
+import logoImg from "../images/Vector.png"
 const Pantry = () => {
     return (
         <div className="pantry-container">

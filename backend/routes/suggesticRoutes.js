@@ -1,9 +1,9 @@
-import express from 'express';
+import express from "express";
 
-import { searchIngredients } from '../controllers/suggesticController.js';
+import { searchIngredients } from "../controllers/suggesticController.js";
 
 const router = express.Router();
 
-router.post('/search-ingredients', searchIngredients);
+router.post("/search-ingredients", searchIngredients);
 
 export default router;

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import Avatar from 'react-avatar-edit';
+import React, { useState } from "react";
+import Avatar from "react-avatar-edit";
 import "./editProfile.css";
-import logoImg from '../../images/logo.png';
+import logoImg from "../../images/logo.png";
 
 function UploadProfile({ closeModal, onImageChange}) {
   const [src, setSrc] = useState(null); 
@@ -40,7 +40,7 @@ function UploadProfile({ closeModal, onImageChange}) {
             <h2>Change Profile Picture</h2>
         </div>
       
-      <div className='crop-container'>
+      <div className="crop-container">
         <Avatar
           width={390}
           height={295}

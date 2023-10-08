@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import "./home.css";
 
 function Home() {
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState("");
     const [results, setResults] = useState([]);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
@@ -28,10 +28,10 @@ function Home() {
         if (query) {
             try {
                 console.log("Making fetch request..."); // <-- Add this
-                const response = await fetch('http://localhost:8080/api/search-ingredients', {
-                    method: 'POST',
+                const response = await fetch("http://localhost:8080/api/search-ingredients", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({ query })
                 });

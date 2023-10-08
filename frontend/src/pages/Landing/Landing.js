@@ -7,18 +7,18 @@ const Landing = ({setLoggedIn}) => {
     const navigate = useNavigate();
 
     const handleRegisterClick = () => {
-        navigate('/Register');
+        navigate("/Register");
     };
     
     const handleLoginClick = () => {
-        navigate('/Login');
+        navigate("/Login");
     };
 
     return (
         <div className="landing-container">
             <div className="landing-nav">
                 <h2>Recipe Remix</h2>
-                <Link to="/" style={{ textDecoration: 'none' , color: "black" }}>
+                <Link to="/" style={{ textDecoration: "none" , color: "black" }}>
                     <h2>About</h2>
                 </Link>
                 <div className="landing-nav-button" >

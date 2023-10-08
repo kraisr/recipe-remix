@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import logoImg from '../../images/logo.png';
+import logoImg from "../../images/logo.png";
 
 
 // components
@@ -28,7 +28,7 @@ const Navbar = () => {
 
     const handleOutsideClick = (event) => {
         const clickedElement = event.target;
-        const isProfileImageClicked = (clickedElement && clickedElement.classList?.contains('profileImage')) || ((clickedElement && clickedElement.parentElement) && clickedElement.classList?.contains('corner-profile'));        
+        const isProfileImageClicked = (clickedElement && clickedElement.classList?.contains("profileImage")) || ((clickedElement && clickedElement.parentElement) && clickedElement.classList?.contains("corner-profile"));        
         if (isProfileImageClicked) {
             toggleMenu();
         }
@@ -40,10 +40,10 @@ const Navbar = () => {
     };
 
     useEffect(() => {
-        document.addEventListener('click', handleOutsideClick);
+        document.addEventListener("click", handleOutsideClick);
 
         return () => {
-            document.removeEventListener('click', handleOutsideClick);
+            document.removeEventListener("click", handleOutsideClick);
         };
     }, []);
 
@@ -71,7 +71,7 @@ const Navbar = () => {
                         <i className="fa-solid fa-user corner-profile"></i>
                     </div>
 
-                    <div className={`sub-menu-wrap ${isSubMenuOpen ? 'open-menu' : ''}`} ref={submenuRef}>
+                    <div className={`sub-menu-wrap ${isSubMenuOpen ? "open-menu" : ""}`} ref={submenuRef}>
                         <div className="sub-menu">
                             {/* <div className="user-info">
                                 <h2>Test Name</h2>
@@ -81,31 +81,31 @@ const Navbar = () => {
                             <Link to="/../profile" className="sub-menu-link" onClick={toggleMenu}>
                                 <i className="fa-solid fa-user"></i>
                                 <p>Profile</p>
-                                <span>{'>'}</span>
+                                <span>{">"}</span>
                             </Link>
 
                             <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
                                 <i className="fa-solid fa-gear"></i>
                                 <p>Settings</p>
-                                <span>{'>'}</span>
+                                <span>{">"}</span>
                             </Link>
 
                             {/* <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
                                 <i className="fa-solid fa-gear"></i>
                                 <p>Preferences</p>
-                                <span>{'>'}</span>
+                                <span>{">"}</span>
                             </Link> */}
 
                             <Link to="/../help" className="sub-menu-link" onClick={toggleMenu}>
                                 <i className="fa-solid fa-user"></i>
                                 <p>Help</p>
-                                <span>{'>'}</span>
+                                <span>{">"}</span>
                             </Link>
 
                             <Link to="/../profile" className="sub-menu-link" onClick={toggleModal}>
                                 <i className="fa-solid fa-user"></i>
                                 <p>Logout</p>
-                                <span>{'>'}</span>
+                                <span>{">"}</span>
                             </Link>
 
                             {editModal && <Logout />}

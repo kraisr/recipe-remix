@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react"
 import "./editProfile.css";
 
 
@@ -8,11 +8,11 @@ import UploadProfile from "./UploadProfile"
 
 function EditProfile({closeModal, applyChanges, profileData}) {
   const [editModal, setEditModal] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(profileData.image !== null && typeof profileData.image === 'object' ? '' : profileData.image || '');
-  const [name, setName] = useState(profileData.name !== null && typeof profileData.name === 'object' ? '' : profileData.name || '');
-  const [username, setUsername] = useState(profileData.username !== null && typeof profileData.username === 'object' ? '' : profileData.username || '');
-  const [bio, setBio] = useState(profileData.bio !== null && typeof profileData.bio === 'object' ? '' : profileData.bio || '');
-  const [link, setLink] = useState(profileData.link !== null && typeof profileData.link === 'object' ? '' : profileData.link || '');
+  const [selectedImage, setSelectedImage] = useState(profileData.image !== null && typeof profileData.image === "object" ? "" : profileData.image || "");
+  const [name, setName] = useState(profileData.name !== null && typeof profileData.name === "object" ? "" : profileData.name || "");
+  const [username, setUsername] = useState(profileData.username !== null && typeof profileData.username === "object" ? "" : profileData.username || "");
+  const [bio, setBio] = useState(profileData.bio !== null && typeof profileData.bio === "object" ? "" : profileData.bio || "");
+  const [link, setLink] = useState(profileData.link !== null && typeof profileData.link === "object" ? "" : profileData.link || "");
 
 
   const toggleModal = () => {

@@ -1,29 +1,29 @@
-import React, { useState } from 'react';
-import { Button, TextField, Container, Typography, InputAdornment, IconButton } from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Button, TextField, Container, Typography, InputAdornment, IconButton } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('First Name:', firstName);
-    console.log('Last Name:', lastName);
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('Confirm Password:', confirmPassword);
+    console.log("First Name:", firstName);
+    console.log("Last Name:", lastName);
+    console.log("Email:", email);
+    console.log("Password:", password);
+    console.log("Confirm Password:", confirmPassword);
   };
 
   const handleLoginClick = () => {
-    navigate('/Login');
+    navigate("/Login");
   };
 
   return (
@@ -41,7 +41,7 @@ const RegisterForm = () => {
           autoFocus
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
-          sx={{ bgcolor: '#fbf2cf' }}
+          sx={{ bgcolor: "#fbf2cf" }}
         />
         <TextField
           variant="outlined"
@@ -53,7 +53,7 @@ const RegisterForm = () => {
           name="lastName"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
-          sx={{ bgcolor: '#fbf2cf' }}
+          sx={{ bgcolor: "#fbf2cf" }}
         />
         <TextField
           variant="outlined"
@@ -66,7 +66,7 @@ const RegisterForm = () => {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          sx={{ bgcolor: '#fbf2cf' }}
+          sx={{ bgcolor: "#fbf2cf" }}
         />
         <TextField
           variant="outlined"
@@ -75,12 +75,12 @@ const RegisterForm = () => {
           fullWidth
           name="password"
           label="Password"
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           id="password"
           autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          sx={{ bgcolor: '#fbf2cf' }}
+          sx={{ bgcolor: "#fbf2cf" }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -101,12 +101,12 @@ const RegisterForm = () => {
           fullWidth
           name="confirmPassword"
           label="Confirm Password"
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           id="confirmPassword"
           autoComplete="new-password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          sx={{ bgcolor: '#fbf2cf' }}
+          sx={{ bgcolor: "#fbf2cf" }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -126,10 +126,10 @@ const RegisterForm = () => {
           variant="contained"
           sx={{ 
               mt: 2, 
-              backgroundColor: '#fa7070',
-              color: '#fff',
-              '&:hover': {
-                  backgroundColor: '#e64a4a',
+              backgroundColor: "#fa7070",
+              color: "#fff",
+              "&:hover": {
+                  backgroundColor: "#e64a4a",
               }
           }}
         >
@@ -141,10 +141,10 @@ const RegisterForm = () => {
           variant="contained"
           sx={{ 
               mt: 2, 
-              backgroundColor: '#455A64',
-              color: '#FFFFFF',
-              '&:hover': {
-                  backgroundColor: '#607D8B',
+              backgroundColor: "#455A64",
+              color: "#FFFFFF",
+              "&:hover": {
+                  backgroundColor: "#607D8B",
               }
           }}
           onClick={handleLoginClick}

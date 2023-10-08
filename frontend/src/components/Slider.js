@@ -1,6 +1,6 @@
-import React from 'react';
-import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
-import 'react-horizontal-scrolling-menu/dist/styles.css';
+import React from "react";
+import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
+import "react-horizontal-scrolling-menu/dist/styles.css";
 
 const getItems = () =>
   Array(20)
@@ -48,17 +48,17 @@ function Card({ onClick, selected, title, itemId }) {
     <div
       onClick={() => onClick(visibility)}
       style={{
-        width: '160px',
+        width: "160px",
       }}
       tabIndex={0}
     >
       <div className="card">
-        <div style={{backgroundColor: '#FBF2CF', margin: '10px', width: '150px', height: '200px', borderRadius: "25px"}}>
+        <div style={{backgroundColor: "#FBF2CF", margin: "10px", width: "150px", height: "200px", borderRadius: "25px"}}>
         </div>
       </div>
       <div
         style={{
-          height: '200px',
+          height: "200px",
         }}
       />
     </div>

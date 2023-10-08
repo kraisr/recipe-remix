@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import { Button, TextField, Container, Typography, InputAdornment, IconButton } from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Button, TextField, Container, Typography, InputAdornment, IconButton } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({ onNavigateToRegister }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
-    navigate('/Register');
+    navigate("/Register");
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Perform login logic here (e.g., API call)
-    console.log('Email:', email);
-    console.log('Password:', password);
+    console.log("Email:", email);
+    console.log("Password:", password);
   };
 
   return (
@@ -37,7 +37,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
           autoFocus
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          sx={{ bgcolor: '#fbf2cf' }}
+          sx={{ bgcolor: "#fbf2cf" }}
         />
         <TextField
           variant="outlined"
@@ -46,12 +46,12 @@ const LoginForm = ({ onNavigateToRegister }) => {
           fullWidth
           name="password"
           label="Password"
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           id="password"
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          sx={{ bgcolor: '#fbf2cf' }}
+          sx={{ bgcolor: "#fbf2cf" }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -71,10 +71,10 @@ const LoginForm = ({ onNavigateToRegister }) => {
           variant="contained"
           sx={{ 
               mt: 2, 
-              backgroundColor: '#fa7070',
-              color: '#fff',
-              '&:hover': {
-                  backgroundColor: '#e64a4a',  // Darker red on hover
+              backgroundColor: "#fa7070",
+              color: "#fff",
+              "&:hover": {
+                  backgroundColor: "#e64a4a",  // Darker red on hover
               }
           }}
         >
@@ -86,15 +86,15 @@ const LoginForm = ({ onNavigateToRegister }) => {
           variant="contained"
           sx={{ 
               mt: 2, 
-              backgroundColor: '#455A64',
-              color: '#FFFFFF',
-              '&:hover': {
-                  backgroundColor: '#607D8B',
+              backgroundColor: "#455A64",
+              color: "#FFFFFF",
+              "&:hover": {
+                  backgroundColor: "#607D8B",
               }
           }}
           onClick={handleRegisterClick}
         >
-          Don't have an account? Register
+          Don"t have an account? Register
         </Button>
       </form>
     </Container>

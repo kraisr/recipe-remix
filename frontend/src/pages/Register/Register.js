@@ -1,10 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 import "./register.css";
-import Box from '@mui/material/Box';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Button, TextField, Container } from '@mui/material';
+import Box from "@mui/material/Box";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Button, TextField, Container } from "@mui/material";
 import RegisterForm from "./RegisterForm";
 
 function Register() {
