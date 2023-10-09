@@ -15,13 +15,17 @@ const registerSchema = yup.object().shape({
   lastName: yup.string().required("Last name is required"),
   email: yup.string().email("Invalid email address").required("Email is required"),
   password: yup.string().required("Password is required"),
+  confirmPassword: yup.string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm Password is required'),
 });
 
 const initialValuesRegister = {
-  firstName: "dsad",
-  lastName: "dasdas",
-  email: "dsadas@asda",
-  password: "dsadas",
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
 };
 
 const RegisterForm = () => {
@@ -75,7 +79,9 @@ const RegisterForm = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Typography variant="h5">Register</Typography>
+      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+        Register
+      </Typography>
       <Formik 
         onSubmit={handleSubmit} 
         initialValues={initialValuesRegister} 
@@ -88,7 +94,8 @@ const RegisterForm = () => {
             handleChange,
             handleSubmit,
             setFieldValue,
-            resetForm 
+            resetForm,
+            submitCount, 
         }) => (
           <form onSubmit={handleSubmit}>
             <TextField
@@ -99,12 +106,28 @@ const RegisterForm = () => {
               variant="outlined"
               margin="normal"
               name="firstName"
-              error={Boolean(touched.firstName) && Boolean(errors.firstName)}
-              helperText={touched.firstName && errors.firstName}
+              error={Boolean(touched.firstName) && Boolean(errors.firstName) && submitCount > 0}
+              helperText={(touched.firstName && errors.firstName && submitCount > 0) ? errors.firstName : ""}
               required
               fullWidth
               autoFocus
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
             />
             <TextField
               label="Last Name"
@@ -114,12 +137,27 @@ const RegisterForm = () => {
               variant="outlined"
               margin="normal"
               name="lastName"
-              error={Boolean(touched.lastName) && Boolean(errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
+              error={Boolean(touched.lastName) && Boolean(errors.lastName) && submitCount > 0}
+              helperText={(touched.lastName && errors.lastName && submitCount > 0) ? errors.lastName : ""}
               required
               fullWidth
-              autoFocus
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
             />
             <TextField
               label="User Email"
@@ -127,14 +165,29 @@ const RegisterForm = () => {
               onChange={handleChange}
               value={values.email}
               name="email"
-              error={Boolean(touched.email) && Boolean(errors.email)}
-              helperText={touched.email && errors.email}
+              error={Boolean(touched.email) && Boolean(errors.email) && submitCount > 0}
+              helperText={(touched.email && errors.email && submitCount > 0) ? errors.email : ""}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              autoFocus
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
             />
             <TextField
               label="User Password"
@@ -144,14 +197,29 @@ const RegisterForm = () => {
               variant="outlined"
               margin="normal"
               name="password"
-              error={Boolean(touched.password) && Boolean(errors.password)}
-              helperText={touched.password && errors.password}
+              error={Boolean(touched.password) && Boolean(errors.password) && submitCount > 0}
+              helperText={(touched.password && errors.password && submitCount > 0) ? errors.password : ""}
               required
               fullWidth
-              autoFocus
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -165,19 +233,37 @@ const RegisterForm = () => {
                 )
               }}
             />
-            {/* <TextField
+            <TextField
+              label="Confirm Password"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.confirmPassword}
+              name="confirmPassword"
+              error={Boolean(touched.confirmPassword) && Boolean(errors.confirmPassword) && submitCount > 0}
+              helperText={(touched.confirmPassword && errors.confirmPassword && submitCount > 0) ? errors.confirmPassword : ""}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              name="confirmPassword"
-              label="Confirm Password"
               type={showPassword ? "text" : "password"}
-              id="confirmPassword"
               autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -190,7 +276,8 @@ const RegisterForm = () => {
                   </InputAdornment>
                 )
               }}
-            /> */}
+            />
+
             <Button
               type="submit"
               fullWidth
