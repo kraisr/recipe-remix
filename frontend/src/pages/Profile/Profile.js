@@ -30,6 +30,32 @@ const Profile = () => {
     setImage(data.selectedImage)
   }
 
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/user/user", 
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        });
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const data = await response.json();
+        setName(data.name);
+      } catch (error) {
+        console.error('Error fetching user name:', error);
+      }
+    };
+  
+    fetchUserName();
+  }, []);
+  
+
  
     return(
         <div className="container">
@@ -39,7 +65,7 @@ const Profile = () => {
                     {!username ? (
                         <h2>User's Profile</h2>
                     ): (
-                        <h2>{username}'s Profile</h2>
+                        <h2>{name}'s Profile</h2>
                     )}
                     
                 </div>

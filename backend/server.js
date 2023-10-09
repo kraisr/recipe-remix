@@ -6,6 +6,7 @@ import connectDB from "./mongoDB/connect.js";
 import authRoutes from "./routes/auth.js";
 import suggesticRoutes from "./routes/suggesticRoutes.js";
 import bodyParser from "body-parser";
+import userRoutes from "./routes/user.js";
 
 dotenv.config();
 // import { GraphQLClient } from 'graphql-request';
@@ -23,8 +24,12 @@ app.use(cors());
 /* add routes */
 app.use("/auth", authRoutes);
 
+app.use("/user", userRoutes);
+
 /* SUGGESTIC API */
 app.use('/api', suggesticRoutes);
+
+
 
 
 // Error handling middleware
