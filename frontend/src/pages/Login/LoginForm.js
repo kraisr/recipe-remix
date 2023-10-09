@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, TextField, Container, Typography, InputAdornment, IconButton } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../state";
 
 // Better form handling with Formik
 import { Formik } from "formik";
@@ -23,12 +26,40 @@ const initialValuesLogin = {
 const LoginForm = ({ onNavigateToRegister }) => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  /* Handler for response from GOOGLE API */
+  function handleCallbackResponse(res) {
+    // console.log("Encoded JWT ID token: " + res.credential);
+
+    // decode the jwt encoded user object
+    var userObject = jwt_decode(res.credential);
+    console.log(userObject);
+  }
+
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id: "290841881270-560ekdio0feevgbulfvhnscked96d591.apps.googleusercontent.com",
+      callback: handleCallbackResponse,
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById("signInDiv"),
+      { theme: "outline", size: "large"}
+    );
+
+    google.accounts.id.prompt();
+  }, []);
+
+  /* Handler for click on register button */
   const handleRegisterClick = () => {
     navigate("/Register");
   };
 
+  /* Handler for login */
   const login = async (values, onSubmitProps) => {
+    // Send the data from the form to mongoDB
     const loggedInResponse = await fetch(
       "http://localhost:8080/auth/login",
       {
@@ -44,13 +75,13 @@ const LoginForm = ({ onNavigateToRegister }) => {
     onSubmitProps.resetForm();
 
     if (loggedIn) {
-      // Use states to store token and user
-      // dispatch(
-      //   setLogin({
-      //     token: loggedIn.token,
-      //     user: loggedIn.user,
-      //   })
-      // )
+      // Use state modifier to store token and user
+      dispatch(
+        setLogin({
+          token: loggedIn.token,
+          user: loggedIn.user,
+        })
+      )
       navigate("/");
     }
   };
@@ -74,7 +105,8 @@ const LoginForm = ({ onNavigateToRegister }) => {
             handleChange,
             handleSubmit,
             setFieldValue,
-            resetForm 
+            resetForm,
+            submitCount,
         }) => (
           <form onSubmit={handleSubmit}>
             <TextField
@@ -83,8 +115,8 @@ const LoginForm = ({ onNavigateToRegister }) => {
               onChange={handleChange}
               value={values.email}
               name="email"
-              error={Boolean(touched.email) && Boolean(errors.email)}
-              helperText={touched.email && errors.email}
+              error={Boolean(touched.email) && Boolean(errors.email) && submitCount > 0}
+              helperText={(touched.email && errors.email && submitCount > 0) ? errors.email : ""}
               variant="outlined"
               margin="normal"
               required
@@ -100,11 +132,11 @@ const LoginForm = ({ onNavigateToRegister }) => {
               variant="outlined"
               margin="normal"
               name="password"
-              error={Boolean(touched.password) && Boolean(errors.password)}
-              helperText={touched.password && errors.password}
+              error={Boolean(touched.password) && Boolean(errors.password) && submitCount > 0}
+              helperText={(touched.password && errors.password && submitCount > 0) ? errors.password : ""}
               required
               fullWidth
-              autoFocus
+              // autoFocus
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
               sx={{ bgcolor: "#fbf2cf" }}
@@ -150,8 +182,12 @@ const LoginForm = ({ onNavigateToRegister }) => {
               }}
               onClick={handleRegisterClick}
             >
-              Don"t have an account? Register
+              Don't have an account? Register
             </Button>
+            
+            {/* Google Sign in Button */}
+            <div id="signInDiv"></div>
+
           </form>
         )}
       </Formik>
