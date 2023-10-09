@@ -84,11 +84,13 @@ const LoginForm = ({ onNavigateToRegister }) => {
           token: loggedIn.token,
           user: loggedIn.user,
         })
-      )
+      );
 
+      localStorage.setItem('token', loggedIn.token);
       navigate("/");
     }
   };
+
 
   const handleSubmit = async (values, onSubmitProps) => {
     await login(values, onSubmitProps);
