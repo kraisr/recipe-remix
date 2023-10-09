@@ -30,7 +30,6 @@ const store = configureStore({
       },
     }),
 });
-})
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -39,6 +38,7 @@ root.render(
       <PersistGate loading={null} persistor={persistStore(store)}>
         <App />
       </PersistGate>
+    </Provider>
   </React.StrictMode>
 );
 

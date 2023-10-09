@@ -4,6 +4,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../state";
 
 // Better form handling with Formik
 import { Formik } from "formik";
@@ -24,6 +26,7 @@ const initialValuesLogin = {
 const LoginForm = ({ onNavigateToRegister }) => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   /* Handler for response from GOOGLE API */
   function handleCallbackResponse(res) {
@@ -72,13 +75,13 @@ const LoginForm = ({ onNavigateToRegister }) => {
     onSubmitProps.resetForm();
 
     if (loggedIn) {
-      // Use states to store token and user
-      // dispatch(
-      //   setLogin({
-      //     token: loggedIn.token,
-      //     user: loggedIn.user,
-      //   })
-      // )
+      // Use state modifier to store token and user
+      dispatch(
+        setLogin({
+          token: loggedIn.token,
+          user: loggedIn.user,
+        })
+      )
       navigate("/");
     }
   };
