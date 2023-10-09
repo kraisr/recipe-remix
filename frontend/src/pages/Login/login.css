@@ -14,6 +14,12 @@
     background-color: #a1c298;
 }
 
+#signInDiv {
+    /* alignItems: "center"; */
+    text-align: center;
+    /* padding-left: 20%; */
+}
+
 /* #filled-basic #outlined-adornment-password {
     background-color: #fbf2cf;
 } */

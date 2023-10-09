@@ -1,12 +1,14 @@
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import "./app.css";
+import { useSelector } from "react-redux";
 
 // Import pages and components
 import Home from "./pages/Home/Home";
 import Pantry from "./pages/Pantry/Pantry";
 import Navbar from "./components/Navbar/Navbar";
 import Profile from "./pages/Profile/Profile";
+import Preferences from "./pages/Preferences/Preferences";
 import Settings from "./pages/Settings/Settings";
 
 import Login from "./pages/Login/Login";
@@ -16,31 +18,20 @@ import Landing from "./pages/Landing/Landing";
 
 
 function App() {
-  // Set to false to show landing page, register, and login
-  // Set to true to show pantry, and user home page
-  const [loggedIn, setLoggedIn] = useState(true);
+  const isLoggedIn = Boolean(useSelector((state) => state.token));
 
   return (
     <div className="App">
       <BrowserRouter>
-        {loggedIn && <Navbar />}
+        {isLoggedIn && <Navbar />}
         <Routes>
-          {loggedIn ? (
-            // If logged in, show these pages
-            <>
-              <Route path="/" element={<Home setLoggedIn={setLoggedIn}/>} />
-              <Route path="/pantry" element={<Pantry />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/settings" element={<Settings />} />
-            </>
-          ) : (
-            // If not logged in, show these pages
-            <>
-              <Route path="/" element={<Landing setLoggedIn={setLoggedIn}/>} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-            </>
-          )}
+          <Route path="/" element={isLoggedIn ? <Home /> : <Landing />} />
+          <Route path="/pantry" element={isLoggedIn ? <Pantry /> : <Navigate to="/" />} />
+          <Route path="/profile" element={isLoggedIn ? <Profile /> : <Navigate to="/" />} />
+          <Route path="/settings" element={isLoggedIn ? <Settings /> : <Navigate to="/" />} />
+          <Route path="/preferences" element={isLoggedIn ? <Preferences /> : <Navigate to="/" />} />
+          <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login />} />
+          <Route path="/register" element={isLoggedIn ? <Navigate to="/" /> : <Register />} />
         </Routes>
       </BrowserRouter>
     </div>
