@@ -68,7 +68,7 @@ const Profile = () => {
             
             <div className="left-container">
                 <div className="user-profile-header">
-                    {!username ? (
+                    {!name ? (
                         <h2>User's Profile</h2>
                     ): (
                         <h2>{name}'s Profile</h2>
