@@ -103,13 +103,14 @@ nav a {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s;
-  
+  z-index:1;
 }
 
 .sub-menu-wrap.open-menu{
   max-height: 600px; /* Adjust the maximum height as needed */
   position: absolute;
   top: calc(100% - 30px); /* Adjust the spacing as needed */
+  z-index:1;
 }
 
 .sub-menu{
