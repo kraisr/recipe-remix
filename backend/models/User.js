@@ -29,6 +29,13 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    pantry: [{
+        ingredientName: {
+            type: String,
+            required: true,
+        },
+    }],
+
 });
 
 // Hash the password before saving the user model

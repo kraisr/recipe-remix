@@ -54,6 +54,29 @@ function SearchBar() {
         fetchSearchResults(query);
     };
 
+    const addToPantry = async (ingredient) => {
+        try {
+            const userId = localStorage.getItem('userId'); // You need to get the logged-in user's ID
+            const response = await fetch('http://localhost:8080/api/add-ingredient', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId, ingredient })
+            });
+    
+            const data = await response.json();
+            if (response.ok) {
+                console.log(data.message); // Ingredient added successfully
+            } else {
+                console.error(data.error);
+            }
+        } catch (error) {
+            console.error("Error adding ingredient to pantry:", error);
+        }
+    };
+    
+
     return (
         <div>
             <div className="searchBar">
@@ -77,11 +100,9 @@ function SearchBar() {
             {searchTerm && results.length > 0 && (
                 <ul className="dropdown">
                     {results.map((label, index) => (
-                        <li 
-                            key={index} 
-                            className={highlightedIndex === index ? "highlighted" : ""}
-                        >
+                        <li key={index} className={highlightedIndex === index ? "highlighted" : ""}>
                             {highlightMatch(label, searchTerm)}
+                            <button onClick={() => addToPantry(label)}>Add to Pantry</button>
                         </li>
                     ))}
                 </ul>

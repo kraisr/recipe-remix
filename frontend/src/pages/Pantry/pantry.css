@@ -67,3 +67,25 @@ img {
     position: relative;
     top: -5px;
 }
+
+
+.ingredients-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 20px;
+}
+
+.ingredient-bubble {
+    background-color: #FBF2CF;
+    border-radius: 25px;
+    padding: 10px 20px;
+    text-align: center;
+    box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s;
+}
+
+.ingredient-bubble:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}

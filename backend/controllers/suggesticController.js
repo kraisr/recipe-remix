@@ -1,46 +1,7 @@
-import { GraphQLClient } from "graphql-request";
 import fetch from "node-fetch";
+import User from "../models/User.js"; // Import the User model
 
 
-// const graphqlEndpoint = "https://production.suggestic.com/graphql";
-// const client = new GraphQLClient(graphqlEndpoint, {
-//     headers: {
-//         Authorization: "Token " + process.env.SUGGESTIC_TOKEN,
-//         "sg-user": process.env.SUGGESTIC_USER_ID
-//     },
-// });
-
-
-// export const searchIngredients = async (req, res) => {
-//     console.log("searchIngredients function called");
-//     try {
-//         const searchTerm = req.body.query; // Assuming you send ingredients as an array in the request body
-
-//         const query = `
-//         {
-//             ingredientSearch(query: "${searchTerm}") {
-//                 edges {
-//                     node {
-//                         ... on EdamamFoodResult {
-//                             id
-//                             label
-//                             databaseId
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//         `;
-
-//         const data = await client.request(query);
-//         res.json(data);
-
-//     } catch (error) {
-//         console.error("Detailed Error:", error);
-//         console.error("Error Stack:", error.stack);
-//         res.status(500).json({ error: "Internal Server Error", details: error.message });
-//     }
-// };
 
 export const searchIngredients = async (req, res) => {
     console.log("searchIngredients endpoint hit");
@@ -86,3 +47,42 @@ export const searchIngredients = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
 };
+
+
+
+export const addIngredientToPantry = async (req, res) => {
+    const { userId, ingredient } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        user.pantry.push({ ingredientName: ingredient });
+        await user.save();
+
+        res.json({ message: "Ingredient added to pantry successfully" });
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
+    }
+};
+
+export const getPantryIngredients = async (req, res) => {
+    const { userId } = req.query;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.json({ pantry: user.pantry });
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
+    }
+};
+
+
