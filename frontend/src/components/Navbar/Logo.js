@@ -6,7 +6,7 @@ import "./logo.css";
 function Logo() {
   return (
     <Link to="/">
-      <div class="logo"> <img alt="logo" src={logoImg}/> </div>
+      <div className="logo"> <img alt="logo" src={logoImg}/> </div>
     </Link>
   );
 };

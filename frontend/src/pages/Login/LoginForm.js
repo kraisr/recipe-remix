@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, TextField, Container, Typography, InputAdornment, IconButton } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 // Better form handling with Formik
 import { Formik } from "formik";
@@ -24,11 +25,38 @@ const LoginForm = ({ onNavigateToRegister }) => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  /* Handler for response from GOOGLE API */
+  function handleCallbackResponse(res) {
+    // console.log("Encoded JWT ID token: " + res.credential);
+
+    // decode the jwt encoded user object
+    var userObject = jwt_decode(res.credential);
+    console.log(userObject);
+  }
+
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id: "290841881270-560ekdio0feevgbulfvhnscked96d591.apps.googleusercontent.com",
+      callback: handleCallbackResponse,
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById("signInDiv"),
+      { theme: "outline", size: "large"}
+    );
+
+    google.accounts.id.prompt();
+  }, []);
+
+  /* Handler for click on register button */
   const handleRegisterClick = () => {
     navigate("/Register");
   };
 
+  /* Handler for login */
   const login = async (values, onSubmitProps) => {
+    // Send the data from the form to mongoDB
     const loggedInResponse = await fetch(
       "http://localhost:8080/auth/login",
       {
@@ -153,6 +181,10 @@ const LoginForm = ({ onNavigateToRegister }) => {
             >
               Don't have an account? Register
             </Button>
+            
+            {/* Google Sign in Button */}
+            <div id="signInDiv"></div>
+
           </form>
         )}
       </Formik>
