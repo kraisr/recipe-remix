@@ -111,6 +111,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
           <form onSubmit={handleSubmit}>
             <TextField
               label="User Email"
+              size="medium"
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.email}
@@ -122,10 +123,27 @@ const LoginForm = ({ onNavigateToRegister }) => {
               required
               fullWidth
               autoFocus
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
             />
             <TextField
               label="User Password"
+              size="medium"
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.password}
@@ -139,7 +157,23 @@ const LoginForm = ({ onNavigateToRegister }) => {
               // autoFocus
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },              
+                },
+             }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

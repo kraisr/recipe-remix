@@ -15,6 +15,9 @@ const registerSchema = yup.object().shape({
   lastName: yup.string().required("Last name is required"),
   email: yup.string().email("Invalid email address").required("Email is required"),
   password: yup.string().required("Password is required"),
+  confirmPassword: yup.string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm Password is required'),
 });
 
 const initialValuesRegister = {
@@ -22,6 +25,7 @@ const initialValuesRegister = {
   lastName: "",
   email: "",
   password: "",
+  confirmPassword: "",
 };
 
 const RegisterForm = () => {
@@ -105,7 +109,23 @@ const RegisterForm = () => {
               required
               fullWidth
               autoFocus
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
             />
             <TextField
               label="Last Name"
@@ -119,7 +139,23 @@ const RegisterForm = () => {
               helperText={(touched.lastName && errors.lastName && submitCount > 0) ? errors.lastName : ""}
               required
               fullWidth
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
             />
             <TextField
               label="User Email"
@@ -133,7 +169,23 @@ const RegisterForm = () => {
               margin="normal"
               required
               fullWidth
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
             />
             <TextField
               label="User Password"
@@ -149,7 +201,23 @@ const RegisterForm = () => {
               fullWidth
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -163,19 +231,37 @@ const RegisterForm = () => {
                 )
               }}
             />
-            {/* <TextField
+            <TextField
+              label="Confirm Password"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.confirmPassword}
+              name="confirmPassword"
+              error={Boolean(touched.confirmPassword) && Boolean(errors.confirmPassword) && submitCount > 0}
+              helperText={(touched.confirmPassword && errors.confirmPassword && submitCount > 0) ? errors.confirmPassword : ""}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              name="confirmPassword"
-              label="Confirm Password"
               type={showPassword ? "text" : "password"}
-              id="confirmPassword"
               autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              sx={{ bgcolor: "#fbf2cf" }}
+              sx={{ 
+                bgcolor: "#fbf2cf",
+                '& label.Mui-focused': {
+                  color: '#6b9466',  // Color of the label when input is focused
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#a1c298',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#88b083',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6b9466',
+                  },
+                },
+             }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -188,7 +274,8 @@ const RegisterForm = () => {
                   </InputAdornment>
                 )
               }}
-            /> */}
+            />
+
             <Button
               type="submit"
               fullWidth
