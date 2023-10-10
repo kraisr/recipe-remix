@@ -11,13 +11,24 @@
 :root {
   --primary: #1aac83;
   --error: #e7195a;
+  --color-primary: #0b6623;
+}
+.light-mode {
+  --primary: #1aac83;
+  --error: #e7195a;
+  --color-primary: #0b6623; /* Light mode background color */
+}
+.light-mode {
+  --primary: #1aac83;
+  --error: #e7195a;
+  --color-primary: #C6EBC5; /* Light mode background color */
 }
 
 html, body, #root, .App {
   height: 100%;
   width: 100%;
+  background-color: var(--color-primary);
   position: fixed;
-  background: #C6EBC5;
   font-family: "Poppins";
   margin: 0;
   padding: 0;
@@ -28,6 +39,5 @@ html, body, #root, .App {
   min-height: 100vh;
   overflow-x: hidden;  /* Prevent horizontal scrolling */
 }
-
 
 
