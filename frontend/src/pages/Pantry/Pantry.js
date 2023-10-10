@@ -35,7 +35,7 @@ const Pantry = () => {
     return ( 
             <div className="pantry-container">
                 <div 
-                className="hamburger-icon" 
+                className="pantry-tag" 
                 style={{ display: isPantryOpen ? 'none' : 'flex' }} 
                 onClick={(e) => {
                     e.stopPropagation();  // Stop the click event from bubbling up
