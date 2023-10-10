@@ -50,6 +50,11 @@ export const login = async (req, res) => {
         // Find specified user given email using mongoose
         const user = await User.findOne({ email: email });
         
+        // Check if user registered with Google, prevent login through this endpoint
+        if(user.googleSignIn) {
+            return res.status(401).json({ error: "User registered with Google. Please use Google sign-in." });
+        }
+
         // If user does not exist, return error
         if (!user) {
             return res.status(400).json({ error: "User does not exist" });
@@ -63,6 +68,41 @@ export const login = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         delete user.password;
+        res.status(200).json({ user, token });
+    } catch (err) {
+        // 500 = status for server error + send error message returned by mongoDB
+        res.status(500).json({ error: err.message });
+    }
+}
+
+/* GOOGLE LOGIN USER */
+export const loginGoogle = async (req, res) => {
+    try {
+        const { email, firstName, lastName } = req.body;
+        console.log(req.body);
+        // Find specified user given email using mongoose
+        let user = await User.findOne({ email: email });
+        console.log(user);
+        // If user does not exist, register user
+        if (!user) {
+            user = new User({
+                email,
+                firstName,
+                lastName,
+                googleSignIn: true,
+            });
+            console.log(user);
+            try {
+                user = await user.save();
+            } catch (saveError) {
+                console.error('Error saving user:', saveError);
+                throw saveError;  // Re-throwing the error will send it to the outer catch block
+            }
+        }
+
+        // Generate a JWT token like you do during a normal login
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        // Respond to the client
         res.status(200).json({ user, token });
     } catch (err) {
         // 500 = status for server error + send error message returned by mongoDB

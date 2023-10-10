@@ -29,14 +29,56 @@ const LoginForm = ({ onNavigateToRegister }) => {
   const dispatch = useDispatch();
 
   /* Handler for response from GOOGLE API */
-  function handleCallbackResponse(res) {
+  async function handleCallbackResponse(res) {
     // console.log("Encoded JWT ID token: " + res.credential);
 
-    // decode the jwt encoded user object
-    var userObject = jwt_decode(res.credential);
-    console.log(userObject);
-  }
+    try {
+      // decode the jwt encoded user object
+      var userObject = jwt_decode(res?.credential);
 
+      // Send a POST request to your server with the user data
+      const loggedInResponse = await fetch(
+          "http://localhost:8080/auth/loginGoogle", 
+          {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                  email: userObject.email,
+                  firstName: userObject.given_name,
+                  lastName: userObject.family_name,
+                  // googleId: userObject.sub,
+              }),
+          }
+      );
+
+      if (!loggedInResponse.ok) {
+          throw new Error(`Network response was not ok: ${loggedInResponse.statusText}`);
+      }
+
+      const loggedIn = await loggedInResponse.json();
+      console.log(loggedIn);
+      if (loggedIn) {
+          // Use state modifier to store token and user
+          dispatch(
+              setLogin({
+                  token: loggedIn.token,
+                  user: loggedIn.user,
+              })
+          );
+
+          // Store the token in localStorage (or somewhere else)
+          localStorage.setItem('token', loggedIn.token);
+
+          // Navigate to the home page (or wherever you'd like)
+          navigate("/");
+      }
+    } catch (error) {
+        console.error('Error during login:', error);
+        // Handle error accordingly
+    }
+  }
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
