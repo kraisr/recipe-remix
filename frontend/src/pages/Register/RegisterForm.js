@@ -14,11 +14,22 @@ const registerSchema = yup.object().shape({
   firstName: yup.string().required("First name is required"),
   lastName: yup.string().required("Last name is required"),
   email: yup.string().email("Invalid email address").required("Email is required"),
-  password: yup.string().required("Password is required"),
+  password: yup.string()
+    .required("Password is required")
+    .min(6, "Password must be at least 6 characters")
+    .matches(
+      /\d/,
+      "Password must contain at least one digit"
+    )
+    .matches(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Password must contain at least one special character"
+    ),
   confirmPassword: yup.string()
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     .required('Confirm Password is required'),
 });
+
 
 const initialValuesRegister = {
   firstName: "",
@@ -223,7 +234,7 @@ const RegisterForm = () => {
                     borderColor: '#6b9466',
                   },
                 },
-             }}
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -267,7 +278,7 @@ const RegisterForm = () => {
                     borderColor: '#6b9466',
                   },
                 },
-             }}
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
