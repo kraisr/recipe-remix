@@ -1,0 +1,18 @@
+/* style.css or similar */
+.google-btn {
+    width: 100%;
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 16px;
+  cursor: pointer;
+  }
+  
+/* Apply styles directly to the Google button. 
+    Note: Google may apply some styles which you'll need to overwrite if you want to change the appearance of the button */
+.google-btn div {
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+}

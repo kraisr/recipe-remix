@@ -79,10 +79,10 @@ export const login = async (req, res) => {
 export const loginGoogle = async (req, res) => {
     try {
         const { email, firstName, lastName } = req.body;
-        console.log(req.body);
+        // console.log(req.body);
         // Find specified user given email using mongoose
         let user = await User.findOne({ email: email });
-        console.log(user);
+        // console.log(user);
         // If user does not exist, register user
         if (!user) {
             user = new User({
@@ -91,7 +91,7 @@ export const loginGoogle = async (req, res) => {
                 lastName,
                 googleSignIn: true,
             });
-            console.log(user);
+            // console.log(user);
             try {
                 user = await user.save();
             } catch (saveError) {
