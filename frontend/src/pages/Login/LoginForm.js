@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../state";
+import "./loginForm.css";
 
 // Better form handling with Formik
 import { Formik } from "formik";
@@ -25,18 +26,61 @@ const initialValuesLogin = {
 
 const LoginForm = ({ onNavigateToRegister }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   /* Handler for response from GOOGLE API */
-  function handleCallbackResponse(res) {
+  async function handleCallbackResponse(res) {
     // console.log("Encoded JWT ID token: " + res.credential);
 
-    // decode the jwt encoded user object
-    var userObject = jwt_decode(res.credential);
-    console.log(userObject);
-  }
+    try {
+      // decode the jwt encoded user object
+      var userObject = jwt_decode(res?.credential);
 
+      // Send a POST request to your server with the user data
+      const loggedInResponse = await fetch(
+        "http://localhost:8080/auth/loginGoogle", 
+        {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              email: userObject.email,
+              firstName: userObject.given_name,
+              lastName: userObject.family_name,
+              // googleId: userObject.sub,
+          }),
+        }
+      );
+
+      if (!loggedInResponse.ok) {
+        throw new Error("Network response was not ok: ${loggedInResponse.statusText}");
+      }
+
+      const loggedIn = await loggedInResponse.json();
+      // console.log(loggedIn);
+      if (loggedIn) {
+        // Use state modifier to store token and user
+        dispatch(
+            setLogin({
+                token: loggedIn.token,
+                user: loggedIn.user,
+            })
+        );
+
+        // Store the token in localStorage (or somewhere else)
+        localStorage.setItem('token', loggedIn.token);
+
+        // Navigate to the home page (or wherever you'd like)
+        navigate("/");
+      }
+    } catch (error) {
+        console.error('Error during login:', error);
+        // Handle error accordingly
+    }
+  }
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
@@ -46,7 +90,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
 
     google.accounts.id.renderButton(
       document.getElementById("signInDiv"),
-      { theme: "outline", size: "large"}
+      { theme: "outline", size: "large", shape: "pill"}
     );
 
     google.accounts.id.prompt();
@@ -72,9 +116,10 @@ const LoginForm = ({ onNavigateToRegister }) => {
     );
 
     const loggedIn = await loggedInResponse.json();
+    console.log(loggedIn);
     onSubmitProps.resetForm();
 
-    if (loggedIn) {
+    if (loggedIn && loggedInResponse.ok) {
 
       // localStorage.setItem('userId', loggedIn.user._id);
       
@@ -88,6 +133,8 @@ const LoginForm = ({ onNavigateToRegister }) => {
 
       localStorage.setItem('token', loggedIn.token);
       navigate("/");
+    } else {
+      setErrorMessage("Invalid credentials. Please try again.");
     }
   };
 
@@ -98,7 +145,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+      <Typography variant="h4" sx={{ fontWeight: "bold" }}>
         Login
       </Typography>
       <Formik 
@@ -195,12 +242,20 @@ const LoginForm = ({ onNavigateToRegister }) => {
                 )
               }}
             />
+
+            {/* Error Message on invalid credentials or unsuccessfull login attempt */}
+            {errorMessage && (
+              <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mt: 2 }}>
+                {errorMessage}
+              </Typography>
+            )}
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ 
-                  mt: 2, 
+                  mt: 4, 
                   backgroundColor: "#fa7070",
                   color: "#fff",
                   "&:hover": {
