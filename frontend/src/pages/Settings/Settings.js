@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './settings.css';
+import '../../index.css';
 
 const Settings = () => {
     const [reminder, setReminder] = useState(false);
@@ -32,6 +33,23 @@ const Settings = () => {
                 const data = await response.json();
                 setUserEmail(data.email);
                 setMode(data.mode); // Assuming 'mode' is the key for light/dark mode in the response
+
+                if (data.mode) {
+                    const rootElement = document.getElementById('root');
+
+                    if (!rootElement.classList.contains('dark-mode')) {
+                        rootElement.classList.remove('light-mode');
+                        rootElement.classList.add('dark-mode');
+                      }  
+                } else {
+                    const rootElement = document.getElementById('root');
+
+                    if (!rootElement.classList.contains('light-mode')) {
+                        rootElement.classList.remove('dark-mode');
+                        rootElement.classList.add('light-mode');
+                      }     
+                }
+
                 setReminder(data.reminder); // Assuming 'reminder' is the key for the reminder setting
 
                 setPreferenceEmail(data.reminderSetting.email); // Set preferenceEmail from the response
@@ -82,6 +100,22 @@ const Settings = () => {
 
             if (response.ok) {
                 setMode(updatedMode);
+
+                if (updatedMode) {
+                    const rootElement = document.getElementById('root');
+
+                    if (!rootElement.classList.contains('dark-mode')) {
+                        rootElement.classList.remove('light-mode');
+                        rootElement.classList.add('dark-mode');
+                      }  
+                } else {
+                    const rootElement = document.getElementById('root');
+
+                    if (!rootElement.classList.contains('light-mode')) {
+                        rootElement.classList.remove('dark-mode');
+                        rootElement.classList.add('light-mode');
+                      }     
+                }
                 console.log(`Updated mode successfully.`, updatedMode);
             } else {
                 console.error(`Failed to update mode.`);
@@ -190,7 +224,7 @@ const Settings = () => {
 
     return (
         <div className={`settings ${modeClass}`}>
-            {/* Dark Mode Toggle */}
+        {/* Dark Mode Toggle */}
             <div className="toggle-container">
                 <h2 style={{ fontSize: '18px' }}>Toggle between light / dark mode</h2>
                 <label className="toggle-switch">
