@@ -14,11 +14,22 @@ const registerSchema = yup.object().shape({
   firstName: yup.string().required("First name is required"),
   lastName: yup.string().required("Last name is required"),
   email: yup.string().email("Invalid email address").required("Email is required"),
-  password: yup.string().required("Password is required"),
+  password: yup.string()
+    .required("Password is required")
+    .min(6, "Password must be at least 6 characters")
+    .matches(
+      /\d/,
+      "Password must contain at least one digit"
+    )
+    .matches(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Password must contain at least one special character"
+    ),
   confirmPassword: yup.string()
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     .required('Confirm Password is required'),
 });
+
 
 const initialValuesRegister = {
   firstName: "",
@@ -30,6 +41,7 @@ const initialValuesRegister = {
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
@@ -65,11 +77,14 @@ const RegisterForm = () => {
 
     // Save the data into parsable json form
     const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
+    console.log(savedUser);
 
-    if (savedUser) {
+    if (savedUser && savedUserResponse.ok) {
       // Saved user successfully ==> redirect to login page
+      onSubmitProps.resetForm();
       navigate("/Login");
+    } else {
+      setErrorMessage(savedUser.error);
     }
   };
 
@@ -219,7 +234,7 @@ const RegisterForm = () => {
                     borderColor: '#6b9466',
                   },
                 },
-             }}
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -263,7 +278,7 @@ const RegisterForm = () => {
                     borderColor: '#6b9466',
                   },
                 },
-             }}
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -278,12 +293,19 @@ const RegisterForm = () => {
               }}
             />
 
+            {/* Error Message on invalid credentials or unsuccessfull login attempt */}
+            {errorMessage && (
+              <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mb: 2 }}>
+                {errorMessage}
+              </Typography>
+            )}
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ 
-                  mt: 2, 
+                  mt: 4, 
                   backgroundColor: "#fa7070",
                   color: "#fff",
                   "&:hover": {

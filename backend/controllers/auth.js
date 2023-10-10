@@ -14,11 +14,16 @@ export const register = async (req, res) => {
             password 
         } = req.body;
 
-        /* Testing request body */
-        // console.log(firstName);
-        // console.log(lastName);
-        // console.log(email);
-        // console.log(password);
+        // Find specified user given email using mongoose
+        const oldUser = await User.findOne({ email: email });
+        // Check if user registered with Google, prevent login through this endpoint
+        if(oldUser && oldUser.googleSignIn) {
+            return res.status(401).json({ error: "User registered with Google. Please use Google sign-in." });
+        }
+        
+        if (oldUser) {
+            return res.status(400).json({ error: "User already registered." });
+        }
 
         // Password encryption with bcrypt salt and hash
         const salt = await bcrypt.genSalt();
@@ -50,20 +55,20 @@ export const login = async (req, res) => {
         // Find specified user given email using mongoose
         const user = await User.findOne({ email: email });
         
+        // If user does not exist, return error
+        if (!user) {
+        return res.status(400).json({ error: "Invalid credentials." });
+        }
+
         // Check if user registered with Google, prevent login through this endpoint
         if(user.googleSignIn) {
             return res.status(401).json({ error: "User registered with Google. Please use Google sign-in." });
         }
 
-        // If user does not exist, return error
-        if (!user) {
-            return res.status(400).json({ error: "User does not exist" });
-        }
-
         // Compare user password with hashed password stored in database
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ error: "Invalid credentials" });
+            return res.status(400).json({ error: "Invalid credentials." });
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
@@ -92,12 +97,9 @@ export const loginGoogle = async (req, res) => {
                 googleSignIn: true,
             });
             // console.log(user);
-            try {
-                user = await user.save();
-            } catch (saveError) {
-                console.error('Error saving user:', saveError);
-                throw saveError;  // Re-throwing the error will send it to the outer catch block
-            }
+            user = await user.save();
+        } else {
+            return res.status(400).json({ error: "User registered with email. Please use login page." });
         }
 
         // Generate a JWT token like you do during a normal login

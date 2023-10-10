@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Container, Typography, InputAdornment, IconButton } from "@mui/material";
+import { Button, TextField, Container, Typography, InputAdornment, IconButton, Box } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
@@ -116,13 +116,9 @@ const LoginForm = ({ onNavigateToRegister }) => {
     );
 
     const loggedIn = await loggedInResponse.json();
-    console.log(loggedIn);
-    onSubmitProps.resetForm();
 
-    if (loggedIn && loggedInResponse.ok) {
-
-      // localStorage.setItem('userId', loggedIn.user._id);
-      
+    if (loggedIn && loggedInResponse.ok) {    
+      onSubmitProps.resetForm();
       // Use state modifier to store token and user
       dispatch(
         setLogin({
@@ -134,13 +130,16 @@ const LoginForm = ({ onNavigateToRegister }) => {
       localStorage.setItem('token', loggedIn.token);
       navigate("/");
     } else {
-      setErrorMessage("Invalid credentials. Please try again.");
+      setErrorMessage(loggedIn.error);
     }
   };
 
-
   const handleSubmit = async (values, onSubmitProps) => {
     await login(values, onSubmitProps);
+  };
+
+  const handleForgotPasswordClick = () => {
+    navigate("/forgot-password");
   };
 
   return (
@@ -228,7 +227,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
                     borderColor: '#6b9466',
                   },              
                 },
-             }}
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -243,19 +242,37 @@ const LoginForm = ({ onNavigateToRegister }) => {
               }}
             />
 
+            {/* Forgot Password Button */}
+            <Box textAlign="right" width="100%" mt={0} mb={1}>
+              <Button
+                type="button"
+                variant="text"
+                sx={{ 
+                  color: "#000",
+                  fontSize: "0.8rem",
+                  "&:hover": {
+                    color: "#455A64",
+                    backgroundColor: "transparent", // Ensure that the background color doesn't change
+                  }
+                }}
+                onClick={handleForgotPasswordClick}
+              >
+                Forgot Password?
+              </Button>
+            </Box>
+            
             {/* Error Message on invalid credentials or unsuccessfull login attempt */}
             {errorMessage && (
-              <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mt: 2 }}>
+              <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mb: 2 }}>
                 {errorMessage}
               </Typography>
             )}
-
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ 
-                  mt: 4, 
+                  mt: 1, 
                   backgroundColor: "#fa7070",
                   color: "#fff",
                   "&:hover": {
@@ -283,7 +300,16 @@ const LoginForm = ({ onNavigateToRegister }) => {
             </Button>
             
             {/* Google Sign in Button */}
-            <div id="signInDiv"></div>
+            <Box 
+              display="flex" 
+              justifyContent="center" 
+              alignItems="center" 
+              width="100%" 
+              mt={2} 
+              mb={1}
+            >
+              <div id="signInDiv"></div>
+            </Box>
 
           </form>
         )}
