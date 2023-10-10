@@ -1,64 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './preferences.css';
+import SearchBar from '../../components/Searchbar/Searchbar.js';
 
 const Preferences = () => {
-  const [lactoseIntolerance, setLactoseIntolerance] = useState(false);
-  const [glutenIntolerance, setGlutenIntolerance] = useState(false);
-  const [vegetarianism, setVegetarianism] = useState(false);
-  const [veganism, setVeganism] = useState(false);
-  const [kosher, setKosher] = useState(false);
-  const [keto, setKeto] = useState(false);
-  const [diabetes, setDiabetes] = useState(false);
-  const [dairyFree, setDairyFree] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); 
-  const [showSaveCancel, setShowSaveCancel] = useState(false); 
+  const [showSaveCancel, setShowSaveCancel] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [preferences, setPreferences] = useState({
+    lactoseIntolerance: false,
+    glutenIntolerance: false,
+    vegetarianism: false,
+    veganism: false,
+    kosher: false,
+    keto: false,
+    diabetes: false,
+    dairyFree: false,
+    others: false,
+  });
 
-  const handleLactoseIntoleranceChange = () => {
-    setLactoseIntolerance(!lactoseIntolerance);
-  };
+  useEffect(() => {
+    const fetchUserPreferences = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
 
-  const handleGlutenIntoleranceChange = () => {
-    setGlutenIntolerance(!glutenIntolerance);
-  };
+        const response = await fetch("http://localhost:8080/user/user", {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          method: "GET",
+        });
 
-  const handleVegetarianismChange = () => {
-    setVegetarianism(!vegetarianism);
-  };
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
 
-  const handleVeganismChange = () => {
-    setVeganism(!veganism);
-  };
+        const data = await response.json();
+        console.log(data.email);
+        setUserEmail(data.email);
+        setPreferences(data.preferences);
+      } catch (error) {
+        console.error('Error fetching user preferences:', error);
+      }
+    };
 
-  const handleKosherChange = () => {
-    setKosher(!kosher);
-  };
+    fetchUserPreferences();
+  }, []);
 
-  const handleKetoChange = () => {
-    setKeto(!keto);
-  };
+  const handleCheckboxChange = async (preferenceName) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
 
-  const handleDiabetesChange = () => {
-    setDiabetes(!diabetes);
-  };
+      const updatedValue = !preferences[preferenceName];
+      const response = await fetch("http://localhost:8080/pref/pref", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: userEmail,
+          preferenceName: preferenceName,
+          updatedValue: updatedValue,
+        }),
+      });
 
-  const handleDairyFreeChange = () => {
-    setDairyFree(!dairyFree);
-  };
-
-  const handleOthersChange = () => {
-    setShowSaveCancel(!showSaveCancel);
+      if (response.ok) {
+        // Update the local state with the new preference value
+        setPreferences((prevPreferences) => ({
+          ...prevPreferences,
+          [preferenceName]: updatedValue,
+        }));
+        console.log(`Updated ${preferenceName} preference successfully. `, updatedValue);
+      } else {
+        console.error(`Failed to update ${preferenceName} preference.`);
+      }
+    } catch (error) {
+      console.error(`Error updating ${preferenceName} preference:`, error);
+    }
   };
 
   const handleSavePreferences = () => {
-    setShowSaveCancel(false);
+    // Add your code for saving preferences here
   };
 
   const handleCancelPreferences = () => {
-    setShowSaveCancel(false);
-  };
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+    // Add your code for canceling preferences here
   };
 
   return (
@@ -75,8 +106,8 @@ const Preferences = () => {
                 type="checkbox"
                 name="lactoseIntolerance"
                 className="checkbox-input"
-                checked={lactoseIntolerance}
-                onChange={handleLactoseIntoleranceChange}
+                checked={preferences.lactoseIntolerance}
+                onChange={() => handleCheckboxChange('lactoseIntolerance')}
               />
               <span className="checkmark"></span>
             </label>
@@ -91,8 +122,8 @@ const Preferences = () => {
                 type="checkbox"
                 name="glutenIntolerance"
                 className="checkbox-input"
-                checked={glutenIntolerance}
-                onChange={handleGlutenIntoleranceChange}
+                checked={preferences.glutenIntolerance}
+                onChange={() => handleCheckboxChange('glutenIntolerance')}
               />
               <span className="checkmark"></span>
             </label>
@@ -107,8 +138,8 @@ const Preferences = () => {
                 type="checkbox"
                 name="vegetarianism"
                 className="checkbox-input"
-                checked={vegetarianism}
-                onChange={handleVegetarianismChange}
+                checked={preferences.vegetarianism}
+                onChange={() => handleCheckboxChange('vegetarianism')}
               />
               <span className="checkmark"></span>
             </label>
@@ -123,8 +154,8 @@ const Preferences = () => {
                 type="checkbox"
                 name="veganism"
                 className="checkbox-input"
-                checked={veganism}
-                onChange={handleVeganismChange}
+                checked={preferences.veganism}
+                onChange={() => handleCheckboxChange('veganism')}
               />
               <span className="checkmark"></span>
             </label>
@@ -139,8 +170,8 @@ const Preferences = () => {
                 type="checkbox"
                 name="kosher"
                 className="checkbox-input"
-                checked={kosher}
-                onChange={handleKosherChange}
+                checked={preferences.kosher}
+                onChange={() => handleCheckboxChange('kosher')}
               />
               <span className="checkmark"></span>
             </label>
@@ -155,8 +186,8 @@ const Preferences = () => {
                 type="checkbox"
                 name="keto"
                 className="checkbox-input"
-                checked={keto}
-                onChange={handleKetoChange}
+                checked={preferences.keto}
+                onChange={() => handleCheckboxChange('keto')}
               />
               <span className="checkmark"></span>
             </label>
@@ -171,8 +202,8 @@ const Preferences = () => {
                 type="checkbox"
                 name="diabetes"
                 className="checkbox-input"
-                checked={diabetes}
-                onChange={handleDiabetesChange}
+                checked={preferences.diabetes}
+                onChange={() => handleCheckboxChange('diabetes')}
               />
               <span className="checkmark"></span>
             </label>
@@ -187,8 +218,8 @@ const Preferences = () => {
                 type="checkbox"
                 name="dairyFree"
                 className="checkbox-input"
-                checked={dairyFree}
-                onChange={handleDairyFreeChange}
+                checked={preferences.dairyFree}
+                onChange={() => handleCheckboxChange('dairyFree')}
               />
               <span className="checkmark"></span>
             </label>
@@ -203,7 +234,8 @@ const Preferences = () => {
                 type="checkbox"
                 name="others"
                 className="checkbox-input"
-                onChange={handleOthersChange}
+                checked={preferences.others}
+                onChange={() => handleCheckboxChange('others')}
               />
               <span className="checkmark"></span>
             </label>
@@ -213,6 +245,8 @@ const Preferences = () => {
           </li>
         </ul>
       </div>
+
+      {showSaveCancel && <SearchBar />}
 
       {showSaveCancel && (
         <div className="save-cancel-buttons">
