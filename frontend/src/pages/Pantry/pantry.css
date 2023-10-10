@@ -91,7 +91,7 @@ img {
     cursor: pointer;
 }
 
-.hamburger-icon {
+.pantry-tag {
     display: none;
     position: absolute;
     top: 125px;  /* Adjust based on your preference and navbar height */
@@ -148,7 +148,7 @@ img {
         font-size: 30px;
     }
 
-    .hamburger-icon {
+    .pantry-tag {
         display: block;
         justify-content: space-between;
         position: absolute;
@@ -217,7 +217,7 @@ img {
 }
 
 @media (min-width: 769px) {
-    .hamburger-icon {
+    .pantry-tag {
         display: none !important;
     }
     .recipe-tag {
