@@ -13,6 +13,7 @@ import Settings from "./pages/Settings/Settings";
 
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 
 import Landing from "./pages/Landing/Landing";
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/preferences" element={isLoggedIn ? <Preferences /> : <Navigate to="/" />} />
           <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login />} />
           <Route path="/register" element={isLoggedIn ? <Navigate to="/" /> : <Register />} />
+          <Route path="/forgot-password" element={isLoggedIn ? <Navigate to="/" /> : <ForgotPassword />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -30,6 +30,7 @@ const initialValuesRegister = {
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
@@ -65,11 +66,14 @@ const RegisterForm = () => {
 
     // Save the data into parsable json form
     const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
+    console.log(savedUser);
 
-    if (savedUser) {
+    if (savedUser && savedUserResponse.ok) {
       // Saved user successfully ==> redirect to login page
+      onSubmitProps.resetForm();
       navigate("/Login");
+    } else {
+      setErrorMessage(savedUser.error);
     }
   };
 
@@ -278,12 +282,19 @@ const RegisterForm = () => {
               }}
             />
 
+            {/* Error Message on invalid credentials or unsuccessfull login attempt */}
+            {errorMessage && (
+              <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mb: 2 }}>
+                {errorMessage}
+              </Typography>
+            )}
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ 
-                  mt: 2, 
+                  mt: 4, 
                   backgroundColor: "#fa7070",
                   color: "#fff",
                   "&:hover": {
