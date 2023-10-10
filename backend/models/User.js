@@ -26,6 +26,8 @@ const userSchema = new mongoose.Schema({
         },
         min: 2,
     },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
     googleSignIn: {
         type: Boolean,
         required: true,

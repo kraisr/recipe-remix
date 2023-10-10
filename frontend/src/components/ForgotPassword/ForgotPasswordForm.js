@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, TextField, Container, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
@@ -17,12 +17,32 @@ const initialValues = {
 };
 
 const ForgotPasswordForm = () => {
+  const [errorMessage, setErrorMessage] = useState("");   
   const navigate = useNavigate();
 
   // Handler to submit the email
   const handleSubmit = async (values, { setSubmitting }) => {
     // You might call an API to send a password reset email here
-    console.log("Submitted email:", values.email);
+    // Send the data from the form to mongoDB
+    const requestResponse = await fetch(
+        "http://localhost:8080/user/requestResetPassword",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
+  
+      const request = await requestResponse.json();
+    //   onSubmitProps.resetForm();
+  
+      if (request && requestResponse.ok) {
+        navigate("/");
+      } else {
+        setErrorMessage(request.error);
+      }
     // For now, just log and reset form
     setSubmitting(false);
   };
@@ -82,6 +102,12 @@ const ForgotPasswordForm = () => {
                 },
              }}
             />
+            {/* Error Message on invalid credentials or unsuccessfull login attempt */}
+            {errorMessage && (
+              <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mb: 2 }}>
+                {errorMessage}
+              </Typography>
+            )}
             <Button
               type="submit"
               fullWidth
