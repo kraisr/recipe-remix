@@ -4,8 +4,6 @@ import cors from "cors";
 
 import connectDB from "./mongoDB/connect.js";
 import authRoutes from "./routes/auth.js";
-import prefRoutes from "./routes/pref.js";
-import setRoutes from "./routes/set.js";
 import suggesticRoutes from "./routes/suggesticRoutes.js";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/user.js";
@@ -28,9 +26,9 @@ app.use("/auth", authRoutes);
 
 app.use("/user", userRoutes);
 
-app.use("/pref", prefRoutes);
+// app.use("/pref", prefRoutes);
 
-app.use("/set", setRoutes);
+// app.use("/set", setRoutes);
 
 
 /* SUGGESTIC API */

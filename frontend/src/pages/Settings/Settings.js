@@ -100,7 +100,7 @@ const Settings = () => {
             // Toggle the current mode (true for light mode, false for dark mode)
             const updatedMode = !mode;
 
-            const response = await fetch("http://localhost:8080/set/mode", {
+            const response = await fetch("http://localhost:8080/user/mode", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -140,15 +140,10 @@ const Settings = () => {
 
     const toggleReminder = async () => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                throw new Error("No token found");
-            }
-
             // Toggle the current mode (true for light mode, false for dark mode)
             const updatedReminder = !reminder;
 
-            const response = await fetch("http://localhost:8080/set/reminder", {
+            const response = await fetch("http://localhost:8080/user/reminder", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -202,7 +197,7 @@ const Settings = () => {
                 const isEverydayAt = reminderTime.includes(":"); // Check if reminderTime contains ":"
                 const isEveryHour = !isEverydayAt;
 
-                const response = await fetch("http://localhost:8080/set/reminderSetting", {
+                const response = await fetch("http://localhost:8080/user/reminderSetting", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

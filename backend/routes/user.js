@@ -1,8 +1,7 @@
 import express from "express";
-import { getUser, updateUser, updatePreferences } from "../controllers/user.js";
-import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js"
-import { sendEmail } from "../controllers/send-email.js";
-
+import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting } from "../controllers/user.js";
+import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js";
+import { sendEmail, updateReminder } from "../controllers/sendEmail.js";
 
 const router = express.Router();
 
@@ -16,6 +15,16 @@ router.post("/resetPassword", resetPassword);
 
 /* CONTACT FORM */
 router.post("/send-email", sendEmail);
+
+/* UPDATE REMINDER */
+router.post("/update-reminder", updateReminder);
+
+/* UPDATE PREFERENCES */
 router.post("/update-preferences", updatePreferences);
+
+/* Set routes to redirect to the correct controller in /controllers/auth.js */
+router.post("/mode", mode);
+router.post("/reminder", reminder);
+router.post("/reminderSetting", reminderSetting);
 
 export default router;
