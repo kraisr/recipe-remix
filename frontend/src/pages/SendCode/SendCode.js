@@ -50,7 +50,7 @@ const SendCode = () => {
     // Generate a random 6-digit code
     const generateRandomCode = () => {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
-      console.log(code);
+      console.log("test: ", code);
       setVerificationCode(code);
       sendVerificationCode(verificationCode);
     };
@@ -66,6 +66,13 @@ const SendCode = () => {
 
   const sendVerificationCode = async (code) => {
     try {
+
+      const requestBody = {
+        code: code
+      };
+
+      console.log(code);
+      console.log(requestBody);
       
       const response = await fetch("http://localhost:8080/user/code", {
         method: "POST",
@@ -73,9 +80,9 @@ const SendCode = () => {
           "Content-Type": "application/json",
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(code),
+        body: JSON.stringify(requestBody),
       });
-
+      console.log(response.body);
       const responseData = await response.json();
       console.log('Server response:', responseData);
 
