@@ -28,7 +28,7 @@ const initialValues = {
     confirmPassword: "",
 };
 
-function ResetPasswordPage() {
+const ResetPasswordForm = ({ onResetSuccess }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
@@ -53,9 +53,7 @@ function ResetPasswordPage() {
             }
 
             setSuccess("Password reset successfully. Redirecting to login...");
-            setTimeout(() => {
-                navigate("/login");
-            }, 3000);
+            onResetSuccess(true); // Set resetSuccess to true if password reset is successful
         } catch (err) {
             setError("An error occurred. Please try again.");
         }
@@ -195,4 +193,4 @@ function ResetPasswordPage() {
     );
 }
 
-export default ResetPasswordPage;
+export default ResetPasswordForm;

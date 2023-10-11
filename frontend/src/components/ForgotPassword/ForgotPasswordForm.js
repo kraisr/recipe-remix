@@ -16,7 +16,7 @@ const initialValues = {
   email: "",
 };
 
-const ForgotPasswordForm = () => {
+const ForgotPasswordForm = ({ onEmailSent }) => {
   const [errorMessage, setErrorMessage] = useState("");   
   const navigate = useNavigate();
 
@@ -36,10 +36,12 @@ const ForgotPasswordForm = () => {
       );
   
       const request = await requestResponse.json();
-    //   onSubmitProps.resetForm();
+      // onSubmitProps.resetForm();
   
       if (request && requestResponse.ok) {
-        navigate("/");
+        // navigate("/");
+        // Notify parent component that email has been sent
+        onEmailSent();
       } else {
         setErrorMessage(request.error);
       }

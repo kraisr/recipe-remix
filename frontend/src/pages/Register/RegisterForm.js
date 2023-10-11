@@ -3,6 +3,7 @@ import { Button, TextField, Container, Typography, InputAdornment, IconButton } 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
+import LoadingScreen from "./LoadingScreen";
 
 // Better form handling with Formik
 import { Formik } from "formik";
@@ -26,8 +27,8 @@ const registerSchema = yup.object().shape({
       "Password must contain at least one special character"
     ),
   confirmPassword: yup.string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match')
-    .required('Confirm Password is required'),
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .required("Confirm Password is required"),
 });
 
 
@@ -39,9 +40,10 @@ const initialValuesRegister = {
   confirmPassword: "",
 };
 
-const RegisterForm = () => {
+const RegisterForm = ({ onRegistrationSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
@@ -62,7 +64,7 @@ const RegisterForm = () => {
 
     // Manually append picture path to formData
     // formData.append("profilePicture", values.picture.name);
-
+    setIsLoading(true);
     // Send formData to backend
     const savedUserResponse = await fetch(
       "http://localhost:8080/auth/register", 
@@ -80,12 +82,29 @@ const RegisterForm = () => {
     console.log(savedUser);
 
     if (savedUser && savedUserResponse.ok) {
-      // Saved user successfully ==> redirect to login page
-      onSubmitProps.resetForm();
-      navigate("/Login");
+      // If registration is successful, send a verification email
+      const emailResponse = await fetch("http://localhost:8080/auth/send-confirmation-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: values.email }),
+      });
+
+      const emailData = await emailResponse.json();
+
+      if (emailData && emailResponse.ok) {
+        // If email is sent successfully, redirect to login page
+        onRegistrationSuccess(values.email);
+        localStorage.setItem("userEmail", values.email);
+        onSubmitProps.resetForm();
+      } else {
+        setErrorMessage(emailData.error || "Error sending confirmation email. Check your email address.");
+      }
     } else {
       setErrorMessage(savedUser.error);
     }
+    setIsLoading(false);
   };
 
   const handleSubmit = async (values, onSubmitProps) => {
@@ -94,9 +113,12 @@ const RegisterForm = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+      <Typography variant="h4" sx={{ fontWeight: "bold" }}>
         Register
       </Typography>
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
       <Formik 
         onSubmit={handleSubmit} 
         initialValues={initialValuesRegister} 
@@ -128,21 +150,21 @@ const RegisterForm = () => {
               autoFocus
               sx={{ 
                 bgcolor: "#fbf2cf",
-                '& label.Mui-focused': {
-                  color: '#6b9466',  // Color of the label when input is focused
+                "& label.Mui-focused": {
+                  color: "#6b9466",  // Color of the label when input is focused
                 },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#a1c298',
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#a1c298",
                   },
-                  '&:hover fieldset': {
-                    borderColor: '#88b083',
+                  "&:hover fieldset": {
+                    borderColor: "#88b083",
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#6b9466',
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6b9466",
                   },
                 },
-             }}
+              }}
             />
             <TextField
               label="Last Name"
@@ -158,18 +180,18 @@ const RegisterForm = () => {
               fullWidth
               sx={{ 
                 bgcolor: "#fbf2cf",
-                '& label.Mui-focused': {
-                  color: '#6b9466',  // Color of the label when input is focused
+                "& label.Mui-focused": {
+                  color: "#6b9466",  // Color of the label when input is focused
                 },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#a1c298',
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#a1c298",
                   },
-                  '&:hover fieldset': {
-                    borderColor: '#88b083',
+                  "&:hover fieldset": {
+                    borderColor: "#88b083",
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#6b9466',
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6b9466",
                   },
                 },
              }}
@@ -188,18 +210,18 @@ const RegisterForm = () => {
               fullWidth
               sx={{ 
                 bgcolor: "#fbf2cf",
-                '& label.Mui-focused': {
-                  color: '#6b9466',  // Color of the label when input is focused
+                "& label.Mui-focused": {
+                  color: "#6b9466",  // Color of the label when input is focused
                 },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#a1c298',
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#a1c298",
                   },
-                  '&:hover fieldset': {
-                    borderColor: '#88b083',
+                  "&:hover fieldset": {
+                    borderColor: "#88b083",
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#6b9466',
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6b9466",
                   },
                 },
              }}
@@ -220,18 +242,18 @@ const RegisterForm = () => {
               autoComplete="new-password"
               sx={{ 
                 bgcolor: "#fbf2cf",
-                '& label.Mui-focused': {
-                  color: '#6b9466',  // Color of the label when input is focused
+                "& label.Mui-focused": {
+                  color: "#6b9466",  // Color of the label when input is focused
                 },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#a1c298',
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#a1c298",
                   },
-                  '&:hover fieldset': {
-                    borderColor: '#88b083',
+                  "&:hover fieldset": {
+                    borderColor: "#88b083",
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#6b9466',
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6b9466",
                   },
                 },
               }}
@@ -264,18 +286,18 @@ const RegisterForm = () => {
               autoComplete="new-password"
               sx={{ 
                 bgcolor: "#fbf2cf",
-                '& label.Mui-focused': {
-                  color: '#6b9466',  // Color of the label when input is focused
+                "& label.Mui-focused": {
+                  color: "#6b9466",  // Color of the label when input is focused
                 },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#a1c298',
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#a1c298",
                   },
-                  '&:hover fieldset': {
-                    borderColor: '#88b083',
+                  "&:hover fieldset": {
+                    borderColor: "#88b083",
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#6b9466',
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6b9466",
                   },
                 },
               }}
@@ -333,7 +355,7 @@ const RegisterForm = () => {
             </Button>
           </form>
         )}
-      </Formik>
+      </Formik>)}
     </Container>
   );
 };
