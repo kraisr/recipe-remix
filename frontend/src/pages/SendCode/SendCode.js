@@ -5,9 +5,7 @@ import { Button } from "@mui/material";
 import "./sendcode.css";
 
 const SendCode = () => {
-
-
-  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationCode, setVerificationCode] = useState(null);
   const [email, setEmail] = useState(null);
 
   const navigate = useNavigate();
@@ -45,20 +43,15 @@ const SendCode = () => {
 
   // Generate a random 6-digit code
   useEffect(() => {
-    // getUserEmail(); // Fetch the user's email
-
-    // Generate a random 6-digit code
     const generateRandomCode = () => {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
-      console.log("test: ", code);
       setVerificationCode(code);
-      sendVerificationCode(verificationCode);
+      return code;
     };
     
-    generateRandomCode();
-
+    const code = generateRandomCode();
+    sendVerificationCode(code);
   }, []); 
-
 
   const handleVerificationCodeChange = (code) => {
     // Handle the verification code change if needed
