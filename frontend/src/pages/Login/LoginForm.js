@@ -54,12 +54,15 @@ const LoginForm = ({ onNavigateToRegister }) => {
           }),
         }
       );
-
+      
+      const loggedIn = await loggedInResponse.json();
+      
       if (!loggedInResponse.ok) {
-        throw new Error("Network response was not ok: ${loggedInResponse.statusText}");
+        // throw new Error("Network response was not ok: ${loggedInResponse.statusText}");
+        setErrorMessage(loggedIn.error);
+        return;
       }
 
-      const loggedIn = await loggedInResponse.json();
       // console.log(loggedIn);
       if (loggedIn) {
         // Use state modifier to store token and user
@@ -116,7 +119,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
     );
 
     const loggedIn = await loggedInResponse.json();
-
+      
     if (loggedIn && loggedInResponse.ok) {    
       onSubmitProps.resetForm();
       // Use state modifier to store token and user
