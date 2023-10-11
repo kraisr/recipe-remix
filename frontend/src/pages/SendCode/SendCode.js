@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import ReactCodeInput from "react-verification-code-input";
-import { Button, TextField, Container, Typography, InputAdornment, IconButton, Box } from "@mui/material";
+import { Button } from "@mui/material";
 import "./sendcode.css";
 
 const SendCode = () => {
@@ -8,6 +9,13 @@ const SendCode = () => {
 
   const [verificationCode, setVerificationCode] = useState("");
   const [email, setEmail] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleXButtonClick = () => {
+    // Navigate back to the login page
+      navigate('/login');
+  };
 
   const getUserEmail = async () => {
     try {
@@ -80,11 +88,11 @@ const SendCode = () => {
   return (
     <div id="wrapper">
         <div id="dialog">
-            <button class="close">×</button>
-            <h3>Please enter the 6-digit verification code we sent via SMS:</h3>
-            <span>(we want to make sure it's you before we contact our movers)</span>
+            <button class="close" onClick={handleXButtonClick}>x</button>
+            <h3>Please enter the 6-digit verification code we sent via Email:</h3>
+           
             
-            <ReactCodeInput 
+            <ReactCodeInput className="codeInput"
               value={verificationCode}
               onChange={handleVerificationCodeChange}
             />
@@ -93,18 +101,22 @@ const SendCode = () => {
               fullWidth
               variant="contained"
               sx={{ 
-                  mt: 1, 
-                  backgroundColor: "#fa7070",
-                  color: "#fff",
-                  "&:hover": {
-                      backgroundColor: "#e64a4a",  // Darker red on hover
-                  }
+                mt: 0.5,
+                height: 50,
+                width:100,
+                backgroundColor: "#fa7070",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#e64a4a",
+                }
               }}
-            />
+            >
+              Verify  {/* Text 'Verify' */}
+            </Button>
             <div>
                 Didn't receive the code?<br />
                 <a href="#">Send code again</a><br />
-                <a href="#">Change phone number</a>
+                {/* <a href="#">Change phone number</a> */}
             </div>
             
         </div>
