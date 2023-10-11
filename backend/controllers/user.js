@@ -26,30 +26,11 @@ export const updateUser = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
 
-        const { 
-            firstName,
-            username,
-            bio,
-            link,
-            image, 
-        } = req.body;
-    
-        const updatedUserData = {
-            firstName,
-            username,
-            bio,
-            link
-        };
+        const updatedUserData = req.body;
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            { 
-                firstName: firstName,
-                username: username,
-                bio: bio,
-                link: link,
-                image: image,
-              },
+            updatedUserData,
             { new: true }
         ).select('-password');
 

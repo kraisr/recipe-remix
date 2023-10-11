@@ -1,0 +1,92 @@
+/* sendcode.css */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  #wrapper {
+    font-family: Arial, sans-serif;
+    font-size: 1.5rem;
+    text-align: center;
+    box-sizing: border-box;
+    color: #333;
+    width: 80%; /* Adjust the width as needed */
+    max-width: 800px; /* Set a maximum width if desired */
+    margin: 0 auto; /* Center the wrapper horizontally */
+  }
+  
+  #dialog {
+    border: solid 1px #ccc;
+    padding: 20px 30px;
+    box-shadow: 0 0 4px #ccc;
+    background-color: #FAF8F8;
+    overflow: hidden;
+    max-width: 100%; /* Allow the dialog to expand within the wrapper */
+    margin: 0 auto; /* Center the dialog within the wrapper */
+  }
+  
+  #dialog span {
+    font-size: 90%;
+  }
+  
+  #dialog #form {
+    max-width: 550px;
+    margin: 25px auto 0;
+  }
+  
+  #dialog #form input {
+    margin: 0 5px;
+    text-align: center;
+    font-size: 1.5rem;
+    border: solid 1px #ccc;
+    box-shadow: 0 0 5px #ccc inset;
+    outline: none;
+    width: 11%;
+    transition: all .2s ease-in-out;
+    border-radius: 3px;
+  }
+  
+  #dialog #form input:focus {
+    border-color: purple;
+    box-shadow: 0 0 5px purple inset;
+  }
+  
+  #dialog #form input::selection {
+    background: transparent;
+  }
+  
+  #dialog #form button {
+    margin:  30px 0 50px;
+    width: 80%;
+    padding: 6px;
+    background-color: #B85FC6;
+    border: none;
+    text-transform: uppercase;
+  }
+  
+  #dialog button.close {
+    border: solid 2px;
+    border-radius: 30px;
+    line-height: 19px;
+    font-size: 120%;
+    width: 22px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
+  
+  #dialog div {
+    position: relative;
+    z-index: 1;
+  }
+  
+  #dialog img {
+    position: absolute;
+    bottom: -70px;
+    right: -63px;
+  }
+  

@@ -9,6 +9,7 @@ const Settings = () => {
     const [emailError, setEmailError] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [mode, setMode] = useState(false); // Initially set to dark mode (false)
+    const [FAState, setFAState] = useState(false);
 
     useEffect(() => {
         const fetchUserSettings = async () => {
@@ -60,6 +61,9 @@ const Settings = () => {
                     // Everyday at is false, set the time for everyHour
                     setReminderTime(data.reminderSetting.everyHour.time);
                 }
+                
+                //set 2FA state
+                setFAState(data.set2FA);
 
                 console.log('email is ', data.email);
                 console.log('mode is ', data.mode);
@@ -68,6 +72,7 @@ const Settings = () => {
                 console.log('data.reminderSetting.everyHour is ', data.reminderSetting.everyHour);
                 console.log('data.reminderSetting.everydayAt.time is ', data.reminderSetting.everydayAt.time);
                 console.log('data.reminderSetting.everyHour.time is ', data.reminderSetting.everyHour.time);
+                console.log('2FA status is: ', data.set2FA);
 
             } catch (error) {
                 console.error('Error fetching user settings:', error);
@@ -156,6 +161,51 @@ const Settings = () => {
             console.error('Error updating reminder:', error);
         }
     };
+    
+    //handle 2FA changes
+    const toggle2FA = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const updatedFAState = !FAState;
+
+            const userUpdateData = {
+                set2FA: updatedFAState,
+                // Include other fields you want to update
+                // firstName: newFirstName,
+                // username: newUsername,
+                // bio: newBio,
+                // ...
+            };
+    
+            //GET user data from backend
+            const response = await fetch("http://localhost:8080/user/user", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(userUpdateData),
+            });
+
+            if (!response.ok) {
+                throw new Error('updating 2FA failed');
+            }
+            const data = await response.json();
+            console.log('new 2FA is', data.set2FA);
+
+            setFAState(updatedFAState);
+            console.log('updating 2FA state was a success');
+            console.log('2FA status is: ', updatedFAState);
+            
+
+        } catch (error) {
+            console.error('Error updating 2FA status', error);
+        }
+    }
 
     const handleEmailChange = (event) => {
         setPreferenceEmail(event.target.value);
@@ -224,7 +274,7 @@ const Settings = () => {
 
     return (
         <div className={`settings ${modeClass}`}>
-        {/* Dark Mode Toggle */}
+            {/* Dark Mode Toggle */}
             <div className="toggle-container">
                 <h2 style={{ fontSize: '18px' }}>Toggle between light / dark mode</h2>
                 <label className="toggle-switch">
@@ -327,6 +377,19 @@ const Settings = () => {
                     </button>
                 </div>
             )}
+
+            <div className="toggle-container">
+                <h2 style={{ fontSize: '18px' }}>Enable 2 Factor Authentication</h2>
+                <label className="toggle-switch">
+                    <input
+                        type="checkbox"
+                        checked={FAState} // Use 'mode' state to determine the checkbox state
+                        onChange={toggle2FA}
+                    />
+                    <span className="slider"></span>
+                </label>
+            </div>
+
         </div>
     );
 };

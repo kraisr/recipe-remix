@@ -71,9 +71,14 @@ export const login = async (req, res) => {
             return res.status(400).json({ error: "Invalid credentials." });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        delete user.password;
-        res.status(200).json({ user, token });
+        if (user.set2FA) {
+            console.log('2FA enabled');
+            return res.status(400).json({ set2FA: true, user });
+        } else {
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+            delete user.password;
+            res.status(200).json({ set2FA: false, user, token });
+        }
     } catch (err) {
         // 500 = status for server error + send error message returned by mongoDB
         res.status(500).json({ error: err.message });

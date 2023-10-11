@@ -29,6 +29,11 @@ const userSchema = new mongoose.Schema({
         },
         min: 2,
     },
+    twoFACode: {
+        type: String,
+    },
+    twoFACodeToken: String,
+    twoFACodeTokenExpires: Date, 
     passwordResetToken: String,
     passwordResetExpires: Date,
     googleSignIn: {
@@ -131,7 +136,12 @@ const userSchema = new mongoose.Schema({
                 default: '',
             },        
         },      
-    },    
+    }, 
+    
+    set2FA: {
+        type: Boolean,
+        default:false,
+    }
 
 });
 

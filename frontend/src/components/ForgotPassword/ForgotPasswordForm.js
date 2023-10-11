@@ -126,7 +126,6 @@ const ForgotPasswordForm = () => {
             <Button
               type="button"
               onClick={handleBackToLogin}
-              type="button"
               fullWidth
               variant="contained"
               sx={{ 
