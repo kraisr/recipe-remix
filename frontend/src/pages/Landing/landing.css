@@ -120,7 +120,7 @@
     margin: 0; /* Add some margin for spacing */
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 768px) {
     
     .landing-container {
         background: #C6EBC5;
