@@ -25,32 +25,28 @@ export const addIngredient = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
 
-        // Log the decoded user ID
-        console.log("Decoded User ID:", userId);
+        const ingredient = req.body.ingredientName;
 
-        const ingredient = req.body;
-        console.log("Ingredient:", ingredient);
-
-
-        const updatedPantry = await User.findByIdAndUpdate(
-            userId,
-            { $push: { pantry: ingredient } },
+        const updatedPantry = await User.findOneAndUpdate(
+            { _id: userId, "pantry.ingredientName": { $ne: ingredient } },
+            { $addToSet: { pantry: { ingredientName: ingredient } } },
             { new: true }
         ).select('-password');
 
-        // Log the updated pantry
-        console.log("Updated Pantry:", updatedPantry);
+        console.log(updatedPantry);
 
         if (!updatedPantry) {
-            return res.status(400).json({ error: "Error updating pantry for user" });
+            return res.status(400).json({ error: "Error updating pantry or ingredient already exists" });
         }
 
         res.status(200).json(updatedPantry);
     } catch (err) {
-        console.error("Error in addIngredient function:", err); // Log the error for more details
+        console.error("Error in addIngredient function:", err);
         res.status(500).json({ error: err.message });
     }
 };
+
+
 
 
 export const getFromPantry = async (req, res) => {
