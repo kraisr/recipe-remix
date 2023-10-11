@@ -60,48 +60,32 @@ const Preferences = () => {
     fetchUserPreferences();
   }, []);
 
-  const handleCheckboxChange = async (preferenceName) => {
+  const handleUpdatePreferences = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token found');
-      }
-
-      const updatedValue = !preferences[preferenceName];
-      const response = await fetch("http://localhost:8080/pref/pref", {
+      const response = await fetch("http://localhost:8080/user/update-preferences", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: userEmail,
-          preferenceName: preferenceName,
-          updatedValue: updatedValue,
+          preferences: preferences
         }),
       });
-
-      if (response.ok) {
-        // Update the local state with the new preference value
-        setPreferences((prevPreferences) => ({
-          ...prevPreferences,
-          [preferenceName]: updatedValue,
-        }));
-        console.log(`Updated ${preferenceName} preference successfully. `, updatedValue);
-
-        if (preferenceName === 'others') {
-          // Toggle the showSaveCancel state based on whether the checkbox is checked
-          setShowSaveCancel(updatedValue);
-        }
-      } else {
-        console.error(`Failed to update ${preferenceName} preference.`);
+  
+      // Check if the response is ok (status 200-299)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
+  
+      // Optional: Update UI to reflect changes
+      // For example, show a success message to the user
+      console.log("Preferences saved successfully!");
+  
     } catch (error) {
-      console.error(`Error updating ${preferenceName} preference:`, error);
+      // Handle errors: show a message to the user, log, etc.
+      console.error('Error saving preferences:', error);
     }
-  };
-
-  const handleSavePreferences = () => {
-    // Add your code for saving preferences here
   };
 
   const handleCancelPreferences = () => {
@@ -158,7 +142,8 @@ const Preferences = () => {
 
   const handleDoneEditing = () => {
     setEditing(false);
-    if (previousScreen === 'intro') {
+    handleUpdatePreferences();
+    if (previousScreen === "intro") {
       setShowIntro(true);
     } else {
       setShowSummary(true);
@@ -173,9 +158,12 @@ const Preferences = () => {
   };
   
   const handleSubmit = async (values) => {
-    console.log(values);
-    // Logic to update preferences in the database
-    // TODO: Implement your logic here
+    // handleUpdatePreferences();
+    setCurrentPreferenceIndex(0);
+    setPreviousScreen("intro");
+    setShowIntro(true);
+    setShowSummary(false);
+    handleDoneEditing();
   };
 
   function formatPreferenceKey(key) {
@@ -220,7 +208,7 @@ const Preferences = () => {
                   <Button
                     variant="outlined"
                     color="primary"
-                    sx={{ backgroundColor: "#fa7070", color: "#fff", "&:hover": { backgroundColor: "#e64a4a" } }}
+                    sx={{ backgroundColor: "#6c757d", color: "#fff", "&:hover": { backgroundColor: "#5a6268" } }}
                     onClick={handleEditFromIntro}
                   >
                     Edit Choices
@@ -284,7 +272,7 @@ const Preferences = () => {
                   <Button
                     variant="outlined"
                     color="primary"
-                    sx={{ backgroundColor: "#fa7070", color: "#fff", "&:hover": { backgroundColor: "#e64a4a" } }}
+                    sx={{ backgroundColor: "#6c757d", color: "#fff", "&:hover": { backgroundColor: "#5a6268" } }}
                     onClick={handleEditFromSummary}
                   >
                     Edit Choices

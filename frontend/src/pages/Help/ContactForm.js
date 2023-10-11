@@ -126,7 +126,6 @@ const Contact = ({ userEmail, onEmailSent }) => {
                             fullWidth
                             multiline
                             rows={4}
-                            autoFocus
                             sx={textFieldStyles}
                         />
                         <Button 

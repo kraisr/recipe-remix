@@ -1,6 +1,6 @@
 import express from "express";
-import {getUser, updateUser} from "../controllers/user.js";
-import {requestResetPassword, resetPassword} from"../controllers/resetPassword.js"
+import { getUser, updateUser, updatePreferences } from "../controllers/user.js";
+import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js"
 import { sendEmail } from "../controllers/send-email.js";
 
 
@@ -16,5 +16,6 @@ router.post("/resetPassword", resetPassword);
 
 /* CONTACT FORM */
 router.post("/send-email", sendEmail);
+router.post("/update-preferences", updatePreferences);
 
 export default router;
