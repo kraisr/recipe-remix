@@ -45,17 +45,18 @@ const SendCode = () => {
 
   // Generate a random 6-digit code
   useEffect(() => {
-    getUserEmail(); // Fetch the user's email
+    // getUserEmail(); // Fetch the user's email
 
     // Generate a random 6-digit code
     const generateRandomCode = () => {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
+      console.log(code);
       setVerificationCode(code);
       sendVerificationCode(verificationCode);
     };
+    
     generateRandomCode();
 
-    
   }, []); 
 
 
@@ -74,6 +75,9 @@ const SendCode = () => {
         },
         body: JSON.stringify(code),
       });
+
+      const responseData = await response.json();
+      console.log('Server response:', responseData);
 
       if (response.ok) {
         console.log("Code verification successful!");

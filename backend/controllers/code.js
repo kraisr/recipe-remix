@@ -64,7 +64,7 @@ export const sendCode = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("Error in sendCode:", err);
-        res.status(500).json({ error: "An internal server error occurred. Please try again later." });
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred' });
     }
 }
