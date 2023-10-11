@@ -24,6 +24,11 @@ export const requestResetPassword = async (req, res) => {
             return res.status(400).json({ error: "User does not exist" });
         }
 
+        // Not verified email
+        if (!user.isEmailVerified) {
+            return res.status(400).json({ error: "Email not verified" });
+        }
+
         // Generate a password reset token
         const token = jwt.sign(
             { id: user._id },
