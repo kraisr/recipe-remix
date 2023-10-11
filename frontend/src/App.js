@@ -15,6 +15,7 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import ResetPasswordPage from "./components/ForgotPassword/ResetPasswordPage";
+import EmailConfirmation from "./pages/Register/EmailConfirmation";
 
 import Landing from "./pages/Landing/Landing";
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/register" element={isLoggedIn ? <Navigate to="/" /> : <Register />} />
           <Route path="/forgot-password" element={isLoggedIn ? <Navigate to="/" /> : <ForgotPassword />} />
           <Route path="/resetPassword/:token" element={isLoggedIn ? <Navigate to="/" /> : <ResetPasswordPage />} />
+          <Route path="/confirm-email/:token" element={isLoggedIn ? <Navigate to="/" /> : <EmailConfirmation />} />
         </Routes>
       </BrowserRouter>
     </div>

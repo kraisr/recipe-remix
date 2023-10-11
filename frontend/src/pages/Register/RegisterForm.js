@@ -80,9 +80,24 @@ const RegisterForm = () => {
     console.log(savedUser);
 
     if (savedUser && savedUserResponse.ok) {
-      // Saved user successfully ==> redirect to login page
-      onSubmitProps.resetForm();
-      navigate("/Login");
+      // If registration is successful, send a verification email
+      const emailResponse = await fetch("http://localhost:8080/auth/send-confirmation-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: values.email }),
+      });
+
+      const emailData = await emailResponse.json();
+
+      if (emailData && emailResponse.ok) {
+        // If email is sent successfully, redirect to login page
+        onSubmitProps.resetForm();
+        navigate("/Login");
+      } else {
+        setErrorMessage(emailData.error || "Error sending confirmation email");
+      }
     } else {
       setErrorMessage(savedUser.error);
     }

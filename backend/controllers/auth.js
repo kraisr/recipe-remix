@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import nodemailer from "nodemailer";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 /* REGISTER USER */
 export const register = async (req, res) => {
@@ -38,6 +42,10 @@ export const register = async (req, res) => {
         });
         // Send back the saved user to the frontend
         const savedUser = await newUser.save();
+
+        // // Send a confirmation email
+        // await sendConfirmationEmail(req, res);
+
         // 201 = status for successful creation
         res.status(201).json(savedUser);
     } catch (err) {
@@ -54,7 +62,7 @@ export const login = async (req, res) => {
         
         // Find specified user given email using mongoose
         const user = await User.findOne({ email: email });
-        
+        console.log(user);
         // If user does not exist, return error
         if (!user) {
         return res.status(400).json({ error: "Invalid credentials." });
@@ -63,6 +71,10 @@ export const login = async (req, res) => {
         // Check if user registered with Google, prevent login through this endpoint
         if(user.googleSignIn) {
             return res.status(401).json({ error: "User registered with Google. Please use Google sign-in." });
+        }
+
+        if (!user.isEmailVerified) {
+            return res.status(401).json({ error: "Email not verified. Please verify your email." });
         }
 
         // Compare user password with hashed password stored in database
@@ -111,3 +123,82 @@ export const loginGoogle = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+/* SEND LINK TO VERIFY EMAIL */
+export const sendConfirmationEmail = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // Find the user and generate a verification token
+        const user = await User.findOne({ email: email });
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "24h" }  // expires in 24 hours
+        );
+
+        // Save the verification token to the user's record
+        user.emailVerificationToken = token;
+        await user.save();
+
+        // Send the email
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                type: "OAuth2",
+                user: "app.reciperemix@gmail.com",
+                clientId: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+            }
+        });
+        
+        const mailOptions = {
+            from: "app.reciperemix@gmail.com",
+            to: user.email,
+            subject: "Please confirm your email address",
+            text: `
+                Thanks for registering with our service! Please confirm your email address by clicking the following link:
+                
+                http://localhost:3000/confirm-email/${token}
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        // If this function is called independently, send a response
+        if (!res.headersSent) {
+            res.status(200).json({ message: "Confirmation email sent" });
+        }
+    } catch (err) {
+        // If this function is called independently, send an error response
+        if (!res.headersSent) {
+            res.status(500).json({ error: "Error sending confirmation email" });
+        }
+    }
+};
+
+/* ON-CLICK EMAIL CONFIRMATION */
+export const confirmEmail = async (req, res) => {
+    try {
+        const { token } = req.params;  // Extract token from URL parameters
+
+        // Decode the token and find the user
+        const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findOne({ _id: userId, emailVerificationToken: token });
+    
+        // If user doesn't exist, or token is invalid or expired, return an error
+        if (!user) {
+            return res.status(400).json({ error: "Invalid or expired token" });
+        }
+    
+        // Set the email as verified and clear the token
+        user.isEmailVerified = true;
+        user.emailVerificationToken = undefined;
+        await user.save();
+    
+        res.status(200).json({ message: "Email verified successfully" });
+    } catch (err) {
+        res.status(500).json({ error: "Error verifying email" });
+    }
+};
