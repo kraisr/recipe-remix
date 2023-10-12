@@ -119,9 +119,9 @@ const LoginForm = ({ onNavigateToRegister }) => {
 
     //check if they are using 2FA
     
-   
+    const statusCode = loggedInResponse.status;
 
-    if (loggedIn && loggedInResponse.ok) {  
+    if (loggedIn && (statusCode === 200 || statusCode === 300)) {  
       
       if(loggedIn.set2FA){
         window.alert("hi");
