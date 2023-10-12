@@ -53,14 +53,14 @@ const Settings = () => {
                     if (!rootElement.classList.contains("dark-mode")) {
                         rootElement.classList.remove("light-mode");
                         rootElement.classList.add("dark-mode");
-                      }  
+                    }
                 } else {
                     const rootElement = document.getElementById("root");
 
                     if (!rootElement.classList.contains("light-mode")) {
                         rootElement.classList.remove("dark-mode");
                         rootElement.classList.add("light-mode");
-                      }     
+                    }
                 }
 
                 setReminder(data.reminder); // Assuming "reminder" is the key for the reminder setting
@@ -120,14 +120,14 @@ const Settings = () => {
                     if (!rootElement.classList.contains("dark-mode")) {
                         rootElement.classList.remove("light-mode");
                         rootElement.classList.add("dark-mode");
-                      }  
+                    }
                 } else {
                     const rootElement = document.getElementById("root");
 
                     if (!rootElement.classList.contains("light-mode")) {
                         rootElement.classList.remove("dark-mode");
                         rootElement.classList.add("light-mode");
-                      }     
+                    }
                 }
                 console.log(`Updated mode successfully.`, updatedMode);
             } else {
@@ -167,6 +167,7 @@ const Settings = () => {
 
     const handleEmailChange = (event) => {
         setPreferenceEmail(event.target.value);
+        console.log('email change');
         setEmailError(""); // Clear any previous error message when the email input changes
     };
 
@@ -226,6 +227,63 @@ const Settings = () => {
 
     const handleCancelButtonClick = () => {
         // Handle the click event for the Cancel button here
+        console.log('cancel clicked');
+
+    };
+
+    const handleSaveButtonClick = async () => {
+        // Handle the click event for the Cancel button here
+        console.log('save clicked');
+        if (reminder) {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                throw new Error("No token found");
+            }
+
+            const userInfo = await fetch("http://localhost:8080/user/user", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                method: "GET",
+            });
+
+            if (!userInfo.ok) {
+                throw new Error("Network userInfo was not ok");
+            }
+
+            const data = await userInfo.json();
+            setUserEmail(data.email);
+
+            const isEverydayAt = true;
+
+            const response = await fetch("http://localhost:8080/user/reminderSetting", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: userEmail,
+                    preferenceEmail: preferenceEmail,
+                    everydayAt: isEverydayAt,
+                    everyHour: '',
+                    everydayAtTime: isEverydayAt ? reminderTime : '',
+                    everyHourTime: '',
+                }),
+            });
+
+            console.log("email is ", data.email);
+            console.log("mode is ", data.mode);
+            console.log("reminder is ", data.reminder);
+            console.log("data.reminderSetting.everydayAt is ", data.reminderSetting.everydayAt);
+            console.log("data.reminderSetting.everyHour is ", data.reminderSetting.everyHour);
+            console.log("data.reminderSetting.everydayAt.time is ", data.reminderSetting.everydayAt.time);
+            console.log("data.reminderSetting.everyHour.time is ", data.reminderSetting.everyHour.time);
+
+            if (!response.ok) {
+                console.error(`Failed to update reminderSetting.`);
+            }
+        }
     };
 
     const modeClass = mode ? "light-mode" : "dark-mode"; // Check if mode is true (light mode)
@@ -280,7 +338,7 @@ const Settings = () => {
                     initialValues={initialValues}
                     validationSchema={settingsSchema}
                     onSubmit={(values, { setSubmitting }) => {
-                        handleSaveSettings(values);
+                        //handleSaveSettings(values);
                         setSubmitting(false);
                     }}
                 >
@@ -300,8 +358,8 @@ const Settings = () => {
                                 <TextField
                                     label="User Email"
                                     onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    value={values.email}
+                                    onChange={handleEmailChange}
+                                    value={preferenceEmail}
                                     name="email"
                                     error={Boolean(touched.email) && Boolean(errors.email) && submitCount > 0}
                                     helperText={(touched.email && errors.email && submitCount > 0) ? errors.email : ""}
@@ -322,26 +380,32 @@ const Settings = () => {
                                         label="Everyday at"
                                         error={touched.reminderTime && Boolean(errors.reminderTime)}
                                         onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.reminderTime}
+                                        onChange={handleReminderTimeChange}
+                                        value={reminderTime}
                                     >
-                                        {Array.from({ length: 48 }, (_, index) => (
-                                            <MenuItem key={index} value={`${String(Math.floor(index / 2)).padStart(2, "0")}:${index % 2 === 0 ? "00" : "30"}`}>
-                                                {`${String(Math.floor(index / 2)).padStart(2, "0")}:${index % 2 === 0 ? "00" : "30"}`}
-                                            </MenuItem>
-                                        ))}
+                                        {Array.from({ length: 24 * 60 }, (_, index) => {
+                                            const hours = Math.floor(index / 60);
+                                            const minutes = index % 60;
+                                            return (
+                                                <MenuItem
+                                                    key={index}
+                                                    value={`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`}>
+                                                    {`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`}
+                                                </MenuItem>
+                                            );
+                                        })}
                                     </Field>
                                 </FormControl>
                             )}
 
                             {reminder && (
                                 <Box mt={2} display="flex" justifyContent="space-between" width="100%">
-                                    <Button 
-                                        type="button" 
-                                        variant="contained" 
+                                    <Button
+                                        type="button"
+                                        variant="contained"
                                         onClick={handleCancelButtonClick}
-                                        sx={{ 
-                                            mt: 4, 
+                                        sx={{
+                                            mt: 4,
                                             backgroundColor: "#455A64",
                                             color: "#FFFFFF",
                                             "&:hover": {
@@ -352,12 +416,14 @@ const Settings = () => {
                                     >
                                         Cancel
                                     </Button>
-                                    <Button 
-                                        type="submit" 
-                                        variant="contained" 
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        onClick={handleSaveButtonClick}
+
                                         disabled={isSubmitting}
-                                        sx={{ 
-                                            mt: 4, 
+                                        sx={{
+                                            mt: 4,
                                             backgroundColor: "#fa7070",
                                             color: "#fff",
                                             "&:hover": {

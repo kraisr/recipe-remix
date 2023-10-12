@@ -1,12 +1,13 @@
 import express from "express";
 import * as dotenv from "dotenv";
 import cors from "cors";
-
+import cron from "node-cron";
 import connectDB from "./mongoDB/connect.js";
 import authRoutes from "./routes/auth.js";
 import suggesticRoutes from "./routes/suggesticRoutes.js";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/user.js";
+import { sendEmail } from './controllers/sendEmail.js';
 
 dotenv.config();
 // import { GraphQLClient } from 'graphql-request';
@@ -49,6 +50,60 @@ app.get('/', (req, res) => {
 });
 
 
+const sendDailyReminders = async () => {
+  const UserModule = await import('./models/User.js'); 
+  const User = UserModule.default;
+
+  const currentHour = new Date().getHours();
+  const currentMinute = new Date().getMinutes();
+  let currentTime = `${String(currentHour).padStart(2, "0")}:${String(currentMinute).padStart(2, "0")}`;
+  currentTime = currentTime.trim(); // Trim any whitespace
+
+  console.log('currentTime', currentTime);
+
+  const allUsers = await User.find();
+
+  // Print all users and their reminderSetting.everydayAt.bool status
+  console.log(`Total users: ${allUsers.length}`);
+  allUsers.forEach(user => {
+    console.log(`User Reminder: ${user.reminder}, User email: ${user.email}, reminderSetting.everydayAt.bool: ${user.reminderSetting.everydayAt.bool}, user time: ${user.reminderSetting.everydayAt.time}`);
+  });
+
+
+  const usersToNotify = await User.find({
+    //"email": "Tim.SK.Chou@gmail.com",
+    "reminder": true,
+    "reminderSetting.everydayAt.bool": true,
+    "reminderSetting.everydayAt.time": currentTime
+  });
+
+  for (const user of usersToNotify) {
+    console.log(`Processing user with email: ${user.email}`);  // <-- This line prints the user.email
+
+    console.log('found');
+    try {
+      const mockReq = {
+        body: {
+          userContactEmail: user.email, 
+          subject: "Your Daily Reminder!",
+          content: "This is the content of the daily reminder."
+        }
+      };
+      const mockRes = {
+        status: (statusCode) => ({
+          send: (msg) => console.log(`Email status ${statusCode}: ${msg}`),
+          json: (data) => console.log(`Email JSON response:`, data)
+        })
+      };
+
+      //console.log('user contact email', user.email);
+      await sendEmail(mockReq, mockRes);
+    } catch (error) {
+      console.error(`Failed to send email to ${user.reminderSetting.email}:`, error);
+    }
+  }
+};
+
 
 const startServer = async () => {
   try {
@@ -63,6 +118,7 @@ const startServer = async () => {
 
 
 
+cron.schedule('* * * * * *', sendDailyReminders);
 
 
 startServer();

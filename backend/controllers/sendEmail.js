@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import bodyParser from "body-parser";
 
 export const sendEmail = async (req, res) => {
-    const { userContactEmail, subject, body } = req.body;
+    const { userContactEmail, subject, content } = req.body;
 
     try {
         const transporter = nodemailer.createTransport({
@@ -19,9 +19,9 @@ export const sendEmail = async (req, res) => {
         // Formulate email options
         const mailOptions = {
             from: "app.reciperemix@gmail.com", // Sender address
-            to: `app.reciperemix@gmail.com, ${userContactEmail}`, // List of receivers
+            to: userContactEmail, // List of receivers
             subject: subject, // Subject line
-            text: `From: ${userContactEmail}\n\n${body}` // Plain text body
+            text: `${content}` // Plain text body
         };
         
         // Send email
