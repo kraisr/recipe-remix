@@ -25,6 +25,10 @@ export const register = async (req, res) => {
         if(oldUser && oldUser.googleSignIn) {
             return res.status(401).json({ error: "User registered with Google. Please use Google sign-in." });
         }
+
+        if (oldUser && !oldUser.isEmailVerified) {
+            return res.status(400).json({ error: "User already registered. Please verify your email to login." });
+        }
         
         if (oldUser) {
             return res.status(400).json({ error: "User already registered." });
