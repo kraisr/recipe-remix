@@ -1,32 +1,33 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { Button } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../state";
 
 import "./logout.css"
 
-const Logout = () => {
+const Logout = ({ closeModal }) => {
     const dispatch = useDispatch();
     const Navigate = useNavigate();
 
-    /* HANDLER FOR LOGOUT */
     const handleLogoutClick = () => {
         // Logout logic
         dispatch(setLogout());
         Navigate("/");
     };
+
+    const exitModal = () => {
+        closeModal();  // Call the closeModal function passed as a prop
+    }
     
     return (
-        // [NOTE] Probably need to change the buttons to different type rather than divs, not good practice
         <div className="logout-modal">
             <div className="logout-confirmation">
                 <h3>Are you sure you want to logout?</h3>
             </div>
             <div className="logout-buttons">
-                {/* <div className="lg-cancel button-17"><h4>Cancel</h4></div> */}
-                {/* <div className="lg-logout button-17"><h4>Logout</h4></div> */}
                 <Button 
+                    onClick={exitModal}
                     variant="contained"
                     sx={{
                         backgroundColor: "#fff",
@@ -87,11 +88,15 @@ const Logout = () => {
                         },
                     }}
                 >
-                Logout
-            </Button>
+                    Logout
+                </Button>
             </div>
         </div>
     )
 }
 
-export default Logout
+export default Logout;
+
+
+
+

@@ -1,231 +1,334 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './preferences.css';
+import SearchBar from '../../components/Searchbar/Searchbar.js';
+import { Formik, Form, Field } from 'formik';
+import { Box, Button, Checkbox, FormControlLabel, Typography, ThemeProvider, createTheme } from '@mui/material';
 
 const Preferences = () => {
-  const [lactoseIntolerance, setLactoseIntolerance] = useState(false);
-  const [glutenIntolerance, setGlutenIntolerance] = useState(false);
-  const [vegetarianism, setVegetarianism] = useState(false);
-  const [veganism, setVeganism] = useState(false);
-  const [kosher, setKosher] = useState(false);
-  const [keto, setKeto] = useState(false);
-  const [diabetes, setDiabetes] = useState(false);
-  const [dairyFree, setDairyFree] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); 
-  const [showSaveCancel, setShowSaveCancel] = useState(false); 
+  const [preferences, setPreferences] = useState({
+    lactoseIntolerance: false,
+    glutenIntolerance: false,
+    vegetarianism: false,
+    veganism: false,
+    kosher: false,
+    keto: false,
+    diabetes: false,
+    dairyFree: false,
+    others: false,
+  });
+  const [showSaveCancel, setShowSaveCancel] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [currentPreferenceIndex, setCurrentPreferenceIndex] = useState(0);
+  const preferenceKeys = Object.keys(preferences);
+  const currentPreferenceKey = preferenceKeys[currentPreferenceIndex];
+  const isLastPreference = currentPreferenceIndex === preferenceKeys.length - 1;
+  const [showSummary, setShowSummary] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [previousScreen, setPreviousScreen] = useState('intro'); // 'intro' or 'summary'
 
-  const handleLactoseIntoleranceChange = () => {
-    setLactoseIntolerance(!lactoseIntolerance);
-  };
 
-  const handleGlutenIntoleranceChange = () => {
-    setGlutenIntolerance(!glutenIntolerance);
-  };
+  useEffect(() => {
+    const fetchUserPreferences = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
 
-  const handleVegetarianismChange = () => {
-    setVegetarianism(!vegetarianism);
-  };
+        const response = await fetch("http://localhost:8080/user/user", {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          method: "GET",
+        });
 
-  const handleVeganismChange = () => {
-    setVeganism(!veganism);
-  };
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
 
-  const handleKosherChange = () => {
-    setKosher(!kosher);
-  };
+        const data = await response.json();
+        console.log(data.email);
+        setUserEmail(data.email);
+        setPreferences(data.preferences);
+      } catch (error) {
+        console.error('Error fetching user preferences:', error);
+      }
+    };
 
-  const handleKetoChange = () => {
-    setKeto(!keto);
-  };
+    fetchUserPreferences();
+  }, []);
 
-  const handleDiabetesChange = () => {
-    setDiabetes(!diabetes);
-  };
-
-  const handleDairyFreeChange = () => {
-    setDairyFree(!dairyFree);
-  };
-
-  const handleOthersChange = () => {
-    setShowSaveCancel(!showSaveCancel);
-  };
-
-  const handleSavePreferences = () => {
-    setShowSaveCancel(false);
+  const handleUpdatePreferences = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/user/update-preferences", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: userEmail,
+          preferences: preferences
+        }),
+      });
+  
+      // Check if the response is ok (status 200-299)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      // Optional: Update UI to reflect changes
+      // For example, show a success message to the user
+      console.log("Preferences saved successfully!");
+  
+    } catch (error) {
+      // Handle errors: show a message to the user, log, etc.
+      console.error('Error saving preferences:', error);
+    }
   };
 
   const handleCancelPreferences = () => {
-    setShowSaveCancel(false);
+    // Add your code for canceling preferences here
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+  const descriptions = {
+    lactoseIntolerance: 'This option is for individuals who cannot digest lactose, a sugar found in milk and dairy products.',
+    glutenIntolerance: 'This option is for individuals who experience adverse reactions to gluten, a protein found in wheat, barley, and rye.',
+    vegetarianism: 'This option is for individuals who do not consume meat.',
+    veganism: 'This option is for individuals who do not consume any animal products.',
+    kosher: 'This option is for individuals who adhere to kosher dietary laws.',
+    keto: 'This option is for individuals following a ketogenic diet, which is low in carbs and high in fats.',
+    diabetes: 'This option is for individuals with diabetes who need to monitor their carbohydrate intake.',
+    dairyFree: 'This option is for individuals who avoid all dairy products.',
+    others: 'This option is for individuals who have other dietary restrictions and preferences.'
   };
+
+  const handlePreferenceSelection = (preference, value) => {
+    setPreferences((prevPreferences) => ({
+      ...prevPreferences,
+      [preference]: value,
+    }));
+    
+    if (!isLastPreference) {
+      setCurrentPreferenceIndex((prevIndex) => prevIndex + 1);
+    } else {
+      setShowSummary(true);
+    }
+  };
+
+  const startSurvey = () => {
+    setPreviousScreen('intro');
+    setShowIntro(false);
+    setShowSummary(false);
+    setEditing(false);
+  };
+
+  const handleEdit = () => {
+    setShowIntro(false);
+    setShowSummary(false);
+    setEditing(true);
+  };
+
+  const handleEditFromIntro = () => {
+    setPreviousScreen('intro');
+    handleEdit();
+  };
+
+  const handleEditFromSummary = () => {
+    setPreviousScreen('summary');
+    handleEdit();
+  };
+
+  const handleDoneEditing = () => {
+    setEditing(false);
+    handleUpdatePreferences();
+    if (previousScreen === "intro") {
+      setShowIntro(true);
+    } else {
+      setShowSummary(true);
+    }
+  };
+
+  const handleCheckboxChangeInEdit = (preference) => {
+    setPreferences((prevPreferences) => ({
+      ...prevPreferences,
+      [preference]: !prevPreferences[preference],
+    }));
+  };
+  
+  const handleSubmit = async (values) => {
+    // handleUpdatePreferences();
+    setCurrentPreferenceIndex(0);
+    setPreviousScreen("intro");
+    setShowIntro(true);
+    setShowSummary(false);
+    handleDoneEditing();
+  };
+
+  function formatPreferenceKey(key) {
+    return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, (str) => str.toUpperCase());
+  }
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#fa7070',
+      },
+    },
+  });
 
   return (
-    <div>
-      <div className="dietary-preferences-container">
-        <h2 style={{ fontSize: '18px' }}>
-          Please set your dietary restrictions and preferences below:
-        </h2>
-        <ul style={{ listStyleType: 'none' }}>
-          <li>
-            <label className="checkbox-label" style={{ fontSize: '30px' }}>
-              Lactose Intolerance
-              <input
-                type="checkbox"
-                name="lactoseIntolerance"
-                className="checkbox-input"
-                checked={lactoseIntolerance}
-                onChange={handleLactoseIntoleranceChange}
-              />
-              <span className="checkmark"></span>
-            </label>
-            <p style={{ fontStyle: 'italic', fontSize: '14px', marginLeft: '40px' }}>
-              This option is for individuals who cannot digest lactose, a sugar found in milk and dairy products.
-            </p>
-          </li>
-          <li>
-            <label className="checkbox-label" style={{ fontSize: '30px' }}>
-              Gluten Intolerance or Sensitivity
-              <input
-                type="checkbox"
-                name="glutenIntolerance"
-                className="checkbox-input"
-                checked={glutenIntolerance}
-                onChange={handleGlutenIntoleranceChange}
-              />
-              <span className="checkmark"></span>
-            </label>
-            <p style={{ fontStyle: 'italic', fontSize: '14px', marginLeft: '40px' }}>
-              This option is for individuals who experience adverse reactions to gluten, a protein found in wheat, barley, and rye.
-            </p>
-          </li>
-          <li>
-            <label className="checkbox-label" style={{ fontSize: '30px' }}>
-              Vegetarianism
-              <input
-                type="checkbox"
-                name="vegetarianism"
-                className="checkbox-input"
-                checked={vegetarianism}
-                onChange={handleVegetarianismChange}
-              />
-              <span className="checkmark"></span>
-            </label>
-            <p style={{ fontStyle: 'italic', fontSize: '14px', marginLeft: '40px' }}>
-              This option is for individuals who do not consume meat.
-            </p>
-          </li>
-          <li>
-            <label className="checkbox-label" style={{ fontSize: '30px' }}>
-              Veganism
-              <input
-                type="checkbox"
-                name="veganism"
-                className="checkbox-input"
-                checked={veganism}
-                onChange={handleVeganismChange}
-              />
-              <span className="checkmark"></span>
-            </label>
-            <p style={{ fontStyle: 'italic', fontSize: '14px', marginLeft: '40px' }}>
-              This option is for individuals who do not consume any animal products.
-            </p>
-          </li>
-          <li>
-            <label className="checkbox-label" style={{ fontSize: '30px' }}>
-              Kosher
-              <input
-                type="checkbox"
-                name="kosher"
-                className="checkbox-input"
-                checked={kosher}
-                onChange={handleKosherChange}
-              />
-              <span className="checkmark"></span>
-            </label>
-            <p style={{ fontStyle: 'italic', fontSize: '14px', marginLeft: '40px' }}>
-              This option is for individuals who adhere to kosher dietary laws.
-            </p>
-          </li>
-          <li>
-            <label className="checkbox-label" style={{ fontSize: '30px' }}>
-              Keto
-              <input
-                type="checkbox"
-                name="keto"
-                className="checkbox-input"
-                checked={keto}
-                onChange={handleKetoChange}
-              />
-              <span className="checkmark"></span>
-            </label>
-            <p style={{ fontStyle: 'italic', fontSize: '14px', marginLeft: '40px' }}>
-              This option is for individuals following a ketogenic diet, which is low in carbs and high in fats.
-            </p>
-          </li>
-          <li>
-            <label className="checkbox-label" style={{ fontSize: '30px' }}>
-              Diabetes
-              <input
-                type="checkbox"
-                name="diabetes"
-                className="checkbox-input"
-                checked={diabetes}
-                onChange={handleDiabetesChange}
-              />
-              <span className="checkmark"></span>
-            </label>
-            <p style={{ fontStyle: 'italic', fontSize: '14px', marginLeft: '40px' }}>
-              This option is for individuals with diabetes who need to monitor their carbohydrate intake.
-            </p>
-          </li>
-          <li>
-            <label className="checkbox-label" style={{ fontSize: '30px' }}>
-              Dairy-free
-              <input
-                type="checkbox"
-                name="dairyFree"
-                className="checkbox-input"
-                checked={dairyFree}
-                onChange={handleDairyFreeChange}
-              />
-              <span className="checkmark"></span>
-            </label>
-            <p style={{ fontStyle: 'italic', fontSize: '14px', marginLeft: '40px' }}>
-              This option is for individuals who avoid all dairy products.
-            </p>
-          </li>
-          <li>
-            <label className="checkbox-label" style={{ fontSize: '30px' }}>
-              Others
-              <input
-                type="checkbox"
-                name="others"
-                className="checkbox-input"
-                onChange={handleOthersChange}
-              />
-              <span className="checkmark"></span>
-            </label>
-            <p style={{ fontStyle: 'italic', fontSize: '14px', marginLeft: '40px' }}>
-              This option is for individuals who have other dietary restrictions and preferences.
-            </p>
-          </li>
-        </ul>
-      </div>
-
-      {showSaveCancel && (
-        <div className="save-cancel-buttons">
-          <button className="save-button" onClick={handleSavePreferences}>
-            Save
-          </button>
-          <button className="cancel-button" onClick={handleCancelPreferences}>
-            Cancel
-          </button>
-        </div>
+    <Formik initialValues={preferences} onSubmit={handleSubmit}>
+      {({ values }) => (
+        <Form>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            bgcolor: '#a1c298',
+            borderRadius: '8px',
+            p: 4,
+            width: ['90%', '60%', '40%', '30%'],
+            mx: 'auto',
+            my: 4,
+            textAlign: 'center',
+          }}>
+            {showIntro ? (
+              <>
+                <Typography variant="h4" mb={3} fontWeight="bold">
+                  Dietary Preferences
+                </Typography>
+                <Typography variant="body1" mb={3}>
+                  Please take a quick survey to set your dietary restrictions and preferences:
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    sx={{ backgroundColor: "#6c757d", color: "#fff", "&:hover": { backgroundColor: "#5a6268" } }}
+                    onClick={handleEditFromIntro}
+                  >
+                    Edit Choices
+                  </Button>
+                  <Button variant="contained" color="primary"
+                    sx={{ backgroundColor: "#fa7070", "&:hover": { backgroundColor: "#e64a4a" } }}
+                    onClick={startSurvey}
+                  >
+                    Start Survey
+                  </Button>
+                </Box>
+              </>
+            ) : !showSummary && !editing ? (
+              <>
+                <Box mb={3} textAlign="left" width="100%">
+                  <Typography variant="h6" fontWeight="bold" mb={2}>
+                    {formatPreferenceKey(currentPreferenceKey)}
+                  </Typography>
+                  <Typography variant="body2" sx={{ ml: 5, fontStyle: 'italic', mb: 3 }}>
+                    {descriptions[currentPreferenceKey]}
+                  </Typography>
+                  <Box textAlign="center" width="100%">
+                    <Button variant="outlined"
+                      sx={{ mr: 2, borderColor: '#fa7070', color: '#fa7070', "&:hover": { borderColor: "#e64a4a" } }}
+                      onClick={() => handlePreferenceSelection(currentPreferenceKey, false)}
+                    >
+                      No, skip
+                    </Button>
+                    <Button variant="contained" color="primary"
+                      sx={{ backgroundColor: "#fa7070", "&:hover": { backgroundColor: "#e64a4a" } }}
+                      onClick={() => handlePreferenceSelection(currentPreferenceKey, true)}
+                    >
+                      Yes, this is a preference
+                    </Button>
+                  </Box>
+                </Box>
+              </>
+            ) : showSummary && !editing ? (
+              <>
+                <Typography variant="h5" mb={3} fontWeight="bold">
+                  Summary of your choices:
+                </Typography>
+                <Box component="ul" sx={{
+                  listStyleType: 'none',
+                  padding: 0,
+                  width: '100%',
+                  textAlign: 'left',
+                  '& li': {
+                    mb: 2,
+                    fontSize: '1.1em',
+                    fontWeight: 'medium'
+                  }
+                }}>
+                  {Object.keys(preferences).map((key) => (
+                    <li key={key}>
+                      {formatPreferenceKey(key)}: <strong>{preferences[key] ? "Yes" : "No"}</strong>
+                    </li>
+                  ))}
+                </Box>
+                <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'center' }}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    sx={{ backgroundColor: "#6c757d", color: "#fff", "&:hover": { backgroundColor: "#5a6268" } }}
+                    onClick={handleEditFromSummary}
+                  >
+                    Edit Choices
+                  </Button>
+                  <Button type="submit" variant="contained"
+                    sx={{ backgroundColor: "#fa7070", color: "#fff", "&:hover": { backgroundColor: "#e64a4a" } }}
+                  >
+                    Save Preferences
+                  </Button>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Typography variant="h5" mb={3} fontWeight="bold">
+                  Edit your choices:
+                </Typography>
+                <Box component="ul" sx={{
+                  listStyleType: 'none',
+                  padding: 0,
+                  width: '100%',
+                  textAlign: 'left',
+                  '& li': {
+                    mb: 2,
+                    fontSize: '1.1em',
+                    fontWeight: 'medium'
+                  }
+                }}>
+                  {Object.keys(preferences).map((key) => (
+                    <li key={key}>
+                      <Checkbox
+                        checked={preferences[key]}
+                        onChange={() => handleCheckboxChangeInEdit(key)}
+                        color="primary"
+                      />
+                      {formatPreferenceKey(key)}
+                    </li>
+                  ))}
+                </Box>
+                <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'center' }}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    sx={{ backgroundColor: "#fa7070", color: "#fff", "&:hover": { backgroundColor: "#e64a4a" }, mt: 4 }}
+                    onClick={handleDoneEditing}
+                  >
+                    Done Editing
+                  </Button>
+                </Box>
+              </>
+            )}
+          </Box>
+        </Form>
       )}
-    </div>
+    </Formik>
   );
+  
 };
 
 export default Preferences;

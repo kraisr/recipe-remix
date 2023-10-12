@@ -23,6 +23,24 @@ const Pantry = () => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
+              
+        // Cleanup: remove the event listener when the component unmounts
+        return () => {
+            document.removeEventListener('click', handleDocumentClick);
+        };
+    }, [isRecipeOpen]);
+    return ( 
+            <div className="pantry-container">
+                <div 
+                className="pantry-tag" 
+                style={{ display: isPantryOpen ? 'none' : 'flex' }} 
+                onClick={(e) => {
+                    e.stopPropagation();  // Stop the click event from bubbling up
+                    setIsPantryOpen(!isPantryOpen);
+                }}
+                >
+                    My Pantry
+                </div>
 
                 const data = await response.json();
                 setPantryIngredients(data);

@@ -1,24 +1,173 @@
-import React, { useState } from 'react';
-import './settings.css';
+import React, { useState, useEffect } from "react";
+import { Formik, Form, Field } from "formik";
+import { TextField, Button, FormControlLabel, Switch, Select, MenuItem, InputLabel, FormControl, Box, Typography } from "@mui/material";
+import * as yup from "yup";
+import "./settings.css";
+import "../../index.css";
 
 const Settings = () => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
-    const [areRemindersEnabled, setRemindersEnabled] = useState(false);
-    const [emailValue, setEmailValue] = useState('');
-    const [reminderTime, setReminderTime] = useState('');
-    const [emailError, setEmailError] = useState('');
+    const [reminder, setReminder] = useState(false);
+    const [preferenceEmail, setPreferenceEmail] = useState("");
+    const [reminderTime, setReminderTime] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [userEmail, setUserEmail] = useState("");
+    const [mode, setMode] = useState(false); // Initially set to dark mode (false)
 
-    const toggleDarkMode = () => {
-        setIsDarkMode(!isDarkMode);
+    const initialValues = {
+        preferenceEmail: "",
+        reminderTime: "",
     };
 
-    const toggleReminders = () => {
-        setRemindersEnabled(!areRemindersEnabled);
+    const settingsSchema = yup.object().shape({
+        preferenceEmail: yup.string().email("Invalid email format").required("Email is required"),
+        reminderTime: yup.string().required("Reminder time is required"),
+    });
+
+    useEffect(() => {
+        const fetchUserSettings = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    throw new Error("No token found");
+                }
+
+                const response = await fetch("http://localhost:8080/user/user", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    method: "GET",
+                });
+
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+
+                const data = await response.json();
+                setUserEmail(data.email);
+                setMode(data.mode); // Assuming "mode" is the key for light/dark mode in the response
+
+                if (data.mode) {
+                    const rootElement = document.getElementById("root");
+
+                    if (!rootElement.classList.contains("dark-mode")) {
+                        rootElement.classList.remove("light-mode");
+                        rootElement.classList.add("dark-mode");
+                      }  
+                } else {
+                    const rootElement = document.getElementById("root");
+
+                    if (!rootElement.classList.contains("light-mode")) {
+                        rootElement.classList.remove("dark-mode");
+                        rootElement.classList.add("light-mode");
+                      }     
+                }
+
+                setReminder(data.reminder); // Assuming "reminder" is the key for the reminder setting
+
+                setPreferenceEmail(data.reminderSetting.email); // Set preferenceEmail from the response
+                if (data.reminderSetting.everydayAt.bool) {
+                    // Everyday at is true, set the time for everydayAt
+                    setReminderTime(data.reminderSetting.everydayAt.time);
+                } else {
+                    // Everyday at is false, set the time for everyHour
+                    setReminderTime(data.reminderSetting.everyHour.time);
+                }
+
+                console.log("email is ", data.email);
+                console.log("mode is ", data.mode);
+                console.log("reminder is ", data.reminder);
+                console.log("data.reminderSetting.everydayAt is ", data.reminderSetting.everydayAt);
+                console.log("data.reminderSetting.everyHour is ", data.reminderSetting.everyHour);
+                console.log("data.reminderSetting.everydayAt.time is ", data.reminderSetting.everydayAt.time);
+                console.log("data.reminderSetting.everyHour.time is ", data.reminderSetting.everyHour.time);
+
+            } catch (error) {
+                console.error("Error fetching user settings:", error);
+            }
+        };
+
+        fetchUserSettings();
+    }, []);
+
+    const toggleDarkMode = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                throw new Error("No token found");
+            }
+
+            // Toggle the current mode (true for light mode, false for dark mode)
+            const updatedMode = !mode;
+
+            const response = await fetch("http://localhost:8080/user/mode", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: userEmail,
+                    mode: updatedMode,
+                }),
+            });
+
+            if (response.ok) {
+                setMode(updatedMode);
+
+                if (updatedMode) {
+                    const rootElement = document.getElementById("root");
+
+                    if (!rootElement.classList.contains("dark-mode")) {
+                        rootElement.classList.remove("light-mode");
+                        rootElement.classList.add("dark-mode");
+                      }  
+                } else {
+                    const rootElement = document.getElementById("root");
+
+                    if (!rootElement.classList.contains("light-mode")) {
+                        rootElement.classList.remove("dark-mode");
+                        rootElement.classList.add("light-mode");
+                      }     
+                }
+                console.log(`Updated mode successfully.`, updatedMode);
+            } else {
+                console.error(`Failed to update mode.`);
+            }
+        } catch (error) {
+            console.error("Error updating mode:", error);
+        }
+    };
+
+    const toggleReminder = async () => {
+        try {
+            // Toggle the current mode (true for light mode, false for dark mode)
+            const updatedReminder = !reminder;
+
+            const response = await fetch("http://localhost:8080/user/reminder", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: userEmail,
+                    reminder: updatedReminder,
+                }),
+            });
+
+            if (response.ok) {
+                setReminder(updatedReminder);
+                console.log(`Updated reminder successfully.`, updatedReminder);
+            } else {
+                console.error(`Failed to update reminder.`);
+            }
+        } catch (error) {
+            console.error("Error updating reminder:", error);
+        }
     };
 
     const handleEmailChange = (event) => {
-        setEmailValue(event.target.value);
-        setEmailError(''); // Clear any previous error message when the email input changes
+        setPreferenceEmail(event.target.value);
+        setEmailError(""); // Clear any previous error message when the email input changes
     };
 
     const handleReminderTimeChange = (event) => {
@@ -27,16 +176,51 @@ const Settings = () => {
 
     const validateEmail = (email) => {
         // Basic email format validation using a regular expression
-        const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+        const emailRegex = /^[a-z0-9!#$%&"*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&"*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
         return emailRegex.test(email);
     };
 
-    const handleSaveSettings = () => {
-        if (areRemindersEnabled && !validateEmail(emailValue)) {
-            setEmailError('Incorrect Email Format');
-        } else {
-            setEmailError(''); // Clear any previous error message
-            // Handle saving settings here
+    const handleSaveSettings = async () => {
+        if (reminder) {
+            if (!validateEmail(preferenceEmail)) {
+                setEmailError("Incorrect Email Format");
+                return; // Do not proceed if email format is incorrect
+            }
+
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    throw new Error("No token found");
+                }
+
+                // Determine whether "Everyday at" or "Every [] hours" was selected
+                const isEverydayAt = reminderTime.includes(":"); // Check if reminderTime contains ":"
+                const isEveryHour = !isEverydayAt;
+
+                const response = await fetch("http://localhost:8080/user/reminderSetting", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: userEmail,
+                        preferenceEmail: preferenceEmail, // Save preferenceEmail
+                        everydayAt: isEverydayAt, // Set to true if "Everyday at" was selected
+                        everyHour: isEveryHour,   // Set to true if "Every [] hours" was selected
+                        everydayAtTime: isEverydayAt ? reminderTime : "", // Set time if "Everyday at" was selected, otherwise ""
+                        everyHourTime: isEveryHour ? reminderTime : "",     // Set time if "Every [] hours" was selected, otherwise ""
+                    }),
+                });
+
+                if (response.ok) {
+                    setReminder(true); // Assuming you want to set reminder to true after saving
+                    console.log(`Updated reminderSetting successfully.`);
+                } else {
+                    console.error(`Failed to update reminderSetting.`);
+                }
+            } catch (error) {
+                console.error("Error updating reminderSetting:", error);
+            }
         }
     };
 
@@ -44,114 +228,153 @@ const Settings = () => {
         // Handle the click event for the Cancel button here
     };
 
-    const modeClass = isDarkMode ? 'dark-mode' : 'light-mode';
+    const modeClass = mode ? "light-mode" : "dark-mode"; // Check if mode is true (light mode)
+
+    const textFieldStyles = {
+        bgcolor: "#fbf2cf",
+        "& label.Mui-focused": {
+            color: "#000",
+        },
+        "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+                borderColor: "#a1c298",
+            },
+            "&:hover fieldset": {
+                borderColor: "#88b083",
+            },
+            "&.Mui-focused fieldset": {
+                borderColor: "#6b9466",
+            },
+        }
+    };
 
     return (
-        <div className={`settings ${modeClass}`}>
-            {/* Dark Mode Toggle */}
-            <div className="toggle-container">
-                <h2 style={{ fontSize: '18px' }}>Toggle between light / dark mode</h2>
-                <label className="toggle-switch">
-                    <input
-                        type="checkbox"
-                        checked={isDarkMode}
-                        onChange={toggleDarkMode}
-                    />
-                    <span className="slider"></span>
-                </label>
-            </div>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: "85vh", // Ensure it takes at least the full height of the viewport
+            }}
+        >
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    bgcolor: "#a1c298",
+                    borderRadius: "8px",
+                    p: 4,
+                    width: ["90%", "60%", "40%", "30%"],  // Responsive width
+                    mx: "auto",
+                    textAlign: "center",  // Ensure all text inside is centered
+                    fontSize: ["3vw", "2vw", "1.5vw", "1vw"],  // Responsive font size
+                }}
+            >
+                <Typography variant="h3" mb={3} fontWeight="bold">
+                    Settings
+                </Typography>
+                <Formik
+                    initialValues={initialValues}
+                    validationSchema={settingsSchema}
+                    onSubmit={(values, { setSubmitting }) => {
+                        handleSaveSettings(values);
+                        setSubmitting(false);
+                    }}
+                >
+                    {({ values, errors, touched, isSubmitting, handleChange, handleBlur, submitCount }) => (
+                        <Form>
+                            <FormControlLabel
+                                control={<Switch checked={mode} onChange={toggleDarkMode} />}
+                                label="Toggle between light / dark mode"
+                            />
 
-            {/* Reminders Toggle */}
-            <div className="toggle-container">
-                <h2 style={{ fontSize: '18px' }}>Set Reminder</h2>
-                <label className="toggle-switch">
-                    <input
-                        type="checkbox"
-                        checked={areRemindersEnabled}
-                        onChange={toggleReminders}
-                    />
-                    <span className="slider"></span>
-                </label>
-            </div>
+                            <FormControlLabel
+                                control={<Switch checked={reminder} onChange={toggleReminder} />}
+                                label="Set Reminder"
+                            />
 
-            {/* Email Input */}
-            {areRemindersEnabled && (
-                <div className="email-input-container">
-                    <div className="input-title">
-                        <h2 style={{ fontSize: '16px' }}>Email</h2>
-                    </div>
-                    <div className="input-field">
-                        <input
-                            type="text"
-                            placeholder="Enter your email"
-                            value={emailValue}
-                            onChange={handleEmailChange}
-                        />
-                    </div>
-                </div>
-            )}
+                            {reminder && (
+                                <TextField
+                                    label="User Email"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    value={values.email}
+                                    name="email"
+                                    error={Boolean(touched.email) && Boolean(errors.email) && submitCount > 0}
+                                    helperText={(touched.email && errors.email && submitCount > 0) ? errors.email : ""}
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    sx={textFieldStyles}
+                                />
+                            )}
 
-            {/* Error Message */}
-            {areRemindersEnabled && emailError && (
-                <div className="error-message">
-                    <p style={{ color: 'red' }}>{emailError}</p>
-                </div>
-            )}
+                            {reminder && (
+                                <FormControl fullWidth variant="outlined" margin="normal" sx={textFieldStyles}>
+                                    <InputLabel>Everyday at</InputLabel>
+                                    <Field
+                                        as={Select}
+                                        name="reminderTime"
+                                        label="Everyday at"
+                                        error={touched.reminderTime && Boolean(errors.reminderTime)}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.reminderTime}
+                                    >
+                                        {Array.from({ length: 48 }, (_, index) => (
+                                            <MenuItem key={index} value={`${String(Math.floor(index / 2)).padStart(2, "0")}:${index % 2 === 0 ? "00" : "30"}`}>
+                                                {`${String(Math.floor(index / 2)).padStart(2, "0")}:${index % 2 === 0 ? "00" : "30"}`}
+                                            </MenuItem>
+                                        ))}
+                                    </Field>
+                                </FormControl>
+                            )}
 
-            {/* Everyday at [] */}
-            {areRemindersEnabled && (
-                <div className="everyday-at-container">
-                    <div className="input-title">
-                        <h2 style={{ fontSize: '16px' }}>Everyday at</h2>
-                    </div>
-                    <div className="input-field">
-                        <select
-                            value={reminderTime}
-                            onChange={handleReminderTimeChange}
-                        >
-                            {/* Add the default option */}
-                            <option value="">Select an option</option>
-                            {/* Options for every 30 minutes */}
-                            {Array.from({ length: 48 }, (_, index) => (
-                                <option key={index} value={`${String(Math.floor(index / 2)).padStart(2, '0')}:${index % 2 === 0 ? '00' : '30'}`}>
-                                    {`${String(Math.floor(index / 2)).padStart(2, '0')}:${index % 2 === 0 ? '00' : '30'}`}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="input-title">
-                        <h2 style={{ fontSize: '16px' }}>or Every</h2> {/* Updated title */}
-                    </div>
-                    <div className="input-field">
-                        <select
-                            value={reminderTime}
-                            onChange={handleReminderTimeChange}
-                        >
-                            {/* Add the default option */}
-                            <option value="">Select an option</option>
-                            {/* Options for every 1 to 24 hours */}
-                            {Array.from({ length: 24 }, (_, index) => (
-                                <option key={index} value={`${index + 1}`}>
-                                    {`${index + 1} hours`}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-            )}
-
-            {/* Button Container */}
-            {areRemindersEnabled && (
-                <div className="save-button-container">
-                    <button className="cancel-button" onClick={handleCancelButtonClick}>
-                        Cancel
-                    </button>
-                    <button className="save-button" onClick={handleSaveSettings}>
-                        Save
-                    </button>
-                </div>
-            )}
-        </div>
+                            {reminder && (
+                                <Box mt={2} display="flex" justifyContent="space-between" width="100%">
+                                    <Button 
+                                        type="button" 
+                                        variant="contained" 
+                                        onClick={handleCancelButtonClick}
+                                        sx={{ 
+                                            mt: 4, 
+                                            backgroundColor: "#455A64",
+                                            color: "#FFFFFF",
+                                            "&:hover": {
+                                                backgroundColor: "#607D8B",
+                                            },
+                                            width: "48%",
+                                        }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button 
+                                        type="submit" 
+                                        variant="contained" 
+                                        disabled={isSubmitting}
+                                        sx={{ 
+                                            mt: 4, 
+                                            backgroundColor: "#fa7070",
+                                            color: "#fff",
+                                            "&:hover": {
+                                                backgroundColor: "#e64a4a",
+                                            },
+                                            width: "48%",
+                                        }}
+                                    >
+                                        Save
+                                    </Button>
+                                </Box>
+                            )}
+                        </Form>
+                    )}
+                </Formik>
+            </Box>
+        </Box>
     );
 };
 

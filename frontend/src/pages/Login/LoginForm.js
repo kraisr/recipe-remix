@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Container, Typography, InputAdornment, IconButton } from "@mui/material";
+import { Button, TextField, Container, Typography, InputAdornment, IconButton, Box } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../state";
+import "./loginForm.css";
 
 // Better form handling with Formik
 import { Formik } from "formik";
@@ -25,18 +26,65 @@ const initialValuesLogin = {
 
 const LoginForm = ({ onNavigateToRegister }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   /* Handler for response from GOOGLE API */
-  function handleCallbackResponse(res) {
+  async function handleCallbackResponse(res) {
     // console.log("Encoded JWT ID token: " + res.credential);
 
-    // decode the jwt encoded user object
-    var userObject = jwt_decode(res.credential);
-    console.log(userObject);
-  }
+    try {
+      // decode the jwt encoded user object
+      var userObject = jwt_decode(res?.credential);
 
+      // Send a POST request to your server with the user data
+      const loggedInResponse = await fetch(
+        "http://localhost:8080/auth/loginGoogle", 
+        {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              email: userObject.email,
+              firstName: userObject.given_name,
+              lastName: userObject.family_name,
+              // googleId: userObject.sub,
+          }),
+        }
+      );
+      
+      const loggedIn = await loggedInResponse.json();
+      
+      if (!loggedInResponse.ok) {
+        // throw new Error("Network response was not ok: ${loggedInResponse.statusText}");
+        setErrorMessage(loggedIn.error);
+        return;
+      }
+
+      // console.log(loggedIn);
+      if (loggedIn) {
+        // Use state modifier to store token and user
+        dispatch(
+            setLogin({
+                token: loggedIn.token,
+                user: loggedIn.user,
+            })
+        );
+
+        // Store the token in localStorage (or somewhere else)
+        localStorage.setItem("token", loggedIn.token);
+        localStorage.setItem("email", loggedIn.user.email);
+
+        // Navigate to the home page (or wherever you"d like)
+        navigate("/");
+      }
+    } catch (error) {
+        console.error("Error during login:", error);
+        // Handle error accordingly
+    }
+  }
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
@@ -46,7 +94,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
 
     google.accounts.id.renderButton(
       document.getElementById("signInDiv"),
-      { theme: "outline", size: "large"}
+      { theme: "outline", size: "large", shape: "pill"}
     );
 
     google.accounts.id.prompt();
@@ -72,12 +120,9 @@ const LoginForm = ({ onNavigateToRegister }) => {
     );
 
     const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-
-    if (loggedIn) {
-
-      // localStorage.setItem('userId', loggedIn.user._id);
       
+    if (loggedIn && loggedInResponse.ok) {    
+      onSubmitProps.resetForm();
       // Use state modifier to store token and user
       dispatch(
         setLogin({
@@ -86,19 +131,25 @@ const LoginForm = ({ onNavigateToRegister }) => {
         })
       );
 
-      localStorage.setItem('token', loggedIn.token);
+      localStorage.setItem("token", loggedIn.token);
+      localStorage.setItem("email", loggedIn.user.email);
       navigate("/");
+    } else {
+      setErrorMessage(loggedIn.error);
     }
   };
-
 
   const handleSubmit = async (values, onSubmitProps) => {
     await login(values, onSubmitProps);
   };
 
+  const handleForgotPasswordClick = () => {
+    navigate("/forgot-password");
+  };
+
   return (
     <Container component="main" maxWidth="xs">
-      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+      <Typography variant="h4" sx={{ fontWeight: "bold" }}>
         Login
       </Typography>
       <Formik 
@@ -133,18 +184,18 @@ const LoginForm = ({ onNavigateToRegister }) => {
               autoFocus
               sx={{ 
                 bgcolor: "#fbf2cf",
-                '& label.Mui-focused': {
-                  color: '#6b9466',  // Color of the label when input is focused
+                "& label.Mui-focused": {
+                  color: "#6b9466",  // Color of the label when input is focused
                 },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#a1c298',
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#a1c298",
                   },
-                  '&:hover fieldset': {
-                    borderColor: '#88b083',
+                  "&:hover fieldset": {
+                    borderColor: "#88b083",
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#6b9466',
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6b9466",
                   },
                 },
              }}
@@ -167,21 +218,21 @@ const LoginForm = ({ onNavigateToRegister }) => {
               autoComplete="new-password"
               sx={{ 
                 bgcolor: "#fbf2cf",
-                '& label.Mui-focused': {
-                  color: '#6b9466',  // Color of the label when input is focused
+                "& label.Mui-focused": {
+                  color: "#6b9466",  // Color of the label when input is focused
                 },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#a1c298',
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#a1c298",
                   },
-                  '&:hover fieldset': {
-                    borderColor: '#88b083',
+                  "&:hover fieldset": {
+                    borderColor: "#88b083",
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#6b9466',
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6b9466",
                   },              
                 },
-             }}
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -195,12 +246,38 @@ const LoginForm = ({ onNavigateToRegister }) => {
                 )
               }}
             />
+
+            {/* Forgot Password Button */}
+            <Box textAlign="right" width="100%" mt={0} mb={1}>
+              <Button
+                type="button"
+                variant="text"
+                sx={{ 
+                  color: "#000",
+                  fontSize: "0.8rem",
+                  "&:hover": {
+                    color: "#455A64",
+                    backgroundColor: "transparent", // Ensure that the background color doesn"t change
+                  }
+                }}
+                onClick={handleForgotPasswordClick}
+              >
+                Forgot Password?
+              </Button>
+            </Box>
+            
+            {/* Error Message on invalid credentials or unsuccessfull login attempt */}
+            {errorMessage && (
+              <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mb: 2 }}>
+                {errorMessage}
+              </Typography>
+            )}
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ 
-                  mt: 2, 
+                  mt: 1, 
                   backgroundColor: "#fa7070",
                   color: "#fff",
                   "&:hover": {
@@ -224,11 +301,20 @@ const LoginForm = ({ onNavigateToRegister }) => {
               }}
               onClick={handleRegisterClick}
             >
-              Don't have an account? Register
+              Don"t have an account? Register
             </Button>
             
             {/* Google Sign in Button */}
-            <div id="signInDiv"></div>
+            <Box 
+              display="flex" 
+              justifyContent="center" 
+              alignItems="center" 
+              width="100%" 
+              mt={2} 
+              mb={1}
+            >
+              <div id="signInDiv"></div>
+            </Box>
 
           </form>
         )}

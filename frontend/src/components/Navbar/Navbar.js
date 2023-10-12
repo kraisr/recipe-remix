@@ -9,6 +9,7 @@ import Logout from "../Logout/Logout";
 const Navbar = () => {
     let [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
     const [editModal, setEditModal] = useState(false);
+    const [logoutModal, setLogoutModal] = useState(false);
     const [click, setClick] = useState(false);
     
     let submenuRef = useRef(null);
@@ -37,6 +38,10 @@ const Navbar = () => {
         }
         setIsSubMenuOpen(isSubMenuOpen);
     };
+
+    const toggleLogoutModal = () => {
+        setLogoutModal(!logoutModal); // Toggle the logout modal state
+    }
 
     const toggleModal = () => {
         setEditModal(true);
@@ -137,13 +142,13 @@ const Navbar = () => {
                                     <span>{'>'}</span>
                                 </Link>
 
-                                <Link to="/../profile" className="sub-menu-link" onClick={toggleModal}>
+                                <Link to="/../profile" className="sub-menu-link" onClick={setLogoutModal}>
                                     <i className="fa-solid fa-user"></i>
                                     <p>Logout</p>
                                     <span>{'>'}</span>
                                 </Link>
 
-                                {editModal && <Logout />}
+                                {logoutModal && <Logout closeModal={toggleLogoutModal} isOpen={logoutModal} />}
 
                             </div>
                         </div>
