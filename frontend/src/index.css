@@ -16,7 +16,7 @@
 .dark-mode {
   --primary: #1aac83;
   --error: #e7195a;
-  --color-primary: #445C46; /* Light mode background color */
+  --color-primary: #4E6C50; /* Light mode background color */
 }
 .light-mode {
   --primary: #1aac83;
