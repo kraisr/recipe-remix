@@ -21,7 +21,8 @@ export const getUser = async (req, res) => {
 
 export const addIngredient = async (req, res) => {
     try {
-  const ingredient = req.body.ingredientName;
+
+        const ingredient = req.body.ingredientName;
 
         const updatedPantry = await User.findOneAndUpdate(
             { _id: userId, "pantry.ingredientName": { $ne: ingredient } },
@@ -42,6 +43,8 @@ export const addIngredient = async (req, res) => {
     }
 };
 
+
+
 export const getFromPantry = async (req, res) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
@@ -59,6 +62,32 @@ export const getFromPantry = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+export const deleteIngredient = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        const ingredient = req.body.ingredientName;
+
+        const updatedPantry = await User.findByIdAndUpdate(
+            userId,
+            { $pull: { pantry: { ingredientName: ingredient } } },
+            { new: true }
+        ).select('-password');
+
+        if (!updatedPantry) {
+            return res.status(400).json({ error: "Error updating pantry or ingredient not found" });
+        }
+
+        res.status(200).json({ message: "Ingredient deleted successfully" });
+    } catch (err) {
+        console.error("Error in deleteIngredient function:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
 
 // Function to update user information
 export const updateUser = async (req, res) => {
