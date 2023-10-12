@@ -19,7 +19,7 @@ export const sendEmail = async (req, res) => {
         // Formulate email options
         const mailOptions = {
             from: "app.reciperemix@gmail.com", // Sender address
-            to: "app.reciperemix@gmail.com", // List of receivers
+            to: `app.reciperemix@gmail.com, ${userContactEmail}`, // List of receivers
             subject: subject, // Subject line
             text: `From: ${userContactEmail}\n\n${body}` // Plain text body
         };
