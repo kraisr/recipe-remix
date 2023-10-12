@@ -5,23 +5,34 @@ import * as yup from "yup";
 import "./settings.css";
 import "../../index.css";
 
+
+
 const Settings = () => {
+    const isValidEmail = (email) => {
+        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+        return emailRegex.test(email);
+    };
+
+/* Validation of input in the login form */
+const loginSchema = yup.object().shape({
+    email: yup.string().email("Invalid email address").required("Email is required"),
+  });
+
     const [reminder, setReminder] = useState(false);
     const [preferenceEmail, setPreferenceEmail] = useState("");
     const [reminderTime, setReminderTime] = useState("");
     const [emailError, setEmailError] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [mode, setMode] = useState(false); // Initially set to dark mode (false)
+    const settingsSchema = yup.object().shape({
+        email: yup.string().email("Invalid email address").required("Please enter a valid email"),
+        reminderTime: yup.string().required("Reminder time is required"),
+    });
 
     const initialValues = {
         preferenceEmail: "",
         reminderTime: "",
     };
-
-    const settingsSchema = yup.object().shape({
-        preferenceEmail: yup.string().email("Invalid email format").required("Email is required"),
-        reminderTime: yup.string().required("Reminder time is required"),
-    });
 
     useEffect(() => {
         const fetchUserSettings = async () => {
@@ -68,7 +79,7 @@ const Settings = () => {
                 setPreferenceEmail(data.reminderSetting.email); // Set preferenceEmail from the response
 
 
-                    setReminderTime(data.reminderSetting.everydayAt.time);
+                setReminderTime(data.reminderSetting.everydayAt.time);
 
 
                 console.log("email is ", data.email);
@@ -233,6 +244,15 @@ const Settings = () => {
     const handleSaveButtonClick = async () => {
         // Handle the click event for the Clear button here
         console.log('save clicked');
+        // try {
+        //     await settingsSchema.validate({
+        //         email: preferenceEmail,
+        //         reminderTime: reminderTime
+        //     });
+        // } catch (error) {
+        //     console.error("Validation Error:", error.errors);
+        //     return; // exit the function if validation fails
+        // }
         if (reminder) {
             const token = localStorage.getItem("token");
             if (!token) {
@@ -335,11 +355,14 @@ const Settings = () => {
                 </Typography>
                 <Formik
                     initialValues={initialValues}
-                    validationSchema={settingsSchema}
-                    onSubmit={(values, { setSubmitting }) => {
-                        //handleSaveSettings(values);
-                        setSubmitting(false);
+                    validate={values => {
+                        const errors = {};
+                        if (!isValidEmail(values.email)) {
+                            errors.email = "Invalid email format";
+                        }
+                        return errors;
                     }}
+                    validationSchema={loginSchema}
                 >
                     {({ values, errors, touched, isSubmitting, handleChange, handleBlur, submitCount }) => (
                         <Form>
