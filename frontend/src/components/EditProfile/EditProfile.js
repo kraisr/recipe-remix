@@ -85,27 +85,13 @@ function EditProfile({closeModal, applyChanges, profileData}) {
     // Pass the updated data to the parent component
     //applyChanges({ name, username, bio, link, image: selectedImage });
     closeModal();
-    // if (file) {
-    //   // Log the MIME type (if available)
-  
-    //   const bucketName = 'ryan-leonard-bucket1';
-    //   const timestamp = Date.now();
-    //   const key = `user_${username}_${timestamp}`;
-  
-    //   try {
-    //     const imageUrl = await uploadImageToS3(file, bucketName, key);
-    //     console.log(imageUrl);
-    //     // Update the selectedImage state with the image URL
-    //     setSelectedImage(imageUrl);
-    //   } catch (error) {
-    //     console.error('Error uploading image to S3:', error);
-    //     // Handle the error, e.g., display an error message to the user
-    //   }
-    // } else {
-    //   console.error('No file selected.');
-    // }
+    
     postChanges();
     
+  }
+
+  const revertChange = () => {
+    setSelectedImage(null);
   }
 
   return (
@@ -130,6 +116,9 @@ function EditProfile({closeModal, applyChanges, profileData}) {
 
                   <div className="picture-text">
                       <p>Change profile picture</p>
+                  </div>
+                  <div className="picture-text" onClick={revertChange}>
+                      <p>Set to Default</p>
                   </div>
               </div>
 
