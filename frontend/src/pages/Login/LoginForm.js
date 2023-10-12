@@ -119,9 +119,9 @@ const LoginForm = ({ onNavigateToRegister }) => {
 
     //check if they are using 2FA
     if(loggedIn.set2FA){
-      navigate("/sendcode");
-      
+      navigate("/sendcode"); 
     }
+    
     if (loggedIn && loggedInResponse.ok) {    
       onSubmitProps.resetForm();
       // Use state modifier to store token and user
