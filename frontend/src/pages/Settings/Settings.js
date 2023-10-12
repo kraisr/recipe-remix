@@ -66,15 +66,13 @@ const Settings = () => {
                 setReminder(data.reminder); // Assuming "reminder" is the key for the reminder setting
 
                 setPreferenceEmail(data.reminderSetting.email); // Set preferenceEmail from the response
-                if (data.reminderSetting.everydayAt.bool) {
-                    // Everyday at is true, set the time for everydayAt
+
+
                     setReminderTime(data.reminderSetting.everydayAt.time);
-                } else {
-                    // Everyday at is false, set the time for everyHour
-                    setReminderTime(data.reminderSetting.everyHour.time);
-                }
+
 
                 console.log("email is ", data.email);
+                console.log("data.reminderSetting.email is ", data.reminderSetting.email);
                 console.log("mode is ", data.mode);
                 console.log("reminder is ", data.reminder);
                 console.log("data.reminderSetting.everydayAt is ", data.reminderSetting.everydayAt);
