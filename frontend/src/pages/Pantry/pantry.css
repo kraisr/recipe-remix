@@ -154,6 +154,16 @@ img {
     background-color: #FF3D3D;
 }
 
+.search-input {
+    width: 90%; /* Adjust as needed */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+
 @media (min-width: 769px) {
     .pantry-tag {
         display: none !important;
