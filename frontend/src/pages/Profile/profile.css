@@ -11,50 +11,63 @@
     margin:10px 10px 20px 20px;
 }
 
-.user-profile-card{
-    padding-top: 20px;
-    background-color: #FBF2CF;
-    margin: 20px 20px 20px 20px;
-    max-width: 150%;
-    min-width:150%;
-    height: 100%;
-    border-radius: 10%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
+.user-profile-card {
+  padding-top: 20px;
+  background-color: #FBF2CF;
+  margin: 20px;
+  max-width: 50vw; /* Adjusted to be a relative width */
+  width: 30vw;
+  min-width: 300px;
+  height: 80%; /* Adjusted to auto so it can shrink in height */
+  border-radius: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
 }
 
-.profile-picture{
-    
-    margin:50px;
-    padding: 40px;
-    border-radius: 100%;
-    background-color: #C6EBC5;
-    max-width: 100px;
-    margin-bottom: 10px;
+
+.profile-picture {
+  position: relative;
+  top: 0%;
+  padding: 5%; /* Adjusted padding to be relative to the container */
+  border-radius: 50%; /* Use a percentage for border-radius to maintain a circular shape */
+  background-color: #C6EBC5;
+  max-width: 150%; /* Adjusted to be a relative max-width */
+  margin-bottom: 10%; /* Adjusted margin to be relative */
 }
+
 
 .profile-picture i {
-    font-size: 5rem;
+  
+  font-size: 5vh;
+  font-size: 5vw;  /* Adjusted font-size to be relative to the viewport width */
+  padding:20px;
 }
 
 .uploaded-pip img {
     margin: 10px;
 } 
-
+.pfp-container{
+  border:1px solid red;
+  width:50%;
+  height:50%;
+}
 
 .profile-info {
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    position: relative;
-    top: -30px;
-    right: -80px;
-    margin-right: auto;
-    min-width: 50%
-  }
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  position: relative;
+  top: -30px;
+  right: 0; /* Adjusted right positioning */
+  margin-right: 30%;
+  margin-left:30%;
+  width: 40%; /* Adjusted width to take full space */
+  /* border:red solid 1px; */
+}
+
   
   .profile-field {
     display: flex;
@@ -80,6 +93,7 @@
   
   .edit-profile {
     margin-top: 0px;
+    margin-bottom:20%;
   }
   
   .edit-profile h3 {
@@ -94,29 +108,31 @@
   
   .card-options {
     position: relative; /* Changed from absolute to relative */
-    display: inline-block;
+    left:30%;
     cursor: pointer;
   }
   
   .card-options i {
     font-size: 1.5rem;
-    padding-left: 800%;
+    padding: 20%;
   }
   
   .card-dropdown-menu {
-    display: block;
     position: absolute;
-    top: 100%;
-    right: 0;
+    top: 70%;
+    /* height:30px; */
+    left:-190%;
+    display:block;
     background-color: #f9f9f9;
-    transform: translateX(200%);
+    padding:0;
+    /* transform: translateX(200%); */
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
   }
   
   .card-dropdown-item {
     color: black;
-    padding: 12px 16px;
+    padding:5px 10px 5px 10px; 
     text-decoration: none;
     display: block;
   }

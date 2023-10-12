@@ -123,7 +123,7 @@ const Profile = () => {
                       )}
                   </div>    
                     
-                  <div className="pfp-container">
+                  
                         
                     <div className={`${!image ? "profile-picture": " uploaded-pfp"}`} onClick={toggleModal}>
                     {image ? (
@@ -131,7 +131,7 @@ const Profile = () => {
                       ) : (
                         <i className="fa-solid fa-user"></i>
                     )}
-                  </div>
+                  
                         
                     </div>
                     
@@ -160,10 +160,10 @@ const Profile = () => {
                     </div>
 
                     {editModal && <EditProfile 
-                                    closeModal={setEditModal} 
-                                    applyChanges={applyChanges}
-                                     profileData={{ name, username, bio, link, image }}
-                                    />}
+                      closeModal={setEditModal} 
+                      applyChanges={applyChanges}
+                      profileData={{ name, username, bio, link, image }}
+                    />}
                 </div>
                 
             </div>

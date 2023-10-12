@@ -198,6 +198,7 @@ nav {
       opacity: 0;
       transition: all 0.5s ease;
       align-items: center;
+      z-index:1;
     }
   
     .nav-menu.active {
@@ -232,6 +233,7 @@ nav {
       max-height: 0px;
       overflow: hidden;
       transition: max-height 0.5s;
+      max-width:0px;
     }
   
   
