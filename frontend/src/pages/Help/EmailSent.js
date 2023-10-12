@@ -30,7 +30,7 @@ function EmailSent({ onReset }) {
             </Typography>
             <Button 
                 variant="contained" 
-                sx={{ mt: 4, backgroundColor: "#fa7070", color: "#fff", "&:hover": { backgroundColor: "#e64a4a" }}}
+                sx={{ mt: 4, backgroundColor: "#fa7070", color: "#fff", whiteSpace: "nowrap", "&:hover": { backgroundColor: "#e64a4a" }}}
                 onClick={onReset}
             >
                 Send Another Email
