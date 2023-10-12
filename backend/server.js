@@ -7,11 +7,11 @@ import authRoutes from "./routes/auth.js";
 import suggesticRoutes from "./routes/suggesticRoutes.js";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/user.js";
-import { sendEmail } from './controllers/sendEmail.js';
+import { sendEmail } from "./controllers/sendEmail.js";
 
 dotenv.config();
-// import { GraphQLClient } from 'graphql-request';
-// import axios from 'axios';
+// import { GraphQLClient } from "graphql-request";
+// import axios from "axios";
 
 
 // create express app
@@ -33,7 +33,7 @@ app.use("/user", userRoutes);
 
 
 /* SUGGESTIC API */
-app.use('/api', suggesticRoutes);
+app.use("/api", suggesticRoutes);
 
 
 
@@ -41,17 +41,17 @@ app.use('/api', suggesticRoutes);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send("Something broke!");
 });
 
 // define a callback function with request and response parameters
-app.get('/', (req, res) => {
-  res.send({ message: 'Hello World!' });
+app.get("/", (req, res) => {
+  res.send({ message: "Hello World!" });
 });
 
 
 const sendDailyReminders = async () => {
-  const UserModule = await import('./models/User.js'); 
+  const UserModule = await import("./models/User.js"); 
   const User = UserModule.default;
 
   const currentHour = new Date().getHours();
@@ -59,7 +59,7 @@ const sendDailyReminders = async () => {
   let currentTime = `${String(currentHour).padStart(2, "0")}:${String(currentMinute).padStart(2, "0")}`;
   currentTime = currentTime.trim(); // Trim any whitespace
 
-  console.log('currentTime', currentTime);
+  console.log("currentTime", currentTime);
 
   const allUsers = await User.find();
 
@@ -80,7 +80,7 @@ const sendDailyReminders = async () => {
   for (const user of usersToNotify) {
     console.log(`Processing user with email: ${user.email}`);  // <-- This line prints the user.email
 
-    console.log('found');
+    console.log("found");
     try {
       const mockReq = {
         body: {
@@ -96,7 +96,7 @@ const sendDailyReminders = async () => {
         })
       };
 
-      //console.log('user contact email', user.email);
+      //console.log("user contact email", user.email);
       await sendEmail(mockReq, mockRes);
     } catch (error) {
       console.error(`Failed to send email to ${user.reminderSetting.email}:`, error);
@@ -110,7 +110,7 @@ const startServer = async () => {
     // connect to MongoDB using .env variable
     connectDB(process.env.MONGO_URL);
 
-    app.listen(8080, () => console.log('Server is running on port http://localhost:8080'));
+    app.listen(8080, () => console.log("Server is running on port http://localhost:8080"));
   } catch (error) {
     console.log(error);
   }
@@ -118,10 +118,7 @@ const startServer = async () => {
 
 
 
-cron.schedule('* * * * * *', sendDailyReminders);
+cron.schedule("0 8 * * * *", sendDailyReminders);
 
 
 startServer();
-
-
-
