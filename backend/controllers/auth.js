@@ -110,12 +110,17 @@ export const loginGoogle = async (req, res) => {
         // Find specified user given email using mongoose
         let user = await User.findOne({ email: email });
         // console.log(user);
+
+        // Extract username from email
+        const username = email.substr(0, email.indexOf("@"));
+
         // If user does not exist, register user
         if (!user) {
             user = new User({
                 email,
                 firstName,
                 lastName,
+                username,
                 googleSignIn: true,
             });
             // console.log(user);
