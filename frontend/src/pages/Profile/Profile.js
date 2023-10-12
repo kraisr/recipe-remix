@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom"
 import "./profile.css";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLogout } from "../../state";
 
 
 //components
@@ -17,6 +20,33 @@ const Profile = () => {
   const [bio, setBio] = useState(null);
   const [link, setLink] = useState(null);
   const[selectedImage, setSelectedImage] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
+  const Navigate = useNavigate();
+
+    const handleLogoutClick = () => {
+        // Logout logic
+        dispatch(setLogout());
+        Navigate("/");
+    };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
 
   const toggleModal = () => {
     setEditModal(true);
@@ -31,6 +61,8 @@ const Profile = () => {
     setLink(data.link);
     setImage(data.image);
   }
+
+  
 
   useEffect(() => {
     //used for getting and displaying the name of the user on the profile page
@@ -81,7 +113,17 @@ const Profile = () => {
                 </div>
 
                 <div className="user-profile-card">
-                    <div className="pfp-container">
+                  <div className="card-options" onClick={toggleDropdown} ref={dropdownRef}>
+                      <i className="fas fa-ellipsis-h"></i> {/* Three dots icon */}
+                      {dropdownOpen && (
+                        <div className="card-dropdown-menu">
+                          <Link to="/settings" className="card-dropdown-item">Settings</Link>
+                          <Link to="#" className="card-dropdown-item" onClick={handleLogoutClick} >Logout</Link>
+                        </div>
+                      )}
+                  </div>    
+                    
+                  <div className="pfp-container">
                         
                     <div className={`${!image ? "profile-picture": " uploaded-pfp"}`} onClick={toggleModal}>
                     {image ? (
