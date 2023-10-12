@@ -21,9 +21,6 @@ export const getUser = async (req, res) => {
 
 export const addIngredient = async (req, res) => {
     try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.id;
 
         const ingredient = req.body.ingredientName;
 
