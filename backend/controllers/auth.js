@@ -75,7 +75,7 @@ export const login = async (req, res) => {
             console.log('2FA enabled');
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
             delete user.password;
-            return res.status(400).json({ set2FA: true, user, token });
+            return res.status(200).json({ set2FA: true, user, token });
         } else {
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
             delete user.password;

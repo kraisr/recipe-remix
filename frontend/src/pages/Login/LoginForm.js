@@ -118,11 +118,15 @@ const LoginForm = ({ onNavigateToRegister }) => {
     const loggedIn = await loggedInResponse.json();
 
     //check if they are using 2FA
-    if(loggedIn.set2FA){
-      navigate("/sendcode"); 
-    }
     
-    if (loggedIn && loggedInResponse.ok) {    
+   
+
+    if (loggedIn && loggedInResponse.ok) {  
+      
+      if(loggedIn.set2FA){
+        window.alert("hi");
+        navigate("/sendcode"); 
+      }
       onSubmitProps.resetForm();
       // Use state modifier to store token and user
       dispatch(

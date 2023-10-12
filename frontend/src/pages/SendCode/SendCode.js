@@ -8,7 +8,7 @@ const SendCode = () => {
   const [enteredCode, setEnteredCode] = useState(null);
   const [verificationCode, setVerificationCode] = useState(null);
   let [createdCode, setCreatedCode] = useState("");
-  let dumbCode = null;
+
   const navigate = useNavigate();
   const handleXButtonClick = () => {
     // Navigate back to the login page
@@ -42,10 +42,10 @@ const SendCode = () => {
     console.log("created code:", createdCode);
     console.log('entered code:', enteredCode);
     if (enteredCode === createdCode){
-      navigate('/');
+      navigate('/profile');
     }
     else {
-      console.log('bad');
+      console.log('Verification failed');
     }
   }
 
@@ -92,7 +92,6 @@ const SendCode = () => {
             <ReactCodeInput 
               type="text"
               className="codeInput"
-              // onComplete={checkCode}
               onChange={handleVerificationCodeChange}
             />
             <Button
