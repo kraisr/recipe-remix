@@ -39,7 +39,7 @@ export const addIngredient = async (req, res) => {
             return res.status(400).json({ error: "Error updating pantry or ingredient already exists" });
         }
 
-        res.status(200).json(updatedPantry);
+        res.status(200).json({ message: "Ingredient added successfully" });
     } catch (err) {
         console.error("Error in addIngredient function:", err);
         res.status(500).json({ error: err.message });

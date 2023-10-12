@@ -8,17 +8,29 @@
     height: calc(100% - 100px);
 
 }
+
+.pantry-title { /* Style for the "My Pantry" text */
+    margin-bottom: 10px;
+    font-size: 24px;       /* You can adjust this as per your preference */
+    font-weight: bold;     /* Making the text bold */
+    text-align: center;    /* Centering the text */
+}
 .pantry-left-container{
     display: flex;
     background-color: #FBF2CF;
     justify-self: start;
     justify-content: center;
-    width: 25vw;
+    width: 50vw;
     height: 650px;
     border-radius: 0 25px 25px 0;
     box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
     position: static;
     transform: none;
+    overflow-x: hidden;
+    overflow-y: auto;  /* This allows vertical scrolling */
+    max-height: 650px; /* Adjust if necessary; ensures a fixed height */
+    flex-direction: column;  /* Make sure content stacks vertically */
+    align-items: center;     /* Center items horizontally */
 }
 
 img {
@@ -34,8 +46,8 @@ img {
     justify-content: space-between;
     text-align: center;
     align-items: center;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 1px;
+    padding-right: 1px;
 }
 
 .pantry-right-container{
@@ -43,7 +55,7 @@ img {
     background-color: #FBF2CF;
     justify-self: end;
     justify-content: center;
-    width: 25vw;
+    width: 50vw;
     height: 650px;
     border-radius: 25px 0 0 25px;
     box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
@@ -77,150 +89,39 @@ img {
     padding: 20px;
 }
 
-.ingredient-bubble {
-    background-color: #FBF2CF;
-    border-radius: 25px;
-    padding: 10px 20px;
-    text-align: center;
-    box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
-    transition: transform 0.3s;
-}
 
 .ingredient-bubble:hover {
     transform: scale(1.1);
     cursor: pointer;
 }
 
-.hamburger-icon {
-    display: none;
-    position: absolute;
-    top: 125px;  /* Adjust based on your preference and navbar height */
-    left: 10px; /* Adjust as needed */
-    padding: 10px 20px;  /* Adds some padding around the text */
-    background-color: #FBF2CF;  /* Example background color */
-    color: black;  /* Text color */
-    border-radius: 20px;  /* Rounded corners */
-    cursor: pointer;  /* Indicates it's clickable */
-    font-weight: bold;  /* Makes the text bold */
+
+.ingredients-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px; /* Adjusted gap for equal spacing vertically and horizontally */
+    padding: 10px;
+    height: 550px; 
+    overflow-y: auto; 
+}
+
+.ingredient-bubble {
+    background-color: #e6b240;
+    border-radius: 25px;
+    font-size: 1em; /* Set a default size */
+    padding: 5px 10px;  /* Adjust padding to reduce bubble size */
+    text-align: center;
     box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s;
+    height: 40px;  /* Reduce height to fit bubbles within the container */
+    line-height: 40px;  /* Adjust to center text vertically */
+    white-space: nowrap;  /* Prevent text from wrapping to the next line */
+    overflow: hidden;  /* Hide excess content */
+    text-overflow: ellipsis;  /* Add ellipsis if text overflows */
+    max-width: 100%;  /* Ensure bubble doesn't exceed its container */
 }
 
-.recipe-tag {
-    display: none;
-    position: absolute;
-    top: 125px;  /* Adjust based on your preference and navbar height */
-    right: 10px; /* Adjust as needed */
-    padding: 10px 20px;  /* Adds some padding around the text */
-    background-color: #FBF2CF;  /* Example background color */
-    color: black;  /* Text color */
-    border-radius: 20px;  /* Rounded corners */
-    cursor: pointer;  /* Indicates it's clickable */
-    font-weight: bold;  /* Makes the text bold */
-    box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
-}
 
-@media (max-width: 768px) {
-    .pantry-container {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        height: calc(100% - 100px);
-    }
 
-    .pantry-left-container,
-    .pantry-right-container {
-        width: 50vw;
-        margin: 10px 0;
-        border-radius: 25px;
-        box-shadow: none;
-    }
 
-    .pantry-center-container img {
-        height: 150px; 
-        width: 150px;
-        padding-top: 200px;
-        padding-bottom: 20px;
-    }
 
-    .pantry-button {
-        width: 80%;  
-        padding: 10px 20px;
-        font-size: 30px;
-    }
-
-    .hamburger-icon {
-        display: block;
-        justify-content: space-between;
-        position: absolute;
-        top: 150px;
-        left: 10px;
-        z-index: 1000; 
-        width: auto;
-        height: auto;
-    }
-
-    .recipe-tag {
-        display: block;
-        justify-content: space-between;
-        position: absolute;
-        top: 150px;
-        right: 10px;
-        z-index: 1000;
-        width: auto; 
-        height: auto; 
-        left: auto; 
-    }
-
-    .pantry-left-container {
-        position: fixed;
-        top: 150px;
-        left: 0;
-        width: 50vw;
-        height: calc(100% - 60px);
-        z-index: 999; 
-        overflow-y: auto; 
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-    .pantry-center-container{
-        display: flex;
-        flex-direction: column;
-        justify-self: center;
-        justify-content: center;
-        justify-content: space-between;
-        text-align: center;
-        align-items: center;
-        top: 200px;
-        width: 100%;
-        height: calc(100% - 100px);
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-    .pantry-right-container {
-        position: fixed;
-        top: 150px;
-        right: 0;
-        width: 50vw;
-        height: calc(100% - 60px);
-        z-index: 999; 
-        overflow-y: auto; 
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-    }
-
-    .pantry-left-container.open {
-        transform: translateX(0); 
-    }
-    .pantry-right-container.open {
-        transform: translateX(0);
-    }
-}
-
-@media (min-width: 769px) {
-    .hamburger-icon {
-        display: none !important;
-    }
-    .recipe-tag {
-        display: none !important;
-    }
-}
