@@ -33,7 +33,7 @@ const corsOptions = {
 
 
 /* add middlewares */
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(cors());
