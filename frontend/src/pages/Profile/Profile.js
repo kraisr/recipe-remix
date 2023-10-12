@@ -118,8 +118,8 @@ const Profile = () => {
                       {dropdownOpen && (
                         <div className="card-dropdown-menu">
                           <Link to="/settings" className="card-dropdown-item">Settings</Link>
-                          <Link to="/preferences" className="card-dropdown-item" onClick={handleLogoutClick} >Preferences</Link>
-                          <Link to="/help" className="card-dropdown-item" onClick={handleLogoutClick} >Help</Link>
+                          <Link to="/preferences" className="card-dropdown-item">Preferences</Link>
+                          <Link to="/help" className="card-dropdown-item">Help</Link>
                           <Link to="#" className="card-dropdown-item" onClick={handleLogoutClick} >Logout</Link>
                         </div>
                       )}
