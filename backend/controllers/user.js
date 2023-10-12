@@ -204,6 +204,11 @@ export const mode = async (req, res) => {
         // Update the specific preference name with the updated value
         user.reminder = reminder;
   
+        if (!reminder) {
+            user.reminderSetting.everydayAt.bool = false;
+            console.log(`Updated user.reminderSetting.everydayAt.bool`);
+        }
+
         // Save the updated user object
         const updatedUser = await user.save();
   

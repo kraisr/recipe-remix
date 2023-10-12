@@ -121,8 +121,8 @@ input:checked + .slider:before {
     text-align: center;
 }
 
-/* Save and Cancel Button Styles */
-.save-button, .cancel-button {
+/* Save and Clear Button Styles */
+.save-button, .clear-button {
     padding: 10px 20px;
     background-color: #2196F3;
     color: #fff;
@@ -134,7 +134,7 @@ input:checked + .slider:before {
     margin-right: 2px; /* Updated margin-right to 2px */
 }
 
-.save-button:hover, .cancel-button:hover {
+.save-button:hover, .clear-button:hover {
     background-color: #0e77d4;
 }
 

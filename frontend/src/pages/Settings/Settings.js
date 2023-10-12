@@ -223,14 +223,15 @@ const Settings = () => {
         }
     };
 
-    const handleCancelButtonClick = () => {
-        // Handle the click event for the Cancel button here
+    const handleClearButtonClick = () => {
+        // Handle the click event for the Clear button here
         console.log('cancel clicked');
-
+        setPreferenceEmail('');
+        setReminderTime('');
     };
 
     const handleSaveButtonClick = async () => {
-        // Handle the click event for the Cancel button here
+        // Handle the click event for the Clear button here
         console.log('save clicked');
         if (reminder) {
             const token = localStorage.getItem("token");
@@ -401,7 +402,7 @@ const Settings = () => {
                                     <Button
                                         type="button"
                                         variant="contained"
-                                        onClick={handleCancelButtonClick}
+                                        onClick={handleClearButtonClick}
                                         sx={{
                                             mt: 4,
                                             backgroundColor: "#455A64",
@@ -412,7 +413,7 @@ const Settings = () => {
                                             width: "48%",
                                         }}
                                     >
-                                        Cancel
+                                        Clear
                                     </Button>
                                     <Button
                                         type="submit"
