@@ -26,6 +26,11 @@ app.use("/auth", authRoutes);
 
 app.use("/user", userRoutes);
 
+// app.use("/pref", prefRoutes);
+
+// app.use("/set", setRoutes);
+
+
 /* SUGGESTIC API */
 app.use('/api', suggesticRoutes);
 
