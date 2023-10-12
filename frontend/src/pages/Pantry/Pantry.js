@@ -1,9 +1,13 @@
 import "./pantry.css";
 import logoImg from "../../images/Vector.png";
 import React, { useEffect, useState } from "react";
+import { deleteIngredientFromPantry } from "./DeleteIngredient.js";
+
 
 const Pantry = () => {
     const [pantryIngredients, setPantryIngredients] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+
 
     useEffect(() => {
         const fetchPantryIngredients = async () => {
@@ -33,16 +37,39 @@ const Pantry = () => {
 
         fetchPantryIngredients();
     }, []);
+
+    const handleDelete = async (ingredientName) => {
+        // Display a confirmation prompt to the user
+        const userConfirmed = window.confirm(`Are you sure you want to delete ${ingredientName} from your pantry?`);
+    
+        // If the user confirms the deletion, proceed with the deletion logic
+        if (userConfirmed) {
+            await deleteIngredientFromPantry(ingredientName);
+            setPantryIngredients(prevIngredients => prevIngredients.filter(ingredient => ingredient.ingredientName !== ingredientName));
+        }
+    };
     
         return (
             <div className="pantry-container">
                 <div className="pantry-left-container">
-                    <div className="pantry-title">My Pantry</div> {/* Replaced <h2> to match our new styles */}
+                <div className="pantry-title">My Pantry</div>
+                <input 
+                    type="text" 
+                    placeholder="Search ingredients..." 
+                    value={searchTerm} 
+                    onChange={(e) => setSearchTerm(e.target.value)} 
+                    className="search-input"
+                />
                     <div className="ingredients-grid">
-                    {pantryIngredients.map(ingredient => (
+                    {pantryIngredients.filter(ingredient => ingredient.ingredientName.toLowerCase().includes(searchTerm.toLowerCase())).map(ingredient => (
                         <div key={ingredient._id} className="ingredient-bubble">
                             {ingredient.ingredientName}
-                            <button className="delete-button">Delete</button>
+                            <button 
+                                className="delete-button" 
+                                onClick={() => handleDelete(ingredient.ingredientName)}
+                            >
+                                Delete
+                            </button>
                         </div>
                     ))}
                 </div>
