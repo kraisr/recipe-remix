@@ -6,6 +6,7 @@ import "./sendcode.css";
 
 const SendCode = () => {
   const [enteredCode, setEnteredCode] = useState(null);
+  const [verificationCode, setVerificationCode] = useState(null);
   let [createdCode, setCreatedCode] = useState("");
   let dumbCode = null;
   const navigate = useNavigate();
