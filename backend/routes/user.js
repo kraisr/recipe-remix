@@ -1,5 +1,5 @@
 import express from "express";
-import {addIngredient, getFromPantry, user} from "../controllers/user.js";
+import {addIngredient, getFromPantry} from "../controllers/user.js";
 import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting } from "../controllers/user.js";
 import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js";
 import { sendEmail, updateReminder } from "../controllers/sendEmail.js";
