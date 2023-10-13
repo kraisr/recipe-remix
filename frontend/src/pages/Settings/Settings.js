@@ -5,25 +5,32 @@ import * as yup from "yup";
 import "./settings.css";
 import "../../index.css";
 
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLogout } from "../../state";
 
 
 const Settings = () => {
-    const isValidEmail = (email) => {
-        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-        return emailRegex.test(email);
-    };
-
-/* Validation of input in the login form */
-const loginSchema = yup.object().shape({
-    email: yup.string().email("Invalid email address").required("Email is required"),
-  });
-
     const [reminder, setReminder] = useState(false);
     const [preferenceEmail, setPreferenceEmail] = useState("");
     const [reminderTime, setReminderTime] = useState("");
     const [emailError, setEmailError] = useState("");
     const [userEmail, setUserEmail] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const [mode, setMode] = useState(false); // Initially set to dark mode (false)
+    const dispatch = useDispatch();
+    const Navigate = useNavigate();
+
+    const isValidEmail = (email) => {
+        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+        return emailRegex.test(email);
+    };
+
+    /* Validation of input in the login form */
+    const loginSchema = yup.object().shape({
+        email: yup.string().email("Invalid email address").required("Email is required"),
+    });
+
     const settingsSchema = yup.object().shape({
         email: yup.string().email("Invalid email address").required("Please enter a valid email"),
         reminderTime: yup.string().required("Reminder time is required"),
@@ -291,16 +298,6 @@ const loginSchema = yup.object().shape({
 
     const handleSaveButtonClick = async () => {
         // Handle the click event for the Clear button here
-        console.log('save clicked');
-        // try {
-        //     await settingsSchema.validate({
-        //         email: preferenceEmail,
-        //         reminderTime: reminderTime
-        //     });
-        // } catch (error) {
-        //     console.error("Validation Error:", error.errors);
-        //     return; // exit the function if validation fails
-        // }
         if (reminder) {
             const token = localStorage.getItem("token");
             if (!token) {
@@ -352,6 +349,36 @@ const loginSchema = yup.object().shape({
             }
         }
     };
+
+    const handleDeleteAccount = async () => {
+        const isSure = window.confirm("Are you sure you want to delete your account? This action is irreversible.");
+        if (isSure) {
+            const deleteResponse = await fetch(
+                "http://localhost:8080/user/delete-account",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({email: userEmail}),
+                }
+            );
+            console.log(deleteResponse);
+            const deleteSuccess = await deleteResponse.json();
+      
+            if (deleteSuccess && deleteResponse.ok) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("email");
+                sessionStorage.removeItem("token");
+                sessionStorage.removeItem("email");
+                dispatch(setLogout());
+                Navigate("/");
+            } else {
+                setErrorMessage(deleteSuccess.error);
+            }
+        }
+    };
+    
 
     const modeClass = mode ? "light-mode" : "dark-mode"; // Check if mode is true (light mode)
 
@@ -514,6 +541,31 @@ const loginSchema = yup.object().shape({
                         </Form>
                     )}
                 </Formik>
+                {/* Error Message on invalid credentials or unsuccessfull login attempt */}
+                {errorMessage && (
+                    <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mt: 3, mb: 0 }}>
+                        {errorMessage}
+                    </Typography>
+                )}
+                {!reminder && (
+                    <Button
+                        type="button"
+                        variant="contained"
+                        onClick={handleDeleteAccount}
+                        sx={{
+                            mt: 1,
+                            backgroundColor: "#e57373", // Choose a color that indicates danger/caution
+                            color: "#FFFFFF",
+                            "&:hover": {
+                                backgroundColor: "#e53935", // Darken the color on hover
+                            },
+                            width: "100%", // Use full width if you like
+                        }}
+                    >
+                        Delete Account
+                    </Button>
+                )}
+
             </Box>
         </Box>
     );

@@ -244,3 +244,23 @@ export const reminderSetting = async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 }  
+
+export const deleteAccount = async (req, res) => {
+    try {
+        const { email } = req.body;
+        console.log("email is ", email);
+
+        // Find and delete user
+        const result = await User.deleteOne({ email });
+
+        // Check if deletion was successful
+        if (result.deletedCount > 0) {
+            res.status(200).json({ message: 'User account deleted successfully.' });
+        } else {
+            res.status(400).json({ error: 'No account found with the provided email address.' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
