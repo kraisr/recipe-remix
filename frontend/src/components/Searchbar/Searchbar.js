@@ -189,7 +189,7 @@ function SearchBar() {
                 ) : searchTerm && results.length > 0 ? (
                     // Display search results
                     <ul className="dropdown">
-                        {results.map((label, index) => (
+                       {results.map((label, index) => (
                             <li key={index} className={highlightedIndex === index ? "highlighted" : ""}>
                                 {highlightMatch(label, searchTerm)}
                                 <button onClick={() => addToPantry(label)}>Add to Pantry</button>
