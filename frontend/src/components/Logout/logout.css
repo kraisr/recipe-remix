@@ -3,7 +3,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: aliceblue;
+  background-color: rgb(222, 237, 250);
   border-radius: 30px;
   display: flex;
   min-width:20%;
