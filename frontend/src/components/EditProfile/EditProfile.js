@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { Button } from "@mui/material";
 import "./editProfile.css";
 
 
@@ -147,8 +148,70 @@ function EditProfile({closeModal, applyChanges, profileData}) {
             </div>
 
             <div className="footer">
-                <div className="cancel" onClick={exitModal}>Cancel</div>
-                <div className="apply" onClick={handleApplyChanges}>Apply Changes</div>
+            <Button 
+                    onClick={exitModal}
+                    variant="contained"
+                    sx={{
+                        backgroundColor: "#fff",
+                        color: "#3c4043",
+                        borderRadius: "24px",
+                        padding: "12px 30px",
+                        fontFamily: '"Google Sans", Roboto, Arial, sans-serif',
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        textTransform: "none",
+                        boxShadow: "rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px",
+                        "&:hover": {
+                            backgroundColor: "#f1f3f4",
+                            boxShadow: "rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px",
+                        },
+                        "&:active": {
+                            boxShadow: "0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%)",
+                        },
+                        "&:focus": {
+                            borderColor: "#4285f4",
+                            boxShadow: "rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px",
+                        },
+                        "&.Mui-disabled": {
+                            boxShadow: "rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px",
+                        },
+                        mr: 2, // Add margin to the right of the button
+                    }}
+                >
+                    Cancel
+                </Button>
+
+                <Button 
+                    onClick={handleApplyChanges} 
+                    variant="contained"
+                    sx={{
+                        backgroundColor: "#FA7070",
+                        color: "#ffffff",
+                        borderRadius: "24px",
+                        padding: "12px 24px",
+                        fontFamily: '"Google Sans", Roboto, Arial, sans-serif',
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        textTransform: "none",
+                        boxShadow: "rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px",
+                        "&:hover": {
+                            backgroundColor: "#bc5050",
+                            boxShadow: "rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px",
+                        },
+                        "&:active": {
+                            boxShadow: "0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%)",
+                        },
+                        "&:focus": {
+                            borderColor: "#4285f4",
+                            boxShadow: "rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px",
+                        },
+                        "&.Mui-disabled": {
+                            boxShadow: "rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px",
+                        },
+                    }}
+                >
+                    Apply Changes
+                </Button>
             </div>
         </div>
     </div>
