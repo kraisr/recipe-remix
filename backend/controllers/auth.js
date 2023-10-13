@@ -169,7 +169,7 @@ export const sendConfirmationEmail = async (req, res) => {
         // Save the verification token to the user's record
         user.emailVerificationToken = token;
         user.emailVerificationTokenExpires = Date.now() + (24 * 60 * 60 * 1000); // Token expires in 24 hours
-        // user.emailVerificationTokenExpires = Date.now() + (0 * 60 * 60 * 1000); // Token expires immediately
+        // user.emailVerificationTokenExpires = Date.now() + (0 * 60 * 60 * 1000); // [MODIFY] Token expires immediately
         await user.save();
 
         // Send the email

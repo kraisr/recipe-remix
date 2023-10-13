@@ -18,6 +18,7 @@ const Settings = () => {
     const [userEmail, setUserEmail] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [mode, setMode] = useState(false); // Initially set to dark mode (false)
+    const [deleteMessage, setDeleteMessage] = useState("");
     const dispatch = useDispatch();
     const Navigate = useNavigate();
 
@@ -371,8 +372,11 @@ const Settings = () => {
                 localStorage.removeItem("email");
                 sessionStorage.removeItem("token");
                 sessionStorage.removeItem("email");
+                setDeleteMessage("Account deleted successfully.");
                 dispatch(setLogout());
-                Navigate("/");
+                setTimeout(() => {
+                    Navigate("/");
+                }, 3000);  // 3000 milliseconds = 3 seconds
             } else {
                 setErrorMessage(deleteSuccess.error);
             }
@@ -544,7 +548,16 @@ const Settings = () => {
                 {/* Error Message on invalid credentials or unsuccessfull login attempt */}
                 {errorMessage && (
                     <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mt: 3, mb: 0 }}>
+                        Account delete unsuccessful:
+                        <br />
                         {errorMessage}
+                    </Typography>
+                )}
+                {deleteMessage && (
+                    <Typography variant="body2" sx={{ color: "green", fontWeight: "bold", mt: 3, mb: 0 }}>
+                        {deleteMessage}
+                        <br />
+                        Redirecting in 3 seconds...
                     </Typography>
                 )}
                 {!reminder && (

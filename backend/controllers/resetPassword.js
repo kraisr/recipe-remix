@@ -37,7 +37,7 @@ export const requestResetPassword = async (req, res) => {
         );
         user.passwordResetToken = token;
         user.passwordResetExpires = Date.now() + (15 * 60 * 1000); // Token expires in 15 minutes
-        // user.passwordResetExpires = Date.now() + (0 * 60 * 1000); // Token expires immediately
+        // user.passwordResetExpires = Date.now() + (0 * 60 * 1000); // [MODIFY] Token expires immediately
         await user.save();
 
         // Send the token via email to the user
