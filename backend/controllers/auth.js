@@ -137,10 +137,16 @@ export const loginGoogle = async (req, res) => {
             return res.status(400).json({ error: "User registered with email. Please use login page." });
         }
 
-        // Generate a JWT token like you do during a normal login
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        // Respond to the client
-        res.status(200).json({ user, token });
+        if (user.set2FA) {
+            console.log('2FA enabled!');
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+            
+            return res.status(200).json({ set2FA: true, user, token });
+        } else {
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+          
+            res.status(200).json({ set2FA: false, user, token });
+        }
     } catch (err) {
         // 500 = status for server error + send error message returned by mongoDB
         res.status(500).json({ error: err.message });
