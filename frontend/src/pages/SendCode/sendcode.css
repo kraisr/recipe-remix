@@ -1,0 +1,110 @@
+/* sendcode.css */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  #wrapper {
+    position: relative;
+    top:20%;
+    font-family: Arial, sans-serif;
+    font-size: 1.5rem;
+    text-align: center;
+    box-sizing: border-box;
+    height: 60%;
+    color: #333;
+    width: 80%; /* Adjust the width as needed */
+    max-width: 800px; /* Set a maximum width if desired */
+    margin: 0 auto; /* Center the wrapper horizontally */
+    /* border: 1px red solid; */
+  }
+  
+  #dialog {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    min-height: 100%;
+    border: solid 1px #ccc;
+    border-radius: 30px;
+    padding: 20px 30px;
+    box-shadow: 0 0 4px #ccc;
+    background-color: #FAF8F8;
+    overflow: hidden;
+    max-width: 100%; /* Allow the dialog to expand within the wrapper */
+    margin: 0 auto; /* Center the dialog within the wrapper */
+  }
+  
+  #dialog span {
+    font-size: 90%;
+  }
+  
+  #dialog #form {
+    max-width: 550px;
+    margin: 25px auto 0;
+  }
+  
+  #dialog #form input:focus {
+    border-color: purple;
+    box-shadow: 0 0 5px purple inset;
+  }
+  
+  #dialog #form input::selection {
+    background: transparent;
+  }
+  
+ 
+  #dialog button.close {
+    border: solid 2px;
+    margin:20px;
+    border-radius: 30%;
+    line-height: 15px;
+    padding:5px 10px 5px 10px;
+    font-size: 50%;
+    /* width: 22px; */
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    border:black 1px solid;
+  }
+  #dialog button.close:hover {
+    cursor: pointer;
+  }
+  
+  #dialog div {
+    position: relative;
+    z-index: 1;
+  }
+  
+  #dialog img {
+    position: absolute;
+    bottom: -70px;
+    right: -63px;
+  }
+
+  .noCode a {
+    color: #474646;
+    font-style: italic;
+  }
+
+  .noCode a:hover {
+    cursor: pointer;
+    color: #000000;
+    position: relative;
+    bottom: 1px;
+  }
+
+
+  h3{
+    margin-top: 10%;
+    font-size: 3vw;
+    
+  }
+
+
+ 
+  

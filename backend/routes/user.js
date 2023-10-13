@@ -2,7 +2,7 @@ import express from "express";
 import {addIngredient, getFromPantry, deleteIngredient} from "../controllers/user.js";
 import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting } from "../controllers/user.js";
 import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js";
-import { sendEmail, updateReminder } from "../controllers/sendEmail.js";
+import { sendEmail, updateReminder } from "../controllers/sendEmail.js";import {sendCode} from "../controllers/code.js"
 
 const router = express.Router();
 
@@ -35,5 +35,8 @@ router.get("/get-pantry", getFromPantry);
 router.post("/delete-pantry", deleteIngredient);
 
 
+
+/* 2FA CODE */
+router.post("/code", sendCode);
 
 export default router;

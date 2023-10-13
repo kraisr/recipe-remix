@@ -17,6 +17,7 @@ import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import ResetPasswordPage from "./components/ForgotPassword/ResetPasswordPage";
 import EmailConfirmation from "./pages/Register/EmailConfirmation";
 import Help from "./pages/Help/Help";
+import SendCode from "./pages/SendCode/SendCode";
 
 import Landing from "./pages/Landing/Landing";
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/resetPassword/:token" element={isLoggedIn ? <Navigate to="/" /> : <ResetPasswordPage />} />
           <Route path="/confirm-email/:token" element={isLoggedIn ? <Navigate to="/" /> : <EmailConfirmation />} />
           <Route path="/help" element={isLoggedIn ? <Help /> : <Navigate to="/" />} />
+          <Route path="/sendcode" element={<SendCode />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../state";
+
 import "./loginForm.css";
 
 // Better form handling with Formik
@@ -57,7 +58,13 @@ const LoginForm = ({ onNavigateToRegister }) => {
       
       const loggedIn = await loggedInResponse.json();
       
+      
+      const loggedIn = await loggedInResponse.json();
+      
       if (!loggedInResponse.ok) {
+        // throw new Error("Network response was not ok: ${loggedInResponse.statusText}");
+        setErrorMessage(loggedIn.error);
+        return;
         // throw new Error("Network response was not ok: ${loggedInResponse.statusText}");
         setErrorMessage(loggedIn.error);
         return;
@@ -76,11 +83,14 @@ const LoginForm = ({ onNavigateToRegister }) => {
         // Store the token in localStorage (or somewhere else)
         localStorage.setItem("token", loggedIn.token);
         localStorage.setItem("email", loggedIn.user.email);
+        localStorage.setItem("token", loggedIn.token);
+        localStorage.setItem("email", loggedIn.user.email);
 
         // Navigate to the home page (or wherever you"d like)
         navigate("/");
       }
     } catch (error) {
+        console.error("Error during login:", error);
         console.error("Error during login:", error);
         // Handle error accordingly
     }
@@ -121,19 +131,23 @@ const LoginForm = ({ onNavigateToRegister }) => {
 
     const loggedIn = await loggedInResponse.json();
       
-    if (loggedIn && loggedInResponse.ok) {    
-      onSubmitProps.resetForm();
-      // Use state modifier to store token and user
-      dispatch(
-        setLogin({
-          token: loggedIn.token,
-          user: loggedIn.user,
-        })
-      );
-
-      localStorage.setItem("token", loggedIn.token);
-      localStorage.setItem("email", loggedIn.user.email);
-      navigate("/");
+    if (loggedIn && loggedInResponse.ok) {  
+      if(loggedIn.set2FA){
+        navigate('/sendcode', { state: { loggedIn } });
+      }else{
+        onSubmitProps.resetForm();
+        // Use state modifier to store token and user
+        dispatch(
+          setLogin({
+            token: loggedIn.token,
+            user: loggedIn.user,
+          })
+        );
+        localStorage.setItem("token", loggedIn.token);
+        localStorage.setItem("email", loggedIn.user.email);
+        
+      }  
+      
     } else {
       setErrorMessage(loggedIn.error);
     }
@@ -186,14 +200,23 @@ const LoginForm = ({ onNavigateToRegister }) => {
                 bgcolor: "#fbf2cf",
                 "& label.Mui-focused": {
                   color: "#6b9466",  // Color of the label when input is focused
+                "& label.Mui-focused": {
+                  color: "#6b9466",  // Color of the label when input is focused
                 },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#a1c298",
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
                     borderColor: "#a1c298",
                   },
                   "&:hover fieldset": {
                     borderColor: "#88b083",
+                  "&:hover fieldset": {
+                    borderColor: "#88b083",
                   },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6b9466",
                   "&.Mui-focused fieldset": {
                     borderColor: "#6b9466",
                   },
@@ -220,14 +243,23 @@ const LoginForm = ({ onNavigateToRegister }) => {
                 bgcolor: "#fbf2cf",
                 "& label.Mui-focused": {
                   color: "#6b9466",  // Color of the label when input is focused
+                "& label.Mui-focused": {
+                  color: "#6b9466",  // Color of the label when input is focused
                 },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#a1c298",
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
                     borderColor: "#a1c298",
                   },
                   "&:hover fieldset": {
                     borderColor: "#88b083",
+                  "&:hover fieldset": {
+                    borderColor: "#88b083",
                   },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6b9466",
                   "&.Mui-focused fieldset": {
                     borderColor: "#6b9466",
                   },              
@@ -257,6 +289,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
                   fontSize: "0.8rem",
                   "&:hover": {
                     color: "#455A64",
+                    backgroundColor: "transparent", // Ensure that the background color doesn"t change
                     backgroundColor: "transparent", // Ensure that the background color doesn"t change
                   }
                 }}
@@ -301,6 +334,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
               }}
               onClick={handleRegisterClick}
             >
+              Don"t have an account? Register
               Don"t have an account? Register
             </Button>
             

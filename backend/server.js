@@ -17,10 +17,29 @@ dotenv.config();
 // create express app
 const app = express(); 
 
+// Allow requests from specific origins
+const allowedOrigins = ['http://localhost:3000']; // Add more origins as needed
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
+
+
 /* add middlewares */
+// app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(cors());
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Internal Server Error' });
+});
 
 /* add routes */
 app.use("/auth", authRoutes);
