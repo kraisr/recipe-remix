@@ -33,6 +33,7 @@ const loginSchema = yup.object().shape({
         preferenceEmail: "",
         reminderTime: "",
     };
+    const [FAState, setFAState] = useState(false);
 
     useEffect(() => {
         const fetchUserSettings = async () => {
@@ -80,7 +81,8 @@ const loginSchema = yup.object().shape({
 
 
                 setReminderTime(data.reminderSetting.everydayAt.time);
-
+                //set 2FA state
+                setFAState(data.set2FA);
 
                 console.log("email is ", data.email);
                 console.log("data.reminderSetting.email is ", data.reminderSetting.email);
@@ -173,6 +175,51 @@ const loginSchema = yup.object().shape({
             console.error("Error updating reminder:", error);
         }
     };
+    
+    //handle 2FA changes
+    const toggle2FA = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const updatedFAState = !FAState;
+
+            const userUpdateData = {
+                set2FA: updatedFAState,
+                // Include other fields you want to update
+                // firstName: newFirstName,
+                // username: newUsername,
+                // bio: newBio,
+                // ...
+            };
+    
+            //GET user data from backend
+            const response = await fetch("http://localhost:8080/user/user", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(userUpdateData),
+            });
+
+            if (!response.ok) {
+                throw new Error('updating 2FA failed');
+            }
+            const data = await response.json();
+            console.log('new 2FA is', data.set2FA);
+
+            setFAState(updatedFAState);
+            console.log('updating 2FA state was a success');
+            console.log('2FA status is: ', updatedFAState);
+            
+
+        } catch (error) {
+            console.error('Error updating 2FA status', error);
+        }
+    }
 
     const handleEmailChange = (event) => {
         setPreferenceEmail(event.target.value);
