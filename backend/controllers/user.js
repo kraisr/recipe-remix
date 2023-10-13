@@ -81,7 +81,7 @@ export const deleteIngredient = async (req, res) => {
         ).select('-password');
 
         if (!updatedPantry) {
-            return res.status(400).json({ error: "Error updating pantry or ingredient not found" });
+            return res.status(400).json({ error: "Error updating pantry, ingredient in pantry" });
         }
 
         res.status(200).json({ message: "Ingredient deleted successfully" });

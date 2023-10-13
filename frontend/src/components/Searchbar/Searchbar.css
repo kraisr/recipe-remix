@@ -91,14 +91,13 @@
     display: table-column; /* Use flexbox to arrange items horizontally */
     justify-content: left; /* Push the button to the right */
     align-items: left; /* Center items vertically */
-    margin-top: 5px; /* Add some space between items */
-    width: left;
+    width: 3vw;
   }
   
   /* Style for the "Add to Pantry" button */
   .add-to-pantry-button {
     width: 20vw; /* Set the width of the button */
-    height: 2.5vw;
+    height: 35px;
     background-color: #619951;
     color: #fff;
     border: none;

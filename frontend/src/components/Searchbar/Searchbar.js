@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./Searchbar.css";
+import { Typography } from "@mui/material";
+
 
 function SearchBar() {
 
@@ -11,8 +13,7 @@ function SearchBar() {
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const [showHistory, setShowHistory] = useState(false); 
     const [searchHistory, setSearchHistory] = useState(getSearchHistory()); // New state variable for search history
-
-
+    const [errorMessage, setErrorMessage] = useState("");
     
 
 
@@ -110,8 +111,10 @@ function SearchBar() {
             if (response.ok) {
                 console.log(data.message); // Ingredient added successfully
                 storeSearchTerm(ingredient); // Add the ingredient to search history
+                setErrorMessage('');
             } else {
                 console.error(data.error);
+                setErrorMessage(data.error);
             }
         } catch (error) {
             console.error("Error adding ingredient to pantry:", error);
@@ -200,7 +203,12 @@ function SearchBar() {
                 </li>
               ))}
             </ul>
-          </div>
+                 {errorMessage && (
+                        <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mb: 2 }}>
+                            {errorMessage}
+                        </Typography>
+                    )}
+                 </div>
                 ) : null}
             </div>
         </>
