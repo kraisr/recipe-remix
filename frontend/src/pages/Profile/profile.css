@@ -18,7 +18,8 @@
   max-width: 50vw; /* Adjusted to be a relative width */
   width: 30vw;
   min-width: 300px;
-  height: 80%; /* Adjusted to auto so it can shrink in height */
+  height: 80%;
+  max-height: 800px; /* Adjusted to auto so it can shrink in height */
   border-radius: 10%;
   display: flex;
   flex-direction: column;
@@ -46,8 +47,10 @@
   padding:20px;
 }
 
-.uploaded-pip img {
-    margin: 10px;
+.uploaded-pfp img{
+  width: 13vw;
+  height:  20vh;  /* Adjusted font-size to be relative to the viewport width */
+  padding:20px;
 } 
 .pfp-container{
   border:1px solid red;
@@ -72,7 +75,7 @@
   .profile-field {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    /* margin-bottom: 5%; */
   }
   
   .field-label {
@@ -92,7 +95,6 @@
   }
   
   .edit-profile {
-    margin-top: 0px;
     margin-bottom:20%;
   }
   

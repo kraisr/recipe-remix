@@ -11,6 +11,7 @@ const Navbar = () => {
     const [editModal, setEditModal] = useState(false);
     const [logoutModal, setLogoutModal] = useState(false);
     const [click, setClick] = useState(false);
+    const [image, setImage] = useState(false);
     
     let submenuRef = useRef(null);
 
@@ -47,6 +48,39 @@ const Navbar = () => {
         setEditModal(true);
         toggleMenu();
     }
+
+    // useEffect(() => {
+        
+    
+    // }, []); 
+
+    // const getProfile = async () => {
+    //     try {
+    //         const token = localStorage.getItem('token');
+    //         if (!token) {
+    //           throw new Error('No token found');
+    //         }
+    
+    //         const response = await fetch("http://localhost:8080/user/user", 
+    //         {
+    //           headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": `Bearer ${token}`  // Add this line to include the token in the request header
+    //           },
+    //           method: "GET",
+    //         });
+      
+    //         if (!response.ok) {
+    //           throw new Error('Network response was not ok');
+    //         }
+      
+    //         const data = await response.json();
+    //         applyChanges(data);
+    
+    //       } catch (error) {
+    //         console.error('Error fetching user name:', error);
+    //       }
+    // }
 
     const handleOutsideClick = (event) => {
         const clickedElement = event.target;
