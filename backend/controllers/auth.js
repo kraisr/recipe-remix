@@ -168,6 +168,8 @@ export const sendConfirmationEmail = async (req, res) => {
 
         // Save the verification token to the user's record
         user.emailVerificationToken = token;
+        user.emailVerificationTokenExpires = Date.now() + (24 * 60 * 60 * 1000); // Token expires in 24 hours
+        // user.emailVerificationTokenExpires = Date.now() + (0 * 60 * 60 * 1000); // Token expires immediately
         await user.save();
 
         // Send the email
@@ -214,7 +216,11 @@ export const confirmEmail = async (req, res) => {
         
         // Decode the token and find the user
         const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findOne({ _id: userId, emailVerificationToken: token });
+        const user = await User.findOne({ 
+            _id: userId, 
+            emailVerificationToken: token,
+            emailVerificationTokenExpires: { $gt: Date.now() }  // Checking for token expiry
+        });
     
         // If user doesn't exist, or token is invalid or expired, return an error
         if (!user) {
@@ -224,6 +230,7 @@ export const confirmEmail = async (req, res) => {
         // Set the email as verified and clear the token
         user.isEmailVerified = true;
         user.emailVerificationToken = undefined;
+        user.emailVerificationTokenExpires = undefined;
         await user.save();
     
         res.status(200).json({ message: "Email verified successfully" });

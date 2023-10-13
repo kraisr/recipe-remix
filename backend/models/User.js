@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema({
         default: false 
     },
     emailVerificationToken: String,
+    emailVerificationTokenExpires: Date,
     twoFACode: {
         type: String,
     },
