@@ -51,6 +51,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
               email: userObject.email,
               firstName: userObject.given_name,
               lastName: userObject.family_name,
+              image: userObject.picture,
               // googleId: userObject.sub,
           }),
         }
@@ -131,9 +132,9 @@ const LoginForm = ({ onNavigateToRegister }) => {
     const loggedIn = await loggedInResponse.json();
       
     if (loggedIn && loggedInResponse.ok) {  
-      if(loggedIn.set2FA){
+      if (loggedIn.set2FA) {
         navigate('/sendcode', { state: { loggedIn } });
-      }else{
+      } else {
         onSubmitProps.resetForm();
         // Use state modifier to store token and user
         dispatch(

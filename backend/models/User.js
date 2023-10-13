@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     },
     lastName: {
         type: String,
-        required: true,
+        required: false,
         min: 2,
         max: 50,
     },
@@ -150,7 +150,7 @@ const userSchema = new mongoose.Schema({
     
     set2FA: {
         type: Boolean,
-        default:false,
+        default: false,
     }
 
 });

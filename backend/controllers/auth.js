@@ -112,7 +112,7 @@ export const login = async (req, res) => {
 /* GOOGLE LOGIN USER */
 export const loginGoogle = async (req, res) => {
     try {
-        const { email, firstName, lastName } = req.body;
+        const { email, firstName, lastName, image } = req.body;
         // console.log(req.body);
         // Find specified user given email using mongoose
         let user = await User.findOne({ email: email });
@@ -128,6 +128,7 @@ export const loginGoogle = async (req, res) => {
                 firstName,
                 lastName,
                 username,
+                image,
                 googleSignIn: true,
             });
             // console.log(user);
