@@ -65,7 +65,10 @@ input[type="text"] {
 .highlight {
     background-color: yellow;
 }
-
+.highlighted {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
 
 .delete-history-item {
     float: right;

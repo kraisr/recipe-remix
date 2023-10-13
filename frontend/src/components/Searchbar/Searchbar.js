@@ -72,8 +72,20 @@ function SearchBar() {
     };
 
     const handleKeyPress = (e) => {
-        if (e.key === "Enter" && searchTerm) {
-            storeSearchTerm(searchTerm); // Log the search term when "Enter" is pressed
+        if (e.key === "ArrowDown") {
+            // Move down the list, but don't exceed the number of results
+            setHighlightedIndex(prevIndex => Math.min(prevIndex + 1, results.length - 1));
+        } else if (e.key === "ArrowUp") {
+            // Move up the list, but don't go below -1 (which means no selection)
+            setHighlightedIndex(prevIndex => Math.max(prevIndex - 1, -1));
+        } else if (e.key === "Enter") {
+            if (highlightedIndex >= 0 && highlightedIndex < results.length) {
+                // If a result is highlighted, add it to the pantry
+                addToPantry(results[highlightedIndex]);
+            } else if (searchTerm) {
+                // If no result is highlighted but there's a search term, log it
+                storeSearchTerm(searchTerm);
+            }
         }
     };
 
@@ -154,6 +166,7 @@ function SearchBar() {
                                 setShowHistory(true); 
                             }
                         }}
+                        autoFocus
                     />
                 </div>
             </div>
