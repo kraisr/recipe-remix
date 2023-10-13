@@ -7,7 +7,25 @@ import { deleteIngredientFromPantry } from "./DeleteIngredient.js";
 const Pantry = () => {
     const [pantryIngredients, setPantryIngredients] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [isPantryOpen, setIsPantryOpen] = useState(false);
+    const [isRecipesOpen, setIsRecipesOpen] = useState(false);
 
+    const openPantry = () => {
+        setIsPantryOpen(true);
+        setIsRecipesOpen(false);
+    };
+
+    // Function to open recipes and close pantry
+    const openRecipes = () => {
+        setIsRecipesOpen(true);
+        setIsPantryOpen(false);
+    };
+
+    // Function to close both panels
+    const closePanels = () => {
+        setIsPantryOpen(false);
+        setIsRecipesOpen(false);
+    };
 
     useEffect(() => {
         const fetchPantryIngredients = async () => {
@@ -48,22 +66,40 @@ const Pantry = () => {
             setPantryIngredients(prevIngredients => prevIngredients.filter(ingredient => ingredient.ingredientName !== ingredientName));
         }
     };
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+    };
+
+    useEffect(() => {
+        window.addEventListener("resize", handleResize);
+        // Cleanup event listener on component unmount
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    // Determine if we're on a small screen
+    const isSmallScreen = windowWidth < 769; // You can adjust this value as needed
     
         return (
             <div className="pantry-container">
-                <div className="pantry-left-container">
-                <div className="pantry-title">My Pantry</div>
-                <input 
-                    type="text" 
-                    placeholder="Search ingredients..." 
-                    value={searchTerm} 
-                    onChange={(e) => setSearchTerm(e.target.value)} 
-                    className="search-input"
-                />
+                {isSmallScreen && !isPantryOpen && !isRecipesOpen && <button className="pantry-toggle-button" onClick={openPantry} style={{display: 'block', zIndex: 500}}>Pantry</button>}
+                {isSmallScreen && !isRecipesOpen && !isPantryOpen && <button className="recipes-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500}}>Matched Recipes</button>}
+
+                <div className={`pantry-left-container ${isPantryOpen ? 'slide-in' : ''}`}>
+                    {isPantryOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>} 
+                    <div className="pantry-title">My Pantry</div>
+                    <input 
+                        type="text" 
+                        placeholder="Search ingredients..." 
+                        value={searchTerm} 
+                        onChange={(e) => setSearchTerm(e.target.value)} 
+                        className="search-input"
+                    />
                     <div className="ingredients-grid">
                     {pantryIngredients.filter(ingredient => ingredient.ingredientName.toLowerCase().includes(searchTerm.toLowerCase())).map(ingredient => (
                         <div key={ingredient._id} className="ingredient-bubble">
-                            {ingredient.ingredientName}
+                            <div className="ingredient-name">{ingredient.ingredientName}</div>
                             <button 
                                 className="delete-button" 
                                 onClick={() => handleDelete(ingredient.ingredientName)}
@@ -82,8 +118,9 @@ const Pantry = () => {
                 </button>          
             </div>
 
-            <div className="pantry-right-container">
-                Matched Recipes
+            <div className={`pantry-right-container ${isRecipesOpen ? 'slide-in' : ''}`}>
+                {isRecipesOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>}
+                <div className="recipe-title">Matched Recipes</div>
             </div>
         </div>
     );
