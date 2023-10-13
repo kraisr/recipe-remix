@@ -183,7 +183,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
         }) => (
           <form onSubmit={handleSubmit}>
             <TextField
-              label="User Email"
+              label="Email"
               size="medium"
               onBlur={handleBlur}
               onChange={handleChange}
@@ -215,7 +215,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
              }}
             />
             <TextField
-              label="User Password"
+              label="Password"
               size="medium"
               onBlur={handleBlur}
               onChange={handleChange}
