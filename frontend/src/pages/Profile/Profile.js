@@ -24,6 +24,7 @@ const Profile = () => {
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
   const Navigate = useNavigate();
+  const [logoutModal, setLogoutModal] = useState(false);
 
     const handleLogoutClick = () => {
         // Logout logic
@@ -61,6 +62,10 @@ const Profile = () => {
     setLink(data.link);
     setImage(data.image);
   }
+
+  const toggleLogoutModal = () => {
+    setLogoutModal(!logoutModal); // Toggle the logout modal state
+}
 
   
 
@@ -120,7 +125,7 @@ const Profile = () => {
                           <Link to="/settings" className="card-dropdown-item">Settings</Link>
                           <Link to="/preferences" className="card-dropdown-item">Preferences</Link>
                           <Link to="/help" className="card-dropdown-item">Help</Link>
-                          <Link to="#" className="card-dropdown-item" onClick={handleLogoutClick} >Logout</Link>
+                          <Link to="#" className="card-dropdown-item" onClick={toggleLogoutModal} >Logout</Link>
                         </div>
                       )}
                   </div>    
