@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Container, Typography, InputAdornment, IconButton, Box } from "@mui/material";
+import { Button, TextField, Container, Typography, InputAdornment, IconButton, Box, FormControlLabel, Checkbox } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +23,7 @@ const loginSchema = yup.object().shape({
 const initialValuesLogin = {
   email: "",
   password: "",
+  rememberMe: false,
 };
 
 const LoginForm = ({ onNavigateToRegister }) => {
@@ -259,24 +260,62 @@ const LoginForm = ({ onNavigateToRegister }) => {
               }}
             />
 
-            {/* Forgot Password Button */}
-            <Box textAlign="right" width="100%" mt={0} mb={1}>
-              <Button
-                type="button"
-                variant="text"
-                sx={{ 
-                  color: "#000",
-                  fontSize: "0.8rem",
-                  "&:hover": {
-                    color: "#455A64",
-                    backgroundColor: "transparent", // Ensure that the background color doesn"t change
-                    backgroundColor: "transparent", // Ensure that the background color doesn"t change
+<Box 
+              display="flex" 
+              justifyContent="space-between" 
+              alignItems="center" 
+              width="100%" 
+              mt={0} 
+              mb={1}>
+              {/* Forgot Password Button */}
+              <Box textAlign="left" width="100%">
+                <Button
+                  type="button"
+                  variant="text"
+                  sx={{ 
+                    color: "#000",
+                    fontSize: "0.75rem",
+                    "&:hover": {
+                      color: "#455A64",
+                      backgroundColor: "transparent", // Ensure that the background color doesn"t change
+                    }
+                  }}
+                  onClick={handleForgotPasswordClick}
+                >
+                  Forgot Password?
+                </Button>
+              </Box>
+              <Box textAlign="right" width="100%">
+                <FormControlLabel
+                  control={
+                    <Checkbox 
+                        name="rememberMe"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        checked={values.rememberMe} 
+                        sx={{
+                            color: "#a1c298",  // Default (unchecked) color
+                            '&.Mui-checked': {
+                                color: "#fa7070",  // Checked color
+                            },
+                        }}
+                    />
                   }
-                }}
-                onClick={handleForgotPasswordClick}
-              >
-                Forgot Password?
-              </Button>
+                  label="Remember Me"
+                  sx={{ 
+                    "&& span": {
+                        fontSize: "0.8rem", 
+                        color: "#000",
+                    },
+                    "&:hover": {
+                        color: "#455A64",
+                    },
+                    ".MuiCheckbox-root": {
+                        padding: "0 9px 0 0",  // Reducing padding to get label closer
+                    }
+                  }}
+                />
+              </Box>
             </Box>
             
             {/* Error Message on invalid credentials or unsuccessfull login attempt */}
