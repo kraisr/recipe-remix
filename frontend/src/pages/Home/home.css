@@ -1,3 +1,16 @@
+/* Define styles for dark mode */
+.dark-mode .header {
+    /* Dark mode header styles */
+    background-color: #182a16;
+    color: #fff;
+}
+
+.dark-mode .instructions {
+    /* Dark mode instruction styles */
+    background-color: #182a16;
+    color: #fff;
+}
+
 
 .header {
     display: flex;
