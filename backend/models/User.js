@@ -150,7 +150,7 @@ const userSchema = new mongoose.Schema({
     
     set2FA: {
         type: Boolean,
-        default:false,
+        default: false,
     }
 
 });
