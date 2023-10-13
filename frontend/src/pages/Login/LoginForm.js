@@ -51,6 +51,7 @@ const LoginForm = ({ onNavigateToRegister }) => {
               email: userObject.email,
               firstName: userObject.given_name,
               lastName: userObject.family_name,
+              image: userObject.picture,
               // googleId: userObject.sub,
           }),
         }
