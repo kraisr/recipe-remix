@@ -151,7 +151,6 @@ function SearchBar() {
         setSearchHistory(getSearchHistory());
     }, [searchTerm]); // Listen for changes in searchTerm
 
-
     return (
         <>
             <div className="searchContainer">
@@ -166,14 +165,16 @@ function SearchBar() {
                                 setShowHistory(true); 
                             }
                         }}
-                        autoFocus
-                    />
+                      placeholder="Add ingredients here..."
+                      className="input-search" 
+                      />
                 </div>
             </div>
             <div className="dropdownContainer">
                 {(showHistory && !searchTerm) ? (
                     // Display search history
-                    <ul className={`dropdown ${showHistory || searchTerm ? 'active' : ''}`}>
+                    <div className = {`ingredient-dropdown`} >
+                    <ul className={`ingredient-table ${showHistory || searchTerm ? 'active' : ''}`}>
                         {searchHistory.map((term, index) => (
                             <li key={index}>
                                 {term}
@@ -186,16 +187,20 @@ function SearchBar() {
                             </li>
                         )}
                     </ul>
+                    </div>
                 ) : searchTerm && results.length > 0 ? (
                     // Display search results
-                    <ul className="dropdown">
-                       {results.map((label, index) => (
-                            <li key={index} className={highlightedIndex === index ? "highlighted" : ""}>
-                                {highlightMatch(label, searchTerm)}
-                                <button onClick={() => addToPantry(label)}>Add to Pantry</button>
-                            </li>
-                        ))}
-                    </ul>
+                       <div className="ingredient-dropdown">
+            <ul className="ingredient-table"> {results.map((label, index) => (
+                <li key={index} className={highlightedIndex === index ? "highlighted" : ""}>
+                    <div className="ingredient-container">
+                        <span className="ingredient-item">{highlightMatch(label, searchTerm)}</span>
+                    <button className="add-to-pantry-button" onClick={() => addToPantry(label)}>Add to Pantry</button>
+                    </div>
+                </li>
+              ))}
+            </ul>
+          </div>
                 ) : null}
             </div>
         </>

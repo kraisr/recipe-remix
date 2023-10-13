@@ -1,84 +1,129 @@
-
-
-
-.searchContainer {
-    width: 500px;
-    margin: 0 auto;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.search-box {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Vertically center the content */
+    justify-content: space-between; /* Add space between elements */
+    background-color: #fff; /* Background color for the search box container */
+    width: 30vw;
+  }
+  
+  /* searchbar.css */
+  
+  .ingredient-table {
+    list-style: none; /* Remove bullet points */
+    padding: 0;
+  }
+  
+  /* Style for each ingredient item row */
+  .ingredient-table li {
+    margin-bottom: 15px;
+  }
+  
+  /* Adjust the CSS to style the new structure */
+  .ingredient-container {
     display: flex;
-    flex-direction: column;
-}
-
-.searchBar {
-    display: grid;
-    place-items: center;  
-    width: 500px; /* Take the full width of its container */
-}
-
-.dropdownContainer {
-    width: 500px;
-    margin: 0 auto;
-    position: relative;
-}
-/* Style for the search bar input */
-input[type="text"] {
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .ingredient-item {
+    width: 60vw; /* Adjust the width as needed */
+  }
+  
+  /* Add spacing around the ingredient-dropdown table ui thingy*/
+  .ingredient-dropdown {
+    padding: 1vw; /* Add padding to create space inside the container */
+    background-color: white; /* Set a background color */
+    border-radius: 0 0 5px 5px; /* Rounded corners on the top */
+    list-style: none;
+    width: 30vw;
+  }
+  
+  .add-to-pantry-button:hover {
+    background-color: #A1C298;
+  }
+  
+  
+  /* Style for the search bar input */
+  .input-search {
+    height: 2vw;
+    width: 30.6vw; /* Make the search bar take the full width of the container */
+    border-style: none;
     padding: 10px;
-    font-size: 16px;
+    font-size: 18px;
+    letter-spacing: 2px;
+    outline-color: #619951;
+    background-color: #A1C298;
+  }
+  /* Style for the dropdown container */
+  .dropdown {
     border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;          /* Make the input take the full width of its container */
-}
-/* Dropdown styles */
-.dropdown {
-    border: none;
     max-height: 150px;
     overflow-y: auto;
     position: absolute;
-    top: calc(100% + 367px);
+    top: 100%;
     left: 0;
-    width: 500px;
+    width: 100px;
     z-index: 1;
     list-style-type: none;
     margin: 0;
     padding: 0;
     background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.dropdown.active {
-    border: 1px solid #ccc;
-
-}
-.dropdown li {
-    padding: 8px;
+    display: flex; /* Use flexbox to arrange items horizontally */
+    flex-direction: row; /* Arrange items in a row */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: space-between; /* Space between items */
+    align-items: flex-start; /* Align items to the top */
+  }
+  
+  /* Style for each ingredient item */
+  .input-dropdown li {
+    padding: 2vw;
     cursor: pointer;
-    transition: background-color 0.2s; /* Smooth transition for hover effect */
-}
-
-.dropdown li:hover {
-    background-color: #f5f5f5;
-}
-
-.highlight {
-    background-color: yellow;
-}
-.highlighted {
-    background-color: #f5f5f5;
+    width: 30vw; /* Set the width of each ingredient item */
+    margin-bottom: 10px; /* Add some space between items */
+    display: flex; /* Use flexbox to arrange items horizontally */
+    justify-content: space-between; /* Space between items */
+    align-items: center;
+    list-style: none;
+  }
+  
+  .add-to-pantry-button-container {
+    display: table-column; /* Use flexbox to arrange items horizontally */
+    justify-content: left; /* Push the button to the right */
+    align-items: left; /* Center items vertically */
+    margin-top: 5px; /* Add some space between items */
+    width: left;
+  }
+  
+  /* Style for the "Add to Pantry" button */
+  .add-to-pantry-button {
+    width: 20vw; /* Set the width of the button */
+    height: 2.5vw;
+    background-color: #619951;
+    color: #fff;
+    border: none;
+    text-align: center;
     cursor: pointer;
-}
+    border-radius: 12px;
+    transition: background-color 0.2s;
+  }
+
 
 .delete-history-item {
     float: right;
     cursor: pointer;
-    padding-left: 10px;
+    padding-right: 1vw;
     color: red;
+    padding-bottom: 0vw;
 }
 
 .clear-history {
     text-align: center;
     cursor: pointer;
-    color: blue;
+    color: rgb(121, 121, 224);
+}
+
+.highlighted {
+    background-color: #A1C298; /* or any other color that stands out */
+    color: #fff;
 }
