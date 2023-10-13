@@ -137,7 +137,7 @@ const startServer = async () => {
 
 
 
-cron.schedule("0 8 * * * *", sendDailyReminders);
+cron.schedule("* * * * *", sendDailyReminders);
 
 
 startServer();

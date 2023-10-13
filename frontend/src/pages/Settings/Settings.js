@@ -477,32 +477,34 @@ const Settings = () => {
                                 />
                             )}
 
-                            {reminder && (
-                                <FormControl fullWidth variant="outlined" margin="normal" sx={textFieldStyles}>
-                                    <InputLabel>Everyday at</InputLabel>
-                                    <Field
-                                        as={Select}
-                                        name="reminderTime"
-                                        label="Everyday at"
-                                        error={touched.reminderTime && Boolean(errors.reminderTime)}
-                                        onBlur={handleBlur}
-                                        onChange={handleReminderTimeChange}
-                                        value={reminderTime}
-                                    >
-                                        {Array.from({ length: 24 * 60 }, (_, index) => {
-                                            const hours = Math.floor(index / 60);
-                                            const minutes = index % 60;
-                                            return (
-                                                <MenuItem
-                                                    key={index}
-                                                    value={`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`}>
-                                                    {`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`}
-                                                </MenuItem>
-                                            );
-                                        })}
-                                    </Field>
-                                </FormControl>
-                            )}
+                           {reminder && (
+    <FormControl fullWidth variant="outlined" margin="normal" sx={textFieldStyles}>
+        <InputLabel>Everyday at</InputLabel>
+        <Field
+            as={Select}
+            name="reminderTime"
+            label="Everyday at"
+            error={touched.reminderTime && Boolean(errors.reminderTime)}
+            onBlur={handleBlur}
+            onChange={handleReminderTimeChange}
+            value={reminderTime}
+        >
+            {Array.from({ length: (24 * 60) / 5 }, (_, index) => { // Change the length calculation here
+                const totalMinutes = index * 5; // Calculate total minutes for the current index
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
+                return (
+                    <MenuItem
+                        key={index}
+                        value={`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`}>
+                        {`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`}
+                    </MenuItem>
+                );
+            })}
+        </Field>
+    </FormControl>
+)}
+
 
                             {reminder && (
                                 <Box mt={2} display="flex" justifyContent="space-between" width="100%">
