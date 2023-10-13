@@ -132,9 +132,9 @@ const LoginForm = ({ onNavigateToRegister }) => {
     const loggedIn = await loggedInResponse.json();
       
     if (loggedIn && loggedInResponse.ok) {  
-      if(loggedIn.set2FA){
+      if (loggedIn.set2FA) {
         navigate('/sendcode', { state: { loggedIn } });
-      }else{
+      } else {
         onSubmitProps.resetForm();
         // Use state modifier to store token and user
         dispatch(
