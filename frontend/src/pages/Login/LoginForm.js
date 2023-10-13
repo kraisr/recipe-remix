@@ -65,32 +65,30 @@ const LoginForm = ({ onNavigateToRegister }) => {
         // throw new Error("Network response was not ok: ${loggedInResponse.statusText}");
         setErrorMessage(loggedIn.error);
         return;
-        // throw new Error("Network response was not ok: ${loggedInResponse.statusText}");
-        setErrorMessage(loggedIn.error);
-        return;
       }
 
       // console.log(loggedIn);
       if (loggedIn) {
         // Use state modifier to store token and user
-        dispatch(
+        if (loggedIn.set2FA) {
+          navigate('/sendcode', { state: { loggedIn } });
+        } else {
+          // Use state modifier to store token and user
+          dispatch(
             setLogin({
-                token: loggedIn.token,
-                user: loggedIn.user,
+              token: loggedIn.token,
+              user: loggedIn.user,
             })
-        );
-
-        // Store the token in localStorage (or somewhere else)
-        localStorage.setItem("token", loggedIn.token);
-        localStorage.setItem("email", loggedIn.user.email);
-        localStorage.setItem("token", loggedIn.token);
-        localStorage.setItem("email", loggedIn.user.email);
-
-        // Navigate to the home page (or wherever you"d like)
-        navigate("/");
+          );
+          localStorage.setItem("token", loggedIn.token);
+          localStorage.setItem("email", loggedIn.user.email);
+          
+        }  
+        
+      } else {
+        setErrorMessage(loggedIn.error);
       }
     } catch (error) {
-        console.error("Error during login:", error);
         console.error("Error during login:", error);
         // Handle error accordingly
     }
