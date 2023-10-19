@@ -6,6 +6,7 @@ import { deleteIngredientFromPantry } from "./DeleteIngredient.js";
 
 const Pantry = () => {
     const [pantryIngredients, setPantryIngredients] = useState([]);
+    const [recipeSuggestions, setRecipeSuggestions] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [isPantryOpen, setIsPantryOpen] = useState(false);
     const [isRecipesOpen, setIsRecipesOpen] = useState(false);
@@ -72,11 +73,35 @@ const Pantry = () => {
         setWindowWidth(window.innerWidth);
     };
 
+    //perform the recipe remix here
+    const handleDaRemix = async () => {
+        try {
+            
+            const response = await fetch("http://localhost:8080/api/search-recipes/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body:  JSON.stringify({ recipeSuggestions })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            setRecipeSuggestions(data);
+        } catch (error) {
+            console.error("Failed to fetch pantry ingredients:", error);
+        }
+    } 
+
     useEffect(() => {
         window.addEventListener("resize", handleResize);
         // Cleanup event listener on component unmount
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
 
     // Determine if we're on a small screen
     const isSmallScreen = windowWidth < 769; // You can adjust this value as needed
@@ -113,7 +138,7 @@ const Pantry = () => {
 
             <div className="pantry-center-container">
                 <img alt="remix" src={logoImg} height="325px" width="270px" />  
-                <button type="button" className="pantry-button">
+                <button type="button" className="pantry-button" onClick={handleDaRemix}>
                     REMIX
                 </button>          
             </div>
