@@ -176,7 +176,7 @@ const Navbar = () => {
                                     <span>{'>'}</span>
                                 </Link>
 
-                                <Link to="/../profile" className="sub-menu-link" onClick={setLogoutModal}>
+                                <Link className="sub-menu-link" onClick={setLogoutModal}>
                                     <i className="fa-solid fa-user"></i>
                                     <p>Logout</p>
                                     <span>{'>'}</span>
