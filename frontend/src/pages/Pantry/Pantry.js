@@ -121,6 +121,7 @@ const Pantry = () => {
             <div className={`pantry-right-container ${isRecipesOpen ? 'slide-in' : ''}`}>
                 {isRecipesOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>}
                 <div className="recipe-title">Matched Recipes</div>
+                <button className="filter-button">Filter</button>
             </div>
         </div>
     );
