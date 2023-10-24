@@ -9,6 +9,7 @@ import Pantry from "./pages/Pantry/Pantry";
 import Navbar from "./components/Navbar/Navbar";
 import Profile from "./pages/Profile/Profile";
 import Preferences from "./pages/Preferences/Preferences";
+import ShoppingList from './pages/ShoppingList/ShoppingList'; 
 import Settings from "./pages/Settings/Settings";
 
 import Login from "./pages/Login/Login";
@@ -35,6 +36,7 @@ function App() {
           <Route path="/profile" element={isLoggedIn ? <Profile /> : <Navigate to="/" />} />
           <Route path="/settings" element={isLoggedIn ? <Settings /> : <Navigate to="/" />} />
           <Route path="/preferences" element={isLoggedIn ? <Preferences /> : <Navigate to="/" />} />
+          <Route path="/shoppingList" element={isLoggedIn ? <ShoppingList /> : <Navigate to="/" />} />
           <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login />} />
           <Route path="/register" element={isLoggedIn ? <Navigate to="/" /> : <Register />} />
           <Route path="/forgot-password" element={isLoggedIn ? <Navigate to="/" /> : <ForgotPassword />} />

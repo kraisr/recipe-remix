@@ -164,6 +164,12 @@ const Navbar = () => {
                                     <span>{'>'}</span>
                                 </Link>
 
+                                <Link to="/../shoppingList" className="sub-menu-link" onClick={toggleMenu}>
+                                    <i className="fa-solid fa-gear"></i>
+                                    <p>Shopping List</p>
+                                    <span>{'>'}</span>
+                                </Link>
+
                                 {/* <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
                                     <i className="fa-solid fa-gear"></i>
                                     <p>Preferences</p>
