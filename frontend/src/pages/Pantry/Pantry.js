@@ -10,7 +10,7 @@ const Pantry = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isPantryOpen, setIsPantryOpen] = useState(false);
     const [isRecipesOpen, setIsRecipesOpen] = useState(false);
-
+    
     const openPantry = () => {
         setIsPantryOpen(true);
         setIsRecipesOpen(false);
@@ -73,6 +73,34 @@ const Pantry = () => {
     const handleResize = () => {
         setWindowWidth(window.innerWidth);
     };
+
+    useEffect(() => {
+        const toggleButton = document.getElementById('toggleDropdown');
+        const dropdown = document.getElementById('filterDropdown');
+       
+           dropdown.style.display = 'none';
+
+        toggleButton.addEventListener('click', () => {
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            } else {
+                dropdown.style.display = 'block';
+            }
+        });
+    
+        // Cleanup: remove the event listener when the component unmounts
+        return () => {
+            toggleButton.removeEventListener('click', () => {
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                } else {
+                    dropdown.style.display = 'block';
+                }
+            });
+        };
+    }, []);
+    
+
 
     //perform the recipe remix here
     const handleDaRemix = async () => {
@@ -190,7 +218,12 @@ const Pantry = () => {
                 {isRecipesOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>}
                 <div className="recipe-top-panel">
                     <div className="recipe-title">Matched Recipes</div>
-                    <button className="filter-button">Filter</button>
+                    <button id="toggleDropdown">Filter</button>
+                    <select id="filterDropdown" className="dropdown-content">
+                        <option value="option1">Option 1</option>
+                        <option value="option2">Option 2</option>
+                        <option value="option3">Option 3</option>
+                    </select>
                 </div>
                 
                 <div className="ingredients-grid">
