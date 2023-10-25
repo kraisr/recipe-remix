@@ -3,6 +3,8 @@ import logoImg from "../../images/Vector.png";
 import React, { useEffect, useState } from "react";
 import { deleteIngredientFromPantry } from "./DeleteIngredient.js";
 
+import remixSound from "../../audio/short.mp3";
+import failSound from "../../audio/fail.mp3";
 
 const Pantry = () => {
     const [pantryIngredients, setPantryIngredients] = useState([]);
@@ -10,6 +12,7 @@ const Pantry = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isPantryOpen, setIsPantryOpen] = useState(false);
     const [isRecipesOpen, setIsRecipesOpen] = useState(false);
+    const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
 
     const openPantry = () => {
         setIsPantryOpen(true);
@@ -26,6 +29,26 @@ const Pantry = () => {
     const closePanels = () => {
         setIsPantryOpen(false);
         setIsRecipesOpen(false);
+    };
+
+    const handleCheckboxClick = (ingredientName) => {
+        setSelectedCheckboxes((prevSelected) => ({
+          ...prevSelected,
+          [ingredientName]: !prevSelected[ingredientName], // Toggle the status
+        }));
+      };
+
+    const handleSelectAll = () => {
+        // Determine if all checkboxes are currently checked or not
+        const allChecked = Object.values(selectedCheckboxes).every((isChecked) => isChecked);
+        
+        // Toggle the status of all checkboxes based on the current state
+        const updatedSelectedCheckboxes = {};
+        for (const ingredient of pantryIngredients) {
+          updatedSelectedCheckboxes[ingredient.ingredientName] = !allChecked;
+        }
+        
+        setSelectedCheckboxes(updatedSelectedCheckboxes);
     };
 
     var snd = new Audio("file.wav");
@@ -78,13 +101,25 @@ const Pantry = () => {
     //perform the recipe remix here
     const handleDaRemix = async () => {
         try {
+
+            const selectedIngredients = pantryIngredients.filter(
+                (ingredient) => selectedCheckboxes[ingredient.ingredientName]
+            );
+
+            if (selectedIngredients.length === 0) {
+                window.alert("No ingredients selected. Please add ingredients to your selection.");
+                return;
+            }
+            
             console.log('ingredients:', pantryIngredients);
             if (pantryIngredients.length === 0) {
                 setRecipeSuggestions([]);
                 return;
             }
-            const ingredientNames = pantryIngredients.map(ingredient => ingredient.ingredientName);
-    
+            const ingredientNames = selectedIngredients.map((ingredient) => ingredient.ingredientName);
+            
+            console.log("selected: ", ingredientNames);
+            
             const response = await fetch("http://localhost:8080/api/search-recipes/", {
                 method: "POST",
                 headers: {
@@ -101,7 +136,16 @@ const Pantry = () => {
             setRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
             console.log("recipes:", recipeSuggestions);
             
-    
+            if (recipeSuggestions.length !== 0){
+                const audio = new Audio(remixSound);
+                audio.play();
+                
+            } else {
+                const audio = new Audio(failSound);
+                audio.play();
+            }
+            
+            
         } catch (error) {
             console.error("Failed to fetch pantry ingredients:", error);
         }
@@ -133,19 +177,25 @@ const Pantry = () => {
                         className="search-input"
                     />
                     <div className="ingredients-grid">
-                    {pantryIngredients.filter(ingredient => ingredient.ingredientName.toLowerCase().includes(searchTerm.toLowerCase())).map(ingredient => (
-                        <div key={ingredient._id} className="ingredient-bubble">
-                            <div className="ingredient-name">{ingredient.ingredientName}</div>
-                            <button 
-                                className="delete-button" 
-                                onClick={() => handleDelete(ingredient.ingredientName)}
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    ))}
+                        {pantryIngredients.filter(ingredient => ingredient.ingredientName.toLowerCase().includes(searchTerm.toLowerCase())).map(ingredient => (
+                            <div key={ingredient._id} className="ingredient-bubble">
+                                <input type="checkbox" name="checkbox" checked={selectedCheckboxes[ingredient.ingredientName] || false} // Set checked state based on selectedCheckboxes
+                                                                       onChange={() => handleCheckboxClick(ingredient.ingredientName)}/>
+                                <div className="ingredient-name">{ingredient.ingredientName}</div>
+                                <button 
+                                    className="delete-button" 
+                                    onClick={() => handleDelete(ingredient.ingredientName)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="select-all-btn">
+                        <button className="button-17" onClick={handleSelectAll}>Select All</button>
+                    </div>
                 </div>
-            </div>
 
             <div className="pantry-center-container">
                 <img alt="remix" src={logoImg} height="325px" width="270px" />  
