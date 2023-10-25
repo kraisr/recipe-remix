@@ -1,3 +1,4 @@
+
 .pantry-container{
     margin: 0 auto;
     padding: 30px 0px;
@@ -333,6 +334,61 @@ img {
     font-weight: bold;
 } 
 
+input[type="checkbox"] {
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    /* Remove most all native input styles */
+    appearance: none;
+    /* For iOS < 15 */
+    background-color: var(--form-background);
+    /* Not removed via appearance */
+    margin: 0;
+  
+    font: inherit;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid currentColor;
+    border-radius: 0.15em;
+    transform: translateY(-0.075em);
+  
+    display: grid;
+    place-content: center;
+  }
+  
+  input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transform-origin: bottom left;
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--form-control-color);
+    /* Windows High Contrast Mode */
+    background-color: CanvasText;
+  }
+  
+  input[type="checkbox"]:checked::before {
+    transform: scale(1);
+  }
+  
+  input[type="checkbox"]:focus {
+    outline: max(2px, 0.15em) solid currentColor;
+    outline-offset: max(2px, 0.15em);
+  }
+
+  .select-all-btn{
+    position: relative;
+    margin-top:20%;
+  }
+
+  .select-all-btn button {
+    position: relative;
+    
+  }
+  
+
 
 @media (min-width: 769px) {
     .pantry-tag {
@@ -342,3 +398,80 @@ img {
         display: none !important;
     }
 }
+
+
+
+
+
+
+.button-17 {
+    padding-left: 30px;
+    padding-right: 30px;
+    align-items: center;
+    appearance: none;
+    
+    border-radius: 24px;
+    border-style: none;
+    box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+    box-sizing: border-box;
+    color: #3c4043;
+    cursor: pointer;
+    display: inline-flex;
+    fill: currentcolor;
+    font-family: "Google Sans",Roboto,Arial,sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    height: 48px;
+    justify-content: center;
+    letter-spacing: .25px;
+    line-height: normal;
+    max-width: 100%;
+    overflow: visible;
+    padding: 2px 24px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: auto;
+    will-change: transform,opacity;
+    z-index: 0;
+    }
+    
+    .lg-logout:hover {
+    background: #bc5050;
+    color: #ffffff;
+    }
+    
+    .button-17:active {
+    box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
+    outline: none;
+    }
+    
+    .button-17:focus {
+    outline: none;
+    border: 2px solid #4285f4;
+    }
+    
+    .button-17:not(:disabled) {
+    box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+    
+    .button-17:not(:disabled):hover {
+    box-shadow: rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px;
+    }
+    
+    .button-17:not(:disabled):focus {
+    box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+    
+    .button-17:not(:disabled):active {
+    box-shadow: rgba(60, 64, 67, .3) 0 4px 4px 0, rgba(60, 64, 67, .15) 0 8px 12px 6px;
+    }
+    
+    .button-17:disabled {
+    box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+    
