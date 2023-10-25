@@ -77,24 +77,24 @@ const Pantry = () => {
     useEffect(() => {
         const toggleButton = document.getElementById('toggleDropdown');
         const dropdown = document.getElementById('filterDropdown');
-       
-           dropdown.style.display = 'none';
-
+    
+        dropdown.style.display = 'none';
+    
         toggleButton.addEventListener('click', () => {
-            if (dropdown.style.display === 'block') {
-                dropdown.style.display = 'none';
+            if (dropdown.style.display == 'none') {
+                dropdown.style.display = 'block'; // or 'relative' if you prefer
             } else {
-                dropdown.style.display = 'block';
+                dropdown.style.display = 'none';
             }
         });
     
         // Cleanup: remove the event listener when the component unmounts
         return () => {
             toggleButton.removeEventListener('click', () => {
-                if (dropdown.style.display === 'block') {
-                    dropdown.style.display = 'none';
+                if (dropdown.style.display == 'none') {
+                    dropdown.style.display = 'block'; // or 'relative' if you prefer
                 } else {
-                    dropdown.style.display = 'block';
+                    dropdown.style.display = 'none';
                 }
             });
         };
@@ -219,11 +219,11 @@ const Pantry = () => {
                 <div className="recipe-top-panel">
                     <div className="recipe-title">Matched Recipes</div>
                     <button id="toggleDropdown">Filter</button>
-                    <select id="filterDropdown" className="dropdown-content">
+                    <div id="filterDropdown" className="dropdown-content">
                         <option value="option1">Option 1</option>
                         <option value="option2">Option 2</option>
                         <option value="option3">Option 3</option>
-                    </select>
+                    </div>
                 </div>
                 
                 <div className="ingredients-grid">
