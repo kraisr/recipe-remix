@@ -89,7 +89,7 @@ const Pantry = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body:  JSON.stringify({ingredientNames })
+                body: JSON.stringify({ingredientNames })
             });
     
             if (!response.ok) {
@@ -106,11 +106,18 @@ const Pantry = () => {
         }
     } 
 
-    const handleSaveRecipe = async (recipe) => {
+    const handleSaveRecipes = async (recipe) => {
+        console.log("handleSaveRecipes called");
+        console.log("Recipe being sent:", recipe);
+
         try {
             const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('No token found in local storage.');
+                return;
+            }
     
-            const response = await fetch("http://localhost:8080/user/save-recipe", {
+            const response = await fetch("http://localhost:8080/user/save-recipes", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -191,7 +198,7 @@ const Pantry = () => {
                     recipeSuggestions.map((recipe, index) => (
                         <div key={index} className="recipe-bubble">
                             <div className="recipe-name">{recipe.node.name}</div>
-                            <button onClick={() => handleSaveRecipe(recipe.node)}>Save Recipe</button>
+                            <button onClick={() => handleSaveRecipes(recipe.node)}>Save Recipe</button>
                         </div>
                     ))
                 ) : (

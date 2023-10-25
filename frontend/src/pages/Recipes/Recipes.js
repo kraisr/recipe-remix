@@ -1,5 +1,6 @@
 import "./recipes.css";
 import React, { useEffect, useState } from "react";
+import RecipeWindow from '../../components/RecipeWindow/RecipeWindow'
 
 
 //ingredientLines
@@ -13,16 +14,17 @@ import React, { useEffect, useState } from "react";
 const Recipes = () => {
     const [savedRecipes, setSavedRecipes] = useState([]);
     const [searchTerm, setSearchTerm] = useState(""); // for the search filter
-    const [isRecipeOpen, setIsRecipeOpen] = useState(false);
+    const [isRecipesOpen, setIsRecipesOpen] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const [selectedRecipe, setSelectedRecipe] = useState(null);
+    const [selectedRecipes, setSelectedRecipes] = useState(null);
 
+   
     const openRecipes = () => {
-        setIsRecipeOpen(true);
+        setIsRecipesOpen(true);
     };
 
     const closePanels = () => {
-        setIsRecipeOpen(false);
+        setIsRecipesOpen(false);
     };
 
     const handleResize = () => {
@@ -58,6 +60,8 @@ const Recipes = () => {
 
                 const data = await response.json();
                 setSavedRecipes(data);
+                 // Log the saved recipes here
+                console.log("Saved Recipes:", data);
             } catch (error) {
                 console.error("Failed to fetch saved recipes:", error);
             }
@@ -66,13 +70,13 @@ const Recipes = () => {
         fetchSavedRecipes();
     }, []);
 
-    const handleRecipeClick = (recipe) => {
-        setSelectedRecipe(recipe);
+    const handleRecipesClick = (recipe) => {
+        setSelectedRecipes(recipe);
     }
 
     // Handle delete logic similarly to the Pantry one. This is a placeholder.
-    const handleDelete = (recipeName) => {
-        console.log("Delete logic for:", recipeName);
+    const handleDelete = (recipe) => {
+        console.log("Delete logic for:", recipe);
     }
 
     const isSmallScreen = windowWidth < 769; // You can adjust this value as needed
@@ -80,10 +84,10 @@ const Recipes = () => {
 
     return (
         <div className="recipes-container">
-            {isSmallScreen && !isRecipeOpen && <button className="recipes-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500}}>My Recipes</button>}
+            {isSmallScreen && !isRecipesOpen && <button className="recipes-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500}}>My Recipes</button>}
 
-            <div className={`recipes-box ${isRecipeOpen ? 'slide-in' : ''}`}>
-                {isRecipeOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>} 
+            <div className={`recipes-box ${isRecipesOpen ? 'slide-in' : ''}`}>
+                {isRecipesOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>} 
                 <div className="recipes-title">My Recipes</div>
                 <input 
                     type="text" 
@@ -93,12 +97,12 @@ const Recipes = () => {
                     className="search-input"
                 />
                 <div className="recipes-grid">
-                    {savedRecipes.filter(recipe => recipe.name.toLowerCase().includes(searchTerm.toLowerCase())).map(recipe => (
-                        <div key={recipe._id} className="recipe-bubble">
-                            <div className="recipe-name" onClick={() => handleRecipeClick(recipe)}>{recipe.name}</div>
+                    {savedRecipes.filter(recipe => recipe.name && recipe.name.toLowerCase().includes(searchTerm.toLowerCase())).map(recipe => (
+                        <div key={recipe._id} className="recipe-bubble" onClick={() => handleRecipesClick(recipe)}>
+                            <div className="recipe-name">{recipe.name}</div>
                             <button 
                                 className="delete-button" 
-                                onClick={() => handleDelete(recipe.name)}
+                                onClick={() => handleDelete(recipe)}
                             >
                                 Delete
                             </button>
@@ -106,6 +110,17 @@ const Recipes = () => {
                     ))}
                 </div>
             </div>
+            {
+                selectedRecipes && 
+                <RecipeWindow 
+                    recipe={selectedRecipes} 
+                    onClose={() => setSelectedRecipes(null)} 
+                    onSave={(updatedRecipe) => {
+                    // Logic to save updatedRecipe to backend and update savedRecipes state
+                 }}
+                />
+            }
+
         </div>
     );
 }

@@ -35,7 +35,7 @@ router.get("/get-pantry", getFromPantry);
 router.post("/delete-pantry", deleteIngredient);
 
 /* RECIPE ROUTES */
-router.post("/save-recipe", saveRecipes)
+router.post("/save-recipes", saveRecipes)
 router.get("/get-recipes", getRecipes);
 
 /* DELETE ACCOUNT */

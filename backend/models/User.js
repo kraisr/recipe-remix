@@ -84,7 +84,7 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        recipeName: {
+        name: {
             type: String,
             required: true,
         },
