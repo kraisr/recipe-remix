@@ -126,7 +126,7 @@ const Navbar = () => {
                         <h1 className="nav-links" onClick={closeMobileMenu}>Pantry</h1>
                     </Link>
 
-                    <Link to="/">
+                    <Link to="/../recipes">
                         <h1 className="nav-links" onClick={closeMobileMenu}>Recipes</h1>
                     </Link>
 

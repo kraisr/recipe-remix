@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 // Import pages and components
 import Home from "./pages/Home/Home";
 import Pantry from "./pages/Pantry/Pantry";
+import Recipes from "./pages/Recipes/Recipes";
 import Navbar from "./components/Navbar/Navbar";
 import Profile from "./pages/Profile/Profile";
 import Preferences from "./pages/Preferences/Preferences";
@@ -33,6 +34,7 @@ function App() {
         <Routes>
           <Route path="/" element={isLoggedIn ? <Home /> : <Landing />} />
           <Route path="/pantry" element={isLoggedIn ? <Pantry /> : <Navigate to="/" />} />
+          <Route path="/recipes" element={isLoggedIn ? <Recipes /> : <Navigate to="/" />} />
           <Route path="/profile" element={isLoggedIn ? <Profile /> : <Navigate to="/" />} />
           <Route path="/settings" element={isLoggedIn ? <Settings /> : <Navigate to="/" />} />
           <Route path="/preferences" element={isLoggedIn ? <Preferences /> : <Navigate to="/" />} />
