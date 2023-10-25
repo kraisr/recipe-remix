@@ -179,8 +179,8 @@ const Pantry = () => {
     
         return (
             <div className="pantry-container">
-                {isSmallScreen && !isPantryOpen && !isRecipesOpen && <button className="pantry-toggle-button" onClick={openPantry} style={{display: 'block', zIndex: 500}}>Pantry</button>}
-                {isSmallScreen && !isRecipesOpen && !isPantryOpen && <button className="recipes-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500}}>Matched Recipes</button>}
+                {isSmallScreen && !isPantryOpen && !isRecipesOpen && <button className="pantry-toggle-button" onClick={openPantry} style={{display: 'block', zIndex: 500,}}>Pantry</button>}
+                {isSmallScreen && !isRecipesOpen && !isPantryOpen && <button className="pantry-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500, marginLeft: '55%'}}>Matched Recipes</button>}
 
                 <div className={`pantry-left-container ${isPantryOpen ? 'slide-in' : ''}`}>
                     {isPantryOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>} 
