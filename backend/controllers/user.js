@@ -19,6 +19,60 @@ export const getUser = async (req, res) => {
     }
 }
 
+
+export const saveRecipe = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        
+        const recipe = {
+            id: req.body.id,
+            totalTime: req.body.totalTime,
+            recipeName: req.body.recipeName,
+            numberOfServings: req.body.numberOfServings,
+            ingredientLines: req.body.ingredientLines,
+            source: { recipeUrl: req.body.recipeUrl },
+            mainImage: req.body.mainImage,
+            instructions: req.body.instructions,
+        };
+
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: userId },
+            { $push: { recipes: recipe } },
+            { new: true }
+        ).select('-password');
+
+        if (!updatedUser) {
+            return res.status(400).json({ error: "Error updating user recipes" });
+        }
+
+        res.status(200).json({ message: "Recipe added successfully" });
+    } catch (err) {
+        console.error("Error in saveRecipe function:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+export const getRecipes = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(400).json({ error: "User does not exist" });
+        }
+
+        res.status(200).json(user.recipes);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+
 export const addIngredient = async (req, res) => {
     try {
         const token = req.headers.authorization.split(" ")[1];

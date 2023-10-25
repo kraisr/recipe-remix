@@ -75,6 +75,37 @@ const userSchema = new mongoose.Schema({
             required: true,
         },
     }],
+    recipes: [{
+        id: {
+            type: String,
+            required: true,
+        },
+        totalTime: {
+            type: String,
+            required: true,
+        },
+        recipeName: {
+            type: String,
+            required: true,
+        },
+        numberOfServings: {
+            type: Number,
+            required: true,
+        },
+        ingredientLines: [String],
+        source: {
+            recipeUrl: {
+                type: String,
+                required: true,
+            }
+        },
+        mainImage: {
+            type: String,
+            required: true,
+        },
+        instructions: [String],
+    }],
+    
     
     preferences: {
         lactoseIntolerance: {
