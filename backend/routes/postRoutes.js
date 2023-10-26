@@ -3,8 +3,8 @@ import { createPost, getUserPosts, deletePost } from '../controllers/postControl
 
 const router = express.Router();
 
-router.post('/create', createPost);
-router.get('/:userId', getUserPosts);
-router.delete('/:postId', deletePost);
+router.post('/post', createPost);
+
+
 
 export default router;
