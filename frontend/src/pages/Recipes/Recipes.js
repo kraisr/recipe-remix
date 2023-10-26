@@ -209,7 +209,7 @@ const Recipes = () => {
 
     return (
         <div className="recipes-container">
-            {isSmallScreen && !isRecipesOpen && <button className="recipes-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500}}>My Recipes</button>}
+            {isSmallScreen && !isRecipesOpen && <button className="recipe-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500}}>My Recipes</button>}
 
             <div className={`recipes-box ${isRecipesOpen ? 'slide-in' : ''}`}>
                 {isRecipesOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>} 
@@ -236,7 +236,7 @@ const Recipes = () => {
                                     }
                                 </PDFDownloadLink>
                                 <button 
-                                    className="delete-button" 
+                                    className="recipe-delete-button" 
                                     onClick={() => handleDelete(recipe)}
                                 >
                                     Delete
