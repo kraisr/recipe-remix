@@ -38,7 +38,6 @@
     overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
-
 .recipes-grid {
     display: flex;
     flex-direction: column;
@@ -51,9 +50,50 @@
     padding-right: 0; /* Remove right padding */
 }
 
+.recipe-bubble {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 50px; /* Adjust based on your design */
+    overflow: hidden; 
+}
+.recipe-name {
+    max-width: 50%; /* Adjust this value based on your design */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
+.recipe-buttons {
+    display: flex;
+    justify-content: space-between;
+}
 
+.download-button {
+    background-color: #FA7070;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    margin-right: 1rem;
+}
 
+.download-button:hover {
+    background-color: #FF3D3D;
+    font-weight: bold;
+}
+
+.delete-button:hover {
+    background-color: #FF3D3D;
+    font-weight: bold;
+}
 
 
 .recipes-toggle-button {

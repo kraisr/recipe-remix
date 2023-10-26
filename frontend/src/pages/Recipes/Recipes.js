@@ -1,5 +1,5 @@
 import "./recipes.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import RecipeWindow from '../../components/RecipeWindow/RecipeWindow'
 import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
 import ReactPDF from '@react-pdf/renderer';
@@ -81,6 +81,7 @@ const Recipes = () => {
     const handleDelete = (recipe) => {
         console.log("Delete logic for:", recipe);
     }
+
     Font.register({
         family: 'Oswald',
         src: 'https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf'
@@ -222,23 +223,25 @@ const Recipes = () => {
                 />
                 <div className="recipes-grid">
                     {savedRecipes.filter(recipe => recipe.name && recipe.name.toLowerCase().includes(searchTerm.toLowerCase())).map(recipe => (
-                        <div key={recipe._id} className="recipe-bubble" onClick={() => handleRecipesClick(recipe)}>
-                            <div className="recipe-name">{recipe.name}</div>
-                            <PDFDownloadLink
-                                document={<PdfGen recipe={recipe} />}
-                                fileName={`${recipe.name}.pdf`}
-                                className="download-button"
-                            >
-                                {({ blob, url, loading, error }) =>
-                                    loading ? "Loading document..." : "Download"
-                                }
-                            </PDFDownloadLink>
-                            <button 
-                                className="delete-button" 
-                                onClick={() => handleDelete(recipe)}
-                            >
-                                Delete
-                            </button>
+                        <div key={recipe._id} className="recipe-bubble">
+                            <div className="recipe-name" onClick={() => handleRecipesClick(recipe)}>{recipe.name}</div>
+                            <div className="recipe-buttons">
+                                <PDFDownloadLink
+                                    document={<PdfGen recipe={recipe} />}
+                                    fileName={`${recipe.name}.pdf`}
+                                    style={{ textDecoration: 'none' }}
+                                >
+                                    {({ blob, url, loading, error }) => 
+                                        loading ? "Loading..." : <button className="download-button">Download</button>
+                                    }
+                                </PDFDownloadLink>
+                                <button 
+                                    className="delete-button" 
+                                    onClick={() => handleDelete(recipe)}
+                                >
+                                    Delete
+                                </button>
+                            </div> 
                         </div>
                     ))}
                 </div>
