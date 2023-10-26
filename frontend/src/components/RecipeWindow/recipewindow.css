@@ -16,8 +16,10 @@
     background-color: #FBF2CF;
     padding: 20px;
     width: 70vw;
-    max-width: 500px;
+    max-width: 70%;
+    max-height: 80vh;
     border-radius: 10px;
+    overflow-y: auto;
     position: relative;
 }
 
@@ -42,12 +44,15 @@
     justify-content: center;
 
 }
+.window-title {
+    font-weight: bold;
+}
 
-.time-container {
+/* .time-container {
     display: flex;
     justify-content: center;
     
-}
+} */
 
 /* .ingredientLines-container {
 

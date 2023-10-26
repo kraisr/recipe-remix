@@ -22,7 +22,7 @@
 }
 
 
-.recipes-box{
+.recipes-box {
     display: flex;
     flex-direction: column;
     background-color: #FBF2CF;
@@ -37,8 +37,19 @@
     padding: 20px 10px; /* Reduced side padding */
     overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
-
-
+.recipes-box .search-input {
+    width: 70%;
+    box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
+    border-color: black;
+}
+.search-input {
+    width: 90%; /* Adjust as needed */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
 .recipes-grid {
     display: flex;
     flex-direction: column;
@@ -51,13 +62,80 @@
     padding-right: 0; /* Remove right padding */
 }
 
+.recipe-bubble {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 50px; /* Adjust based on your design */
+    overflow: hidden; 
+}
+.recipe-name {
+    max-width: 50%; /* Adjust this value based on your design */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recipe-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.download-button {
+    background-color: #FA7070;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    margin-right: 1rem;
+}
+
+.recipe-delete-button {
+    background-color: #FA7070;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+.download-button:hover {
+    background-color: #FF3D3D;
+    font-weight: bold;
+}
+
+.recipe-delete-button:hover {
+    background-color: #FF3D3D;
+    font-weight: bold;
+}
 
 
-
-
-
-.recipes-toggle-button {
-    left: 20px;
+.recipe-toggle-button {
+    display: none;
+    position: absolute;
+    top: 125px;  
+    left: 10px; 
+    padding: 10px 20px;  
+    background-color: #FBF2CF;  
+    color: black;  
+    border-radius: 20px;  
+    cursor: pointer;  
+    font-weight: bold;  
+    width: 100vw;
+    box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 .close-panel-button {
@@ -84,6 +162,7 @@
         height: 100%;
         z-index: 99;
         overflow-y: auto; /* In case the content is longer than the screen */
+        padding-right: 20px;
     }
 
     .recipes-box {
@@ -97,14 +176,14 @@
         transform: translateX(0); /* Comes in from the left or right */
     }
 
-    .recipes-toggle-button {
+    .recipe-toggle-button {
         display: block;
         justify-content: space-between;
         position: absolute;
         top: 150px;
         left: 10px;
         z-index: 1000; 
-        width: auto;
+        width: 100vw;
         height: auto;
     }
 
@@ -124,4 +203,9 @@
     color: #FF3D3D;
     /* Add other styles (background, color, etc.) as desired */
 }
+}
+@media (min-width: 769px) {
+   .recipe-toggle-button {
+    display: none !important;
+   }
 }

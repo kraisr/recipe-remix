@@ -11,6 +11,7 @@ const Pantry = () => {
     const [isPantryOpen, setIsPantryOpen] = useState(false);
     const [isRecipesOpen, setIsRecipesOpen] = useState(false);
     
+    
     const openPantry = () => {
         setIsPantryOpen(true);
         setIsRecipesOpen(false);
