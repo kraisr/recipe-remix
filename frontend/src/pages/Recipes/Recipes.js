@@ -214,6 +214,8 @@ const Recipes = () => {
     
 
     const isSmallScreen = windowWidth < 769; // You can adjust this value as needed
+    const filteredRecipes = savedRecipes.filter(recipe => recipe.name && recipe.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
 
 
     return (
@@ -231,28 +233,34 @@ const Recipes = () => {
                     className="search-input"
                 />
                 <div className="recipes-grid">
-                    {savedRecipes.filter(recipe => recipe.name && recipe.name.toLowerCase().includes(searchTerm.toLowerCase())).map(recipe => (
-                        <div key={recipe._id} className="recipe-bubble">
-                            <div className="recipe-name" onClick={() => handleRecipesClick(recipe)}>{recipe.name}</div>
-                            <div className="recipe-buttons">
-                                <PDFDownloadLink
-                                    document={<PdfGen recipe={recipe} />}
-                                    fileName={`${recipe.name}.pdf`}
-                                    style={{ textDecoration: 'none' }}
-                                >
-                                    {({ blob, url, loading, error }) => 
-                                        loading ? "Loading..." : <button className="download-button">Download</button>
-                                    }
-                                </PDFDownloadLink>
-                                <button 
-                                    className="recipe-delete-button" 
-                                    onClick={() => handleDelete(recipe)}
-                                >
-                                    Delete
-                                </button>
-                            </div> 
+                    {
+                        filteredRecipes.length > 0 
+                        ? filteredRecipes.map(recipe => (
+                            <div key={recipe._id} className="recipe-bubble">
+                                <div className="recipe-name" onClick={() => handleRecipesClick(recipe)}>{recipe.name}</div>
+                                <div className="recipe-buttons">
+                                    <PDFDownloadLink
+                                        document={<PdfGen recipe={recipe} />}
+                                        fileName={`${recipe.name}.pdf`}
+                                        style={{ textDecoration: 'none' }}
+                                    >
+                                        {({ blob, url, loading, error }) => 
+                                            loading ? "Loading..." : <button className="download-button">Download</button>
+                                        }
+                                    </PDFDownloadLink>
+                                    <button 
+                                        className="recipe-delete-button" 
+                                        onClick={() => handleDelete(recipe)}
+                                    >
+                                        Delete
+                                    </button>
+                                </div> 
+                            </div>
+                        ))
+                        : <div className="no-recipes-message">
+                            No recipes found. Please check for typos or try a different keyword.
                         </div>
-                    ))}
+                    }
                 </div>
             </div>
             {
