@@ -227,6 +227,7 @@ const Pantry = () => {
                 </div>
                 
                 <div className="ingredients-grid">
+
                 {recipeSuggestions && recipeSuggestions.length > 0 ? (
                     recipeSuggestions.map((recipe, index) => (
                         <div key={index} className="recipe-bubble">
@@ -238,7 +239,7 @@ const Pantry = () => {
                     <p>No recipes found.</p>
                 )}
 
-                    <hr/>
+
                 </div>
             </div>
         </div>
