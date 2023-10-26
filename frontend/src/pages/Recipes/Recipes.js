@@ -4,6 +4,8 @@ import RecipeWindow from '../../components/RecipeWindow/RecipeWindow'
 import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
 import ReactPDF from '@react-pdf/renderer';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import { deleteRecipe } from "./DeleteRecipe.js";
+
 
 
 //ingredientLines
@@ -78,8 +80,15 @@ const Recipes = () => {
     }
 
     // Handle delete logic similarly to the Pantry one. This is a placeholder.
-    const handleDelete = (recipe) => {
-        console.log("Delete logic for:", recipe);
+    const handleDelete = async (recipe) => {
+        // Display a confirmation prompt to the user
+         const userConfirmed = window.confirm(`Are you sure you want to delete ${recipe.name} from your pantry?`);
+    
+         // If the user confirms the deletion, proceed with the deletion logic
+         if (userConfirmed) {
+             await deleteRecipe(recipe);
+             setSavedRecipes(prevRecipes => prevRecipes.filter(r => r.name !== recipe.name));
+         }
     }
 
     Font.register({

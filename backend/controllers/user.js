@@ -18,6 +18,30 @@ export const getUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+export const deleteRecipe = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        const recipe = req.body.recipe;
+
+        const updatedRecipe = await User.findByIdAndUpdate(
+            userId,
+            { $pull: { recipes: { name: recipe.name } } },
+            { new: true }
+        ).select('-password');
+
+        if (!updatedRecipe) {
+            return res.status(400).json({ error: "Error updating recipes" });
+        }
+
+        res.status(200).json({ message: "recipe deleted successfully" });
+    } catch (err) {
+        console.error("Error in deleteRecipe function:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
 
 
 export const saveRecipes = async (req, res) => {
