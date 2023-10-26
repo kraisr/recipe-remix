@@ -93,7 +93,7 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                         </>
                     ) : (
                         <>
-                            <div>Ingredients:</div>
+                            <div className="window-title">Ingredients:</div>
                             <ul>
                                 {recipe.ingredientLines.map((line, index) => (
                                     <li key={index}>{line}</li>
@@ -115,7 +115,7 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                         </>
                     ) : (
                         <>
-                            <div>Instructions:</div>
+                            <div className="window-title">Instructions:</div>
                             <ol className="instructions-list">
                                 {recipe.instructions.map((instr, index) => (
                                     <li key={index} className="instruction-line">{instr}</li>
