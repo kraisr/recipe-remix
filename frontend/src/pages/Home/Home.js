@@ -20,11 +20,11 @@ function Home() {
                         <p>Imagine taking a list of boring ingredients in your pantry—what exciting recipes can you whip up?</p>
                         <p>Watch as the ingredients magically appear below, ready for you to add to your 'pantry' of culinary possibilities!</p>
                     </div>
-                    <div className='magnifying-glass'> </div>
+                    
                 </div>
             </header>
             <div className="search-bar-container">
-            <SearchBar />
+                <SearchBar />
             </div> 
         </div>
     );

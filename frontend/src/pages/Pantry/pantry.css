@@ -23,6 +23,11 @@
     box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
     border-color: black;
 }
+.pantry-right-container .recipe-input {
+    width: 70%;
+    box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
+    border-color: black;
+}
 .pantry-left-container{
     display: flex;
     flex-direction: column;
@@ -112,6 +117,20 @@ img {
     top: -5px;
 }
 
+.recipe-search-panel{
+    display: flex;
+    flex-direction: row;
+}
+
+.magnifying-glass{
+    position: relative;
+    z-index:1;
+    border-radius: 20%;
+    height:50%;
+    top:15%;
+    left:6%;
+}
+
 .ingredients-grid {
     display: flex;
     flex-direction: column;
@@ -122,6 +141,10 @@ img {
     padding-top: 10px;
     padding-left: 0; /* Remove left padding */
     padding-right: 0; /* Remove right padding */
+}
+
+.ingredients-grid p {
+    align-self: center;
 }
 
 .ingredient-name:hover {
@@ -193,9 +216,22 @@ img {
 }
 
 .search-input {
+    left:50%;
     width: 90%; /* Adjust as needed */
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 2%;
+    margin-bottom: 5%;
+    margin-top:2%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+.recipe-input {
+    position: relative;
+    left:15%;
+    width: 90%; /* Adjust as needed */
+    padding: 2%;
+    margin-bottom: 5%;
+    margin-top:2%;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 16px;
