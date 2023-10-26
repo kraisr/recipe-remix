@@ -10,7 +10,7 @@ const Pantry = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isPantryOpen, setIsPantryOpen] = useState(false);
     const [isRecipesOpen, setIsRecipesOpen] = useState(false);
-
+    
     const openPantry = () => {
         setIsPantryOpen(true);
         setIsRecipesOpen(false);
@@ -73,6 +73,34 @@ const Pantry = () => {
     const handleResize = () => {
         setWindowWidth(window.innerWidth);
     };
+
+    useEffect(() => {
+        const toggleButton = document.getElementById('toggleDropdown');
+        const dropdown = document.getElementById('filterDropdown');
+    
+        dropdown.style.display = 'none';
+    
+        toggleButton.addEventListener('click', () => {
+            if (dropdown.style.display == 'none') {
+                dropdown.style.display = 'block'; // or 'relative' if you prefer
+            } else {
+                dropdown.style.display = 'none';
+            }
+        });
+    
+        // Cleanup: remove the event listener when the component unmounts
+        return () => {
+            toggleButton.removeEventListener('click', () => {
+                if (dropdown.style.display == 'none') {
+                    dropdown.style.display = 'block'; // or 'relative' if you prefer
+                } else {
+                    dropdown.style.display = 'none';
+                }
+            });
+        };
+    }, []);
+    
+
 
     //perform the recipe remix here
     const handleDaRemix = async () => {
@@ -151,8 +179,8 @@ const Pantry = () => {
     
         return (
             <div className="pantry-container">
-                {isSmallScreen && !isPantryOpen && !isRecipesOpen && <button className="pantry-toggle-button" onClick={openPantry} style={{display: 'block', zIndex: 500}}>Pantry</button>}
-                {isSmallScreen && !isRecipesOpen && !isPantryOpen && <button className="recipes-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500}}>Matched Recipes</button>}
+                {isSmallScreen && !isPantryOpen && !isRecipesOpen && <button className="pantry-toggle-button" onClick={openPantry} style={{display: 'block', zIndex: 500,}}>Pantry</button>}
+                {isSmallScreen && !isRecipesOpen && !isPantryOpen && <button className="pantry-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500, marginLeft: '55%'}}>Matched Recipes</button>}
 
                 <div className={`pantry-left-container ${isPantryOpen ? 'slide-in' : ''}`}>
                     {isPantryOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>} 
@@ -190,10 +218,16 @@ const Pantry = () => {
                 {isRecipesOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>}
                 <div className="recipe-top-panel">
                     <div className="recipe-title">Matched Recipes</div>
-                    <button className="filter-button">Filter</button>
+                    <button id="toggleDropdown">Filter</button>
+                    <div id="filterDropdown" className="dropdown-content">
+                        <option value="option1">Option 1</option>
+                        <option value="option2">Option 2</option>
+                        <option value="option3">Option 3</option>
+                    </div>
                 </div>
                 
                 <div className="ingredients-grid">
+
                 {recipeSuggestions && recipeSuggestions.length > 0 ? (
                     recipeSuggestions.map((recipe, index) => (
                         <div key={index} className="recipe-bubble">
@@ -205,7 +239,7 @@ const Pantry = () => {
                     <p>No recipes found.</p>
                 )}
 
-                    <hr/>
+
                 </div>
             </div>
         </div>
