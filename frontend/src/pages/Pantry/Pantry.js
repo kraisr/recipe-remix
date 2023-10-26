@@ -28,7 +28,6 @@ const Pantry = () => {
         setIsRecipesOpen(false);
     };
 
-    var snd = new Audio("file.wav");
 
     useEffect(() => {
         const fetchPantryIngredients = async () => {
@@ -118,7 +117,7 @@ const Pantry = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body:  JSON.stringify({ingredientNames })
+                body: JSON.stringify({ingredientNames })
             });
     
             if (!response.ok) {
@@ -134,6 +133,39 @@ const Pantry = () => {
             console.error("Failed to fetch pantry ingredients:", error);
         }
     } 
+
+    const handleSaveRecipes = async (recipe) => {
+        console.log("handleSaveRecipes called");
+        console.log("Recipe being sent:", recipe);
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('No token found in local storage.');
+                return;
+            }
+    
+            const response = await fetch("http://localhost:8080/user/save-recipes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(recipe)
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            const data = await response.json();
+            console.log(data.message);
+            
+        } catch (error) {
+            console.error("Failed to save recipe:", error);
+        }
+    }
+    
 
     useEffect(() => {
         window.addEventListener("resize", handleResize);
@@ -195,22 +227,19 @@ const Pantry = () => {
                 </div>
                 
                 <div className="ingredients-grid">
-                    {recipeSuggestions && recipeSuggestions.length > 0 ? (
-                        recipeSuggestions.map((recipe, index) => (
-                            <div key={index} className="recipe-bubble">
-                                <div className="recipe-name">{recipe.node.name}</div>
-                                <button
-                                    className="delete-button"
-                                    onClick={() => handleDelete(recipe.node.name)}
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                            
-                        ))
-                    ) : (
-                        <p>No recipes found.</p>
-                    )}
+
+                {recipeSuggestions && recipeSuggestions.length > 0 ? (
+                    recipeSuggestions.map((recipe, index) => (
+                        <div key={index} className="recipe-bubble">
+                            <div className="recipe-name">{recipe.node.name}</div>
+                            <button onClick={() => handleSaveRecipes(recipe.node)}>Save Recipe</button>
+                        </div>
+                    ))
+                ) : (
+                    <p>No recipes found.</p>
+                )}
+
+
                 </div>
             </div>
         </div>
@@ -220,30 +249,4 @@ const Pantry = () => {
 export default Pantry;
 
 
-       // Cleanup: remove the event listener when the component unmounts
-    //     return () => {
-    //         document.removeEventListener('click', handleDocumentClick);
-    //     };
-    // }, [isRecipeOpen]);
-    // return ( 
-    //         <div className="pantry-container">
-    //             <div 
-    //             className="pantry-tag" 
-    //             style={{ display: isPantryOpen ? 'none' : 'flex' }} 
-    //             onClick={(e) => {
-    //                 e.stopPropagation();  // Stop the click event from bubbling up
-    //                 setIsPantryOpen(!isPantryOpen);
-    //             }}
-    //             >
-    //                 My Pantry
-    //             </div>
-
-    //             const data = await response.json();
-    //             setPantryIngredients(data);
-    //         } catch (error) {
-    //             console.error("Failed to fetch pantry ingredients:", error);
-    //         }
-    //     };
-
-    //     fetchPantryIngredients();
-    // }, []);
+ 
