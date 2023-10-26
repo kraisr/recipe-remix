@@ -3,8 +3,10 @@ import logoImg from "../../images/Vector.png";
 import React, { useEffect, useState } from "react";
 import { deleteIngredientFromPantry } from "./DeleteIngredient.js";
 
-import remixSound from "../../audio/short.mp3";
+import remixSound from "../../audio/success.mp3";
 import failSound from "../../audio/fail.mp3";
+import mixingBowl from "../../images/mixing_bowl.gif";
+import mixingBowlImg from "../../images/frame-1.png";
 
 const Pantry = () => {
     const [pantryIngredients, setPantryIngredients] = useState([]);
@@ -17,9 +19,10 @@ const Pantry = () => {
     const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
     const [noRecipesMessage, setNoRecipesMessage] = useState("Nothing to see here yet, try hitting remix!");
     const[listLength, setListLength] = useState("");
+    const [isGifPlaying, setIsGifPlaying] = useState(false);
 
     //identify if the filtered recipe is being remixed or searched
-
+    let remixStatus = false;
 
     const openPantry = () => {
         setIsPantryOpen(true);
@@ -92,18 +95,24 @@ const Pantry = () => {
     useEffect(() => {
         if (recipeSuggestions.length > 0) {
             const term = recipeSearchTerm.toLowerCase();
-            console.log('term:', term);
-            console.log("recipe suggestions: ", recipeSuggestions);
+    
             let filteredRecipes = "";
-            filteredRecipes = recipeSuggestions.filter(
-                (recipe) => recipe.node.name.toLowerCase().includes(term)
-            );
-            
+            if (recipeSuggestions[0]?.node?.name) {
+                // This structure is for recipe remix
+                filteredRecipes = recipeSuggestions.filter(
+                    (recipe) => recipe.node.name.toLowerCase().includes(term)
+                );
+            } else if (recipeSuggestions[0]?.name) {
+                // This structure is for recipe search
+                filteredRecipes = recipeSuggestions.filter(
+                    (recipe) => recipe.name.toLowerCase().includes(term)
+                );
+            }
+    
             setFilteredRecipeSuggestions(filteredRecipes);
-            //console.log("filtered: ", filteredRecipeSuggestions);
         }
     }, [recipeSearchTerm, recipeSuggestions]);
-
+    
 
     const handleRecipeSearch = async () => {
         try {
@@ -122,7 +131,7 @@ const Pantry = () => {
             const data = await response.json();
             console.log('data: ', data);
         
-            setRecipeSuggestions(data);
+            setRecipeSuggestions(data.data.searchRecipeByNameOrIngredient.onPlan);
 
             console.log("recipes: ", recipeSuggestions);
 
@@ -171,7 +180,10 @@ const Pantry = () => {
     //perform the recipe remix here
     const handleDaRemix = async () => {
         try {
-
+            setTimeout(() => {
+                setIsGifPlaying(true);
+            }, 1000);
+            
             const selectedIngredients = pantryIngredients.filter(
                 (ingredient) => selectedCheckboxes[ingredient.ingredientName]
             );
@@ -202,7 +214,9 @@ const Pantry = () => {
             }
     
             const data = await response.json();
-            setRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
+            console.log("data: ", data);
+            console.log('type remix: ', typeof(data));
+            
             console.log("recipes:", recipeSuggestions);
             console.log("length: ", recipeSuggestions.length);
             const success = new Audio(remixSound);
@@ -212,11 +226,22 @@ const Pantry = () => {
                 success.play();
                 setNoRecipesMessage("");
                 setFilteredRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
-                
+                remixStatus = true;
             } else {
                 fail.play();
+                remixStatus = false;
                 setNoRecipesMessage("Oops! No recipes found");
             }
+
+            setTimeout(() => {
+                setIsGifPlaying(false);
+                setRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
+                if(remixStatus) {
+                    window.alert("Success!");
+                } else {
+                    window.alert("Dubious Food :(");
+                }
+            }, 5000);
             
             
         } catch (error) {
@@ -277,7 +302,21 @@ const Pantry = () => {
                 </div>
 
             <div className="pantry-center-container">
-                <img alt="remix" src={logoImg} height="325px" width="270px" />  
+                {isGifPlaying ? (
+                    <img
+                        src={mixingBowl}
+                        alt="Mixing Bowl"
+                        className="mixing-bowl-gif"
+                        style={{ width: '100%', height: '100%' }} // Adjust the width and height as needed
+                    />
+                ) : (
+                    <img
+                        src={mixingBowlImg}
+                        alt="Mixing Bowl"
+                        className="mixing-bowl-static"
+                        style={{ width: '100%', height: '100%' }} // Adjust the width and height as needed
+                    />
+                )}
                 <button type="button" className="pantry-button" onClick={handleDaRemix}>
                     REMIX
                 </button>          
@@ -307,7 +346,9 @@ const Pantry = () => {
                     {filteredRecipeSuggestions && filteredRecipeSuggestions.length > 0 && recipeSuggestions.length > 0? (
                         filteredRecipeSuggestions.map((recipe, index) => (
                             <div key={index} className="recipe-bubble">
-                                <div className="recipe-name">{recipe.node.name}</div>
+                                <div className="recipe-name">
+                                    {recipe.node ? recipe.node.name : recipe.name}
+                                </div>
                                 <button
                                     className="delete-button"
                                     onClick={() => handleDelete(recipe.node.name)}
