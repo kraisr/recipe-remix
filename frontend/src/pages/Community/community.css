@@ -4,40 +4,68 @@
     border: red 1px solid
 }
 .community-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    gap: 20px;
-    padding: 20px;
+    margin: 0 auto;
+    padding: 30px 0px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    height: calc(100% - 100px);
 }
 
 .suggested-recipes {
-    /* Style for the suggested recipes sidebar */
-    border: 1px solid #e0e0e0;
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: #FBF2CF;
+    width: 30vw;
+    height: 650px;
+    border-radius: 0 25px 25px 0;
+    box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
+    align-items: center;
+    justify-content: flex-start; /* Align items to the top */
+    padding-top: 1%;
+    padding: 20px 10px; /* Reduced side padding */
+    overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 .community-feed {
-    /* Style for the main feed */
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    width: 30vw;
+    padding-left: 1px;
+    padding-right: 1px;
+    margin: auto;
 }
 
 .create-post-button {
-    /* Style for the "+" button */
+    display: flex;
     position: fixed;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 24px;
-    padding: 10px 20px;
-    border-radius: 50%;
+    font-size: 60px;
+    padding: 30px 60px; /* Increased horizontal padding for a rectangular shape */
+    border-radius: 5px; /* Mild rounded corners for the rectangle */
     background-color: #ffffff;
     color: #000000;
-    border: black 2 px solid;
+    border: black 2px solid;
     cursor: pointer;
+    transition: 0.3s; /* Smooth transition for hover effects */
 }
 
 .close-friends {
-    /* Style for the close friends sidebar */
-    border: 1px solid #e0e0e0;
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: #FBF2CF;
+    justify-content: start;
+    width: 30vw;
+    height: 650px;
+    padding-top: 1%;
+    padding: 20px 10px;
+    border-radius: 25px 0 0 25px;
+    box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
 }
