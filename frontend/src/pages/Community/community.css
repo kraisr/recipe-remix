@@ -1,0 +1,43 @@
+
+
+* {
+    border: red 1px solid
+}
+.community-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+.suggested-recipes {
+    /* Style for the suggested recipes sidebar */
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+}
+
+.community-feed {
+    /* Style for the main feed */
+    position: relative;
+}
+
+.create-post-button {
+    /* Style for the "+" button */
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    padding: 10px 20px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #000000;
+    border: black 2 px solid;
+    cursor: pointer;
+}
+
+.close-friends {
+    /* Style for the close friends sidebar */
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+}
