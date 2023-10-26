@@ -11,6 +11,7 @@ const Pantry = () => {
     const [isPantryOpen, setIsPantryOpen] = useState(false);
     const [isRecipesOpen, setIsRecipesOpen] = useState(false);
     
+    
     const openPantry = () => {
         setIsPantryOpen(true);
         setIsRecipesOpen(false);
@@ -227,22 +228,19 @@ const Pantry = () => {
                 </div>
                 
                 <div className="ingredients-grid">
-                    {recipeSuggestions && recipeSuggestions.length > 0 ? (
-                        recipeSuggestions.map((recipe, index) => (
-                            <div key={index} className="recipe-bubble">
-                                <div className="recipe-name">{recipe.node.name}</div>
-                                <button
-                                    className="delete-button"
-                                    onClick={() => handleDelete(recipe.node.name)}
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                            
-                        ))
-                    ) : (
-                        <p>No recipes found.</p>
-                    )}
+
+                {recipeSuggestions && recipeSuggestions.length > 0 ? (
+                    recipeSuggestions.map((recipe, index) => (
+                        <div key={index} className="recipe-bubble">
+                            <div className="recipe-name">{recipe.node.name}</div>
+                            <button onClick={() => handleSaveRecipes(recipe.node)}>Save Recipe</button>
+                        </div>
+                    ))
+                ) : (
+                    <p>No recipes found.</p>
+                )}
+
+
                 </div>
             </div>
         </div>
