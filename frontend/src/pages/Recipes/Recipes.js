@@ -1,6 +1,9 @@
 import "./recipes.css";
 import React, { useEffect, useState } from "react";
 import RecipeWindow from '../../components/RecipeWindow/RecipeWindow'
+import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import ReactPDF from '@react-pdf/renderer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 
 //ingredientLines
@@ -78,6 +81,127 @@ const Recipes = () => {
     const handleDelete = (recipe) => {
         console.log("Delete logic for:", recipe);
     }
+    Font.register({
+        family: 'Oswald',
+        src: 'https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf'
+      });
+
+    const styles = StyleSheet.create({
+        page: {
+            flexDirection: 'column',
+            backgroundColor: '#FBF2CF',
+            padding: 20,
+        },
+        recipeContent: {
+            backgroundColor: '#FBF2CF',
+            marginTop: 20,
+            marginBottom: 20,
+            marginLeft: 10,
+            marginRight: 10,
+            fontFamily: 'Oswald'
+        },
+        header: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 20,
+        },
+        title: {
+            fontSize: 24,
+            fontWeight: 'bold',
+        },
+        imageContainer: {
+            flexDirection: 'row',
+            justifyContent: 'center',
+            height: 200
+        },
+        image: {
+            width: 200,
+            height: 200,
+            borderRadius: 10
+        },
+        imagePlaceholder: {
+            width: 200,
+            height: 50,
+        },
+        infoContainer: {
+            marginVertical: 8,
+        },
+        ingredients: {
+            marginBottom: 10,
+            breakAfter: true
+        },
+        ingredientTitle: {
+            fontWeight: 'bold',
+            fontSize: 15,
+            marginBottom: 6,
+        },
+        ingredientItem: {
+            fontSize: 12,
+            fontWeight: 'normal'
+        },
+        instructions: {
+            marginBottom: 10,
+        },
+        instructionTitle: {
+            fontWeight: 'bold',
+            fontSize: 15,
+            marginBottom: 6,
+        },
+        instructionItem: {
+            fontSize: 12,
+            fontWeight: 'normal'
+        },
+        source: {
+            marginTop: 8,
+        }
+    });
+    
+    
+     // ZA PDF ITSELF 
+     const PdfGen = ({ recipe }) => (
+        <Document>
+            <Page size="A4" style={styles.page}>
+                <View style={styles.recipeContent}>
+                    <View style={styles.header}>
+                        <Text style={styles.title}>{recipe.name}</Text>
+                    </View>
+                    <View style={styles.imageContainer}>
+                        {
+                            recipe.mainImage !== "https://sg-data.storage.googleapis.com/images_bucket/Empty.png" 
+                            ? (<View style={styles.imageContainer}>
+                                <Image src={recipe.mainImage} style={styles.image} />
+                            </View>)
+                            : <View style={styles.imagePlaceholder} />
+                        }
+                    </View>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.instructions}>Total Time: {recipe.totalTime}</Text>
+                        <Text>Number of Servings: {recipe.numberOfServings}</Text>
+                    </View>
+                    <View style={styles.ingredients}>
+                        <Text style={styles.ingredientTitle}>Ingredients:</Text>
+                        {recipe.ingredientLines.map((line, index) => (
+                            <Text key={index} style={styles.ingredientItem}>- {line}</Text>
+                        ))}
+                    </View>
+                    <View style={styles.instructions} breakAfter={true}>
+                    <Text style={styles.instructionTitle}>Instructions:</Text>
+                    {recipe.instructions && recipe.instructions.length > 0 ? (
+                        recipe.instructions.map((instr, index) => (
+                            <Text key={index} style={styles.instructionItem}>{index + 1}. {instr}</Text>
+                        ))
+                    ) : (
+                        <Text style={styles.instructionItem}>Adjust to your preferences.</Text>
+                    )}
+                    </View>
+                    <View style={styles.source}>
+                        <Text>Source: {recipe.source}</Text>
+                    </View>
+                </View>
+            </Page>
+        </Document>
+    );
+    
 
     const isSmallScreen = windowWidth < 769; // You can adjust this value as needed
 
@@ -100,6 +224,15 @@ const Recipes = () => {
                     {savedRecipes.filter(recipe => recipe.name && recipe.name.toLowerCase().includes(searchTerm.toLowerCase())).map(recipe => (
                         <div key={recipe._id} className="recipe-bubble" onClick={() => handleRecipesClick(recipe)}>
                             <div className="recipe-name">{recipe.name}</div>
+                            <PDFDownloadLink
+                                document={<PdfGen recipe={recipe} />}
+                                fileName={`${recipe.name}.pdf`}
+                                className="download-button"
+                            >
+                                {({ blob, url, loading, error }) =>
+                                    loading ? "Loading document..." : "Download"
+                                }
+                            </PDFDownloadLink>
                             <button 
                                 className="delete-button" 
                                 onClick={() => handleDelete(recipe)}
