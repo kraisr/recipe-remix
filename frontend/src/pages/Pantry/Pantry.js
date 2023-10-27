@@ -16,6 +16,7 @@ const Pantry = () => {
     const [filteredRecipeSuggestions, setFilteredRecipeSuggestions] = useState([]);
     const [isPantryOpen, setIsPantryOpen] = useState(false);
     const [isRecipesOpen, setIsRecipesOpen] = useState(false);
+
     const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
     const [noRecipesMessage, setNoRecipesMessage] = useState("Nothing to see here yet, try hitting remix!");
     const[listLength, setListLength] = useState("");
@@ -23,6 +24,7 @@ const Pantry = () => {
 
     //identify if the filtered recipe is being remixed or searched
     let remixStatus = false;
+
 
     const openPantry = () => {
         setIsPantryOpen(true);
@@ -40,6 +42,7 @@ const Pantry = () => {
         setIsPantryOpen(false);
         setIsRecipesOpen(false);
     };
+
 
     const handleCheckboxClick = (ingredientName) => {
         setSelectedCheckboxes((prevSelected) => ({
@@ -60,6 +63,7 @@ const Pantry = () => {
         
         setSelectedCheckboxes(updatedSelectedCheckboxes);
     };
+
 
 
     useEffect(() => {
@@ -177,6 +181,34 @@ const Pantry = () => {
         setWindowWidth(window.innerWidth);
     };
 
+    useEffect(() => {
+        const toggleButton = document.getElementById('toggleDropdown');
+        const dropdown = document.getElementById('filterDropdown');
+    
+        dropdown.style.display = 'none';
+    
+        toggleButton.addEventListener('click', () => {
+            if (dropdown.style.display == 'none') {
+                dropdown.style.display = 'block'; // or 'relative' if you prefer
+            } else {
+                dropdown.style.display = 'none';
+            }
+        });
+    
+        // Cleanup: remove the event listener when the component unmounts
+        return () => {
+            toggleButton.removeEventListener('click', () => {
+                if (dropdown.style.display == 'none') {
+                    dropdown.style.display = 'block'; // or 'relative' if you prefer
+                } else {
+                    dropdown.style.display = 'none';
+                }
+            });
+        };
+    }, []);
+    
+
+
     //perform the recipe remix here
     const handleDaRemix = async () => {
         try {
@@ -206,7 +238,7 @@ const Pantry = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body:  JSON.stringify({ingredientNames })
+                body: JSON.stringify({ingredientNames })
             });
     
             if (!response.ok) {
@@ -249,7 +281,39 @@ const Pantry = () => {
         }
     } 
 
+
+    const handleSaveRecipes = async (recipe) => {
+        console.log("handleSaveRecipes called");
+        console.log("Recipe being sent:", recipe);
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('No token found in local storage.');
+                return;
+            }
     
+            const response = await fetch("http://localhost:8080/user/save-recipes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(recipe)
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            const data = await response.json();
+            console.log(data.message);
+            
+        } catch (error) {
+            console.error("Failed to save recipe:", error);
+        }
+    }
+
     
 
     useEffect(() => {
@@ -264,8 +328,8 @@ const Pantry = () => {
     
         return (
             <div className="pantry-container">
-                {isSmallScreen && !isPantryOpen && !isRecipesOpen && <button className="pantry-toggle-button" onClick={openPantry} style={{display: 'block', zIndex: 500}}>Pantry</button>}
-                {isSmallScreen && !isRecipesOpen && !isPantryOpen && <button className="recipes-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500}}>Matched Recipes</button>}
+                {isSmallScreen && !isPantryOpen && !isRecipesOpen && <button className="pantry-toggle-button" onClick={openPantry} style={{display: 'block', zIndex: 500,}}>Pantry</button>}
+                {isSmallScreen && !isRecipesOpen && !isPantryOpen && <button className="pantry-toggle-button" onClick={openRecipes} style={{display: 'block', zIndex: 500, marginLeft: '55%'}}>Matched Recipes</button>}
 
                 <div className={`pantry-left-container ${isPantryOpen ? 'slide-in' : ''}`}>
                     {isPantryOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>} 
@@ -326,7 +390,12 @@ const Pantry = () => {
                 {isRecipesOpen && <button onClick={closePanels} className="close-panel-button" style={{display: 'block'}}>X</button>}
                 <div className="recipe-top-panel">
                     <div className="recipe-title">Matched Recipes</div>
-                    <button className="filter-button">Filter</button>
+                    <button id="toggleDropdown">Filter</button>
+                    <div id="filterDropdown" className="dropdown-content">
+                        <option value="option1">Option 1</option>
+                        <option value="option2">Option 2</option>
+                        <option value="option3">Option 3</option>
+                    </div>
                 </div>
                 <div className="recipe-search-panel">
                     <input 
@@ -343,12 +412,16 @@ const Pantry = () => {
                 </div>
 
                 <div className="ingredients-grid">
+
                     {filteredRecipeSuggestions && filteredRecipeSuggestions.length > 0 && recipeSuggestions.length > 0? (
                         filteredRecipeSuggestions.map((recipe, index) => (
                             <div key={index} className="recipe-bubble">
                                 <div className="recipe-name">
+
                                     {recipe.node ? recipe.node.name : recipe.name}
                                 </div>
+                                <button onClick={() => handleSaveRecipes(recipe.node)}>Save Recipe</button>
+
                                 <button
                                     className="delete-button"
                                     onClick={() => handleDelete(recipe.node.name)}
@@ -370,30 +443,4 @@ const Pantry = () => {
 export default Pantry;
 
 
-       // Cleanup: remove the event listener when the component unmounts
-    //     return () => {
-    //         document.removeEventListener('click', handleDocumentClick);
-    //     };
-    // }, [isRecipeOpen]);
-    // return ( 
-    //         <div className="pantry-container">
-    //             <div 
-    //             className="pantry-tag" 
-    //             style={{ display: isPantryOpen ? 'none' : 'flex' }} 
-    //             onClick={(e) => {
-    //                 e.stopPropagation();  // Stop the click event from bubbling up
-    //                 setIsPantryOpen(!isPantryOpen);
-    //             }}
-    //             >
-    //                 My Pantry
-    //             </div>
-
-    //             const data = await response.json();
-    //             setPantryIngredients(data);
-    //         } catch (error) {
-    //             console.error("Failed to fetch pantry ingredients:", error);
-    //         }
-    //     };
-
-    //     fetchPantryIngredients();
-    // }, []);
+ 

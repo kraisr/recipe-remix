@@ -126,11 +126,11 @@ const Navbar = () => {
                         <h1 className="nav-links" onClick={closeMobileMenu}>Pantry</h1>
                     </Link>
 
-                    <Link to="/">
+                    <Link to="/../recipes">
                         <h1 className="nav-links" onClick={closeMobileMenu}>Recipes</h1>
                     </Link>
 
-                    <Link to="/">
+                    <Link to="/../community">
                         <h1 className="nav-links" onClick={closeMobileMenu}>Community</h1>
                     </Link>
 
@@ -161,6 +161,12 @@ const Navbar = () => {
                                 <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
                                     <i className="fa-solid fa-gear"></i>
                                     <p>Settings</p>
+                                    <span>{'>'}</span>
+                                </Link>
+
+                                <Link to="/../shoppingList" className="sub-menu-link" onClick={toggleMenu}>
+                                    <i className="fa-solid fa-gear"></i>
+                                    <p>Shopping List</p>
                                     <span>{'>'}</span>
                                 </Link>
 

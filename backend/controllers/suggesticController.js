@@ -66,6 +66,15 @@ export const searchRecipes = async (req, res) => {
                     name
                   }
                   ingredientLines
+                  id
+                  totalTime
+                  numberOfServings
+                  source {
+                    recipeUrl
+                  }
+                  mainImage
+                  instructions
+
                 }
               }
             }

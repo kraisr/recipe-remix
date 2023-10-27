@@ -18,7 +18,86 @@ export const getUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+export const deleteRecipe = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
 
+        const recipe = req.body.recipe;
+
+        const updatedRecipe = await User.findByIdAndUpdate(
+            userId,
+            { $pull: { recipes: { name: recipe.name } } },
+            { new: true }
+        ).select('-password');
+
+        if (!updatedRecipe) {
+            return res.status(400).json({ error: "Error updating recipes" });
+        }
+
+        res.status(200).json({ message: "recipe deleted successfully" });
+    } catch (err) {
+        console.error("Error in deleteRecipe function:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+export const saveRecipes = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        
+        const recipe = {
+            id: req.body.id,
+            totalTime: req.body.totalTime,
+            name: req.body.name,
+            numberOfServings: req.body.numberOfServings,
+            ingredientLines: req.body.ingredientLines,
+            source: { recipeUrl: req.body.recipeUrl },
+            mainImage: req.body.mainImage,
+            instructions: req.body.instructions,
+        };
+
+        const updatedUser = await User.findOneAndUpdate(
+            // Check to make sure the recipe with the same id doesn't exist for the user
+            { _id: userId, "recipes.id": { $ne: recipe.id } },
+            { $addToSet: { recipes: recipe } }, // Use $addToSet here to ensure uniqueness, but the query condition above should already handle it
+            { new: true }
+        ).select('-password');
+
+        if (!updatedUser) {
+            return res.status(400).json({ error: "Error updating user recipes or recipe already exists" });
+        }
+
+        res.status(200).json({ message: "Recipe added successfully" });
+    } catch (err) {
+        console.error("Error in saveRecipe function:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+export const getRecipes = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(400).json({ error: "User does not exist" });
+        }
+
+        res.status(200).json(user.recipes);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+//addIngredient to pantry
 export const addIngredient = async (req, res) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
@@ -47,7 +126,7 @@ export const addIngredient = async (req, res) => {
 };
 
 
-
+//getting ingredient to display in the pantry
 export const getFromPantry = async (req, res) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
@@ -65,7 +144,7 @@ export const getFromPantry = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
-
+//deleting the ingredient from pantry
 export const deleteIngredient = async (req, res) => {
     try {
         const token = req.headers.authorization.split(" ")[1];

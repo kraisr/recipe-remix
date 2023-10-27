@@ -1,0 +1,45 @@
+/* shoppinglist.css */
+
+/* Styles for the Shopping List Title and Missing Ingredients Title */
+.shopping-list-title,
+.missing-ingredients-title {
+  background-color: #a1c298;
+  border-radius: 8px;
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.shopping-list-title h4,
+.missing-ingredients-title h4 {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 24px; /* Adjust the font size as needed for both titles */
+}
+
+/* Styles for individual Shopping Lists and Missing Ingredients */
+.shopping-list,
+.missing-ingredient {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.shopping-list h6,
+.missing-ingredient h6 {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 16px; /* Adjust the font size as needed for both shopping list and missing ingredient titles */
+}
+
+/* Styles for the plus button to add Shopping Lists and Missing Ingredients */
+.add-shopping-list-button,
+.add-missing-ingredient-button,
+.add-selected-ingredients-button {
+  margin: 20px auto;
+  display: block;
+}

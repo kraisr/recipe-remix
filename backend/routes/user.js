@@ -1,9 +1,9 @@
 import express from "express";
-import {addIngredient, getFromPantry, deleteIngredient} from "../controllers/user.js";
+import {addIngredient, getFromPantry, deleteIngredient, deleteRecipe} from "../controllers/user.js";
 import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting, deleteAccount } from "../controllers/user.js";
 import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js";
 import { sendEmail, updateReminder } from "../controllers/sendEmail.js";import {sendCode} from "../controllers/code.js"
-
+import { saveRecipes, getRecipes} from "../controllers/user.js";
 const router = express.Router();
 
 /* GET USER DATA */
@@ -33,6 +33,11 @@ router.post("/reminderSetting", reminderSetting);
 router.post("/add-pantry", addIngredient);
 router.get("/get-pantry", getFromPantry);
 router.post("/delete-pantry", deleteIngredient);
+
+/* RECIPE ROUTES */
+router.post("/save-recipes", saveRecipes);
+router.get("/get-recipes", getRecipes);
+router.post("/delete-recipe", deleteRecipe);
 
 /* DELETE ACCOUNT */
 router.post("/delete-account", deleteAccount);
