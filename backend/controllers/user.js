@@ -209,7 +209,7 @@ export const updatePreferences = async (req, res) => {
         } = req.body;
 
         const updatedUser = await User.findOne({ email });
-        console.log(updatedUser);
+        //console.log(updatedUser);
         if (!updatedUser) {
             return res.status(400).json({ error: "User does not exist" });
         }
@@ -269,7 +269,7 @@ export const mode = async (req, res) => {
   
         if (!reminder) {
             user.reminderSetting.everydayAt.bool = false;
-            console.log(`Updated user.reminderSetting.everydayAt.bool`);
+            //console.log(`Updated user.reminderSetting.everydayAt.bool`);
         }
 
         // Save the updated user object
@@ -289,12 +289,12 @@ export const mode = async (req, res) => {
 export const reminderSetting = async (req, res) => {
     try {
         const { email, preferenceEmail, everydayAt, everyHour, everydayAtTime, everyHourTime } = req.body;
-        console.log("email is ", email);
-        console.log("preferenceEmail is ", preferenceEmail);
-        console.log("data.reminderSetting.everydayAt is ", everydayAt);
-        console.log("data.reminderSetting.everyHour is ", everyHour);
-        console.log("data.reminderSetting.everydayAt.time is ", everydayAtTime);
-        console.log("data.reminderSetting.everyHour.time is ", everyHourTime);
+        // console.log("email is ", email);
+        // console.log("preferenceEmail is ", preferenceEmail);
+        // console.log("data.reminderSetting.everydayAt is ", everydayAt);
+        // console.log("data.reminderSetting.everyHour is ", everyHour);
+        // console.log("data.reminderSetting.everydayAt.time is ", everydayAtTime);
+        // console.log("data.reminderSetting.everyHour.time is ", everyHourTime);
         // Find the user by email
         const user = await User.findOne({ email: email });
 

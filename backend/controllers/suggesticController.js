@@ -96,7 +96,12 @@ export const searchRecipes = async (req, res) => {
             body: JSON.stringify({ query,  variables})
         });
 
-        const data = await response.json();
+        const text = await response.text();
+        console.log("Response Text:", text);
+
+        // Try parsing the response
+        const data = JSON.parse(text);
+        
         const matchedRecipes = data.data.searchRecipesByIngredients.edges.map(edge => edge.node);
         
         console.log("Data from Suggestic API:", data);
@@ -104,6 +109,67 @@ export const searchRecipes = async (req, res) => {
 
         res.json(data);
 
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
+    }
+};
+
+
+export const searchAllRecipes = async (req, res) => {
+    console.log("searchAllRecipes endpoint hit");
+    try {
+        const searchTerm = req.body.searchTerm; // Assuming you'll send the search term in the request body
+
+        // Create a GraphQL query to search for recipes by name
+        const query = `
+        {
+            searchRecipeByNameOrIngredient(query: "${searchTerm}") {
+            onPlan {
+                id
+                name
+                servingWeight
+                author
+            }
+            otherResults {
+                id
+                name
+                servingWeight
+                author
+            }
+            }
+        }
+        `;
+
+
+        const variables = {
+            searchTerm
+        };
+        //console.log("search: ", searchTerm);
+
+        const response = await fetch("https://production.suggestic.com/graphql", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Token ${process.env.SUGGESTIC_TOKEN}`,
+                "sg-user": process.env.SUGGESTIC_USER_ID
+            },
+            body: JSON.stringify({ query, variables })
+        });
+
+        const data = await response.json();
+        console.log("data: ", data);
+        // const matchedRecipes = data.data.searchRecipeByNameOrIngredient.edges.map(edge => edge.node);
+        const searchResult = data.data.searchRecipeByNameOrIngredient;
+        
+        const recipeNames = searchResult.onPlan.map(result => result.name);
+        console.log("name:", recipeNames);
+
+
+        // Now you can work with the array of recipe names
+   
+
+        res.json(data);
     } catch (error) {
         console.error("Error:", error);
         res.status(500).json({ error: "Internal Server Error", details: error.message });
