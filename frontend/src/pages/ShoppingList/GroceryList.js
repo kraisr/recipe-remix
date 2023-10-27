@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './shoppingList.css';
+//import './print-styles.css'; // Import the print-specific CSS
+
 import {
   Typography,
   Button,
@@ -23,6 +25,9 @@ import EmptyIcon from '@mui/icons-material/Inbox';
 
 
 const GroceryList = () => {
+  const [userEmail, setUserEmail] = useState('');
+  const [lastListNumber, setLastListNumber] = useState(0);
+
   const [shoppingLists, setShoppingLists] = useState([
     { id: 1, title: 'test', items: ['Milk', 'Bread', 'Eggs'] },
     { id: 2, title: 'test2', items: ['a', 'a', 'a'] },
@@ -34,75 +39,438 @@ const GroceryList = () => {
   const [editedListValue, setEditedListValue] = useState('');
   const [editListNameMode, setEditListNameMode] = useState(false);
   const [newListName, setNewListName] = useState('');
-
-  const handleEditListName = () => {
-    const updatedLists = shoppingLists.map(list =>
-      list.id === selectedListId ? { ...list, title: newListName } : list
-    );
-    setShoppingLists(updatedLists);
-    setEditListNameMode(false);
-  };
   
+  const handlePrint = () => {
+    if (selectedListId !== null) {
+      const list = shoppingLists.find((list) => list.id === selectedListId);
+      if (list) {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+  
+        iframe.contentDocument.open();
+        iframe.contentDocument.write(`
+          <html>
+            <head>
+              <title>${list.title}</title>
+              <style>
+                /* Add your CSS styles here */
+                body {
+                  font-family: Arial, sans-serif;
+                  margin: 10px;
+                }
+                .print-header {
+                  text-align: center;
+                }
+                .print-list-name {
+                  font-size: 24px;
+                  font-weight: bold;
+                }
+                .print-ingredients ul {
+                  list-style-type: none;
+                  padding: 0;
+                }
+                .print-ingredients li {
+                  margin-bottom: 5px;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="print-header">
+                <div class="print-list-name">${list.title}</div>
+              </div>
+              <div class="print-ingredients">
+                <ul>
+                  ${list.items
+                    .map(
+                      (item) =>
+                        `<li>${item.item} - ${item.quantity} ${item.unit}</li>`
+                    )
+                    .join('')}
+                </ul>
+              </div>
+            </body>
+          </html>
+        `);
+        iframe.contentDocument.close();
+  
+        iframe.contentWindow.print();
+  
+        document.body.removeChild(iframe);
+      }
+    }
+  };
 
-  const addShoppingList = () => {
+  const handleQuantityChange = (listId, itemIndex, newQuantity) => {
+    const updatedLists = [...shoppingLists];
+    const list = updatedLists.find(list => list.id === listId);
+    
+    if (list && list.items[itemIndex]) {
+        list.items[itemIndex].quantity = newQuantity;
+        setShoppingLists(updatedLists);
+    } else {
+        console.error("List or item not found for updating quantity.");
+    }
+};
+
+const handleUnitChange = (listId, itemIndex, newUnit) => {
+  const updatedLists = [...shoppingLists];
+  const list = updatedLists.find(list => list.id === listId);
+  
+  if (list && list.items[itemIndex]) {
+      list.items[itemIndex].unit = newUnit;
+      setShoppingLists(updatedLists);
+  } else {
+      console.error("List or item not found for updating unit.");
+  }
+};
+
+
+  useEffect(() => {
+    const fetchUserGroceryList = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+  
+        const response = await fetch("http://localhost:8080/user/user", {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          method: "GET",
+        });
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const data = await response.json();
+  
+        // Transform the shopping lists data to include the items structure
+        const transformedShoppingLists = data.shoppingLists.map((list) => ({
+          ...list,
+          items: list.items.map((item) => ({
+            item: item.item,
+            quantity: item.quantity,
+            unit: item.unit
+          })),
+        }));
+  
+        setUserEmail(data.email);
+        setShoppingLists(transformedShoppingLists);
+      } catch (error) {
+        console.error('Error fetching user preferences:', error);
+      }
+    };
+    fetchUserGroceryList();
+    fetchShoppingListNames();
+  }, []);
+  
+  useEffect(() => {
+    if (selectedListId !== null) {
+      const selectedList = shoppingLists.find((list) => list.id === selectedListId);
+      if (selectedList) {
+        console.log(`Selected Shopping List: ${selectedList.title}`);
+      }
+    }
+  }, [selectedListId, shoppingLists]);
+
+  const fetchShoppingListNames = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/user/getShoppingLists", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      // Check if the response is ok (status 200-299)
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+  
+      // Assuming the response contains an array of shopping lists
+      const data = await response.json();
+  
+      // Extract the list numbers from the titles and find the greatest number
+      const listNumbers = data.map((list) => {
+        const match = list.title.match(/^New List (\d+)$/);
+        return match ? parseInt(match[1]) : 0;
+      });
+      const greatestNumber = Math.max(...listNumbers);
+  
+      // Set the last list number in the state
+      setLastListNumber(greatestNumber);
+    } catch (error) {
+      // Handle errors: show a message to the user, log, etc.
+      console.error("Error fetching shopping list names:", error);
+    }
+  };
+
+  
+  const addShoppingList = async () => {
+    const maxListNumber = Math.max(
+      ...shoppingLists.map((list) => {
+        const match = list.title.match(/^New List (\d+)$/);
+        return match ? parseInt(match[1]) : 0;
+      })
+    );
+  
     const newList = {
       id: Date.now(),
-      title: 'New List',
+      title: `New List ${maxListNumber + 1}`,
       items: [],
     };
-    setShoppingLists([...shoppingLists, newList]);
+  
+    const requestBody = {
+      email: userEmail,
+      newList: newList,
+    };
+  
+    console.log("Request Body:", requestBody);
+
+    try {
+      const response = await fetch("http://localhost:8080/user/createShoppingList", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody), // Pass the requestBody as JSON string
+      });
+  
+      // Check if the response is ok (status 200-299)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      // Update the local state after a successful request
+      setShoppingLists([...shoppingLists, newList]);
+      setSelectedListId(newList.id);
+  
+      // Optional: Update UI to reflect changes
+      // For example, show a success message to the user
+      console.log("Shopping list created successfully!");
+  
+    } catch (error) {
+      // Handle errors: show a message to the user, log, etc.
+      console.error('Error creating shopping list:', error);
+    }
   };
 
-  const deleteShoppingList = (listId) => {
+  const deleteShoppingList = async (listId) => {
     const updatedLists = shoppingLists.filter((list) => list.id !== listId);
     setShoppingLists(updatedLists);
     if (listId === selectedListId) {
       setSelectedListId(null);
     }
+    const requestBody = {
+      email: userEmail,
+      listId: listId,
+    };
+    try {
+      const response = await fetch("http://localhost:8080/user/deleteShoppingList", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody), // Pass the requestBody as JSON string
+      });
+  
+      // Check if the response is ok (status 200-299)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      // Optional: Update UI to reflect changes
+      // For example, show a success message to the user
+      console.log("Shopping list deleted successfully!");
+  
+    } catch (error) {
+      // Handle errors: show a message to the user, log, etc.
+      console.error('Error deleting shopping list:', error);
+    }
+  };
+  
+  const handleEditListName = async () => {
+    const updatedLists = shoppingLists.map((list) =>
+  list.id === selectedListId ? { ...list, id: selectedListId, title: newListName } : list
+);
+    setShoppingLists(updatedLists);
+    setEditListNameMode(false);
+    const requestBody = {
+      email: userEmail,
+      listId: selectedListId,
+      newListName: newListName,
+    };
+
+    console.log("Request Body:", requestBody);
+
+    try {
+      const response = await fetch("http://localhost:8080/user/editShoppingList", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody), // Pass the requestBody as JSON string
+      });
+  
+      // Check if the response is ok (status 200-299)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      // Optional: Update UI to reflect changes
+      // For example, show a success message to the user
+      console.log("Shopping list edit successfully!");
+  
+    } catch (error) {
+      // Handle errors: show a message to the user, log, etc.
+      console.error('Error editing shopping list:', error);
+    }
   };
 
-  const deleteItemFromList = (listId, itemId) => {
+  const deleteItemFromList = async (listId, itemId) => {
     const updatedLists = [...shoppingLists];
     const list = updatedLists.find((list) => list.id === listId);
     if (list) {
-      list.items = list.items.filter((item, index) => index !== itemId);
+      const itemToDelete = list.items[itemId]; // Define itemToDelete within the if block
+      list.items = list.items.filter((item) => item !== itemToDelete);
       setShoppingLists(updatedLists);
       // Reset editing states if the item being deleted is currently being edited
       if (editedList === listId && editedItems[listId] === itemId) {
         setEditedList(null);
         setEditedItems({ ...editedItems, [listId]: undefined });
-        setEditedListValue(''); 
+        setEditedListValue('');
+      }
+  
+      const requestBody = {
+        email: userEmail,
+        listId: selectedListId,
+        itemName: itemToDelete.item, // Pass the item name to be deleted
+      };
+  
+      console.log("Request Body:", requestBody);
+  
+      try {
+        const response = await fetch("http://localhost:8080/user/deleteFromShoppingList", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody), // Pass the requestBody as a JSON string
+        });
+  
+        // Check if the response is ok (status 200-299)
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        // Optional: Update UI to reflect changes
+        // For example, show a success message to the user
+        console.log("Item deleted from the shopping list successfully!");
+      } catch (error) {
+        // Handle errors: show a message to the user, log, etc.
+        console.error('Error deleting item from shopping list:', error);
       }
     }
   };
   
-  const addItemToList = (listId) => {
+  
+  const addItemToList = async (listId) => {
     if (newItems[listId].trim() === '') return;
     const updatedLists = [...shoppingLists];
     const list = updatedLists.find((list) => list.id === listId);
     if (list) {
-      list.items.push(newItems[listId]);
+      const newItemName = newItems[listId];
+      const newItem = { item: newItemName, quantity: 1 }; // Create the item object
+      list.items.push(newItem);
       setShoppingLists(updatedLists);
       setNewItems({ ...newItems, [listId]: '' });
       // Reset the editing states when a new item is added
       setEditedList(null);
       setEditedItems({ ...editedItems, [listId]: undefined });
-      setEditedListValue(''); 
+      setEditedListValue('');
+      console.log(`Added "${newItemName}" to List ID ${listId}`);
+    }
+    const requestBody = {
+      email: userEmail,
+      listId: selectedListId,
+      item: newItems[listId], // Use newItemValue as an array
+      quantity: 1, // Assuming quantity is always 1 for now
+    };
+  
+    console.log("Request Body:", requestBody);
+  
+    try {
+      const response = await fetch("http://localhost:8080/user/addToShoppingList", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody), // Pass the requestBody as a JSON string
+      });
+  
+      // Check if the response is ok (status 200-299)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      // Optional: Update UI to reflect changes
+      // For example, show a success message to the user
+      console.log("Item added to the shopping list successfully!");
+    } catch (error) {
+      // Handle errors: show a message to the user, log, etc.
+      console.error('Error adding item to shopping list:', error);
     }
   };
   
-
-  const editItemInList = (listId, itemId) => {
+  const editItemInList = async (listId, itemId) => {
     const updatedLists = [...shoppingLists];
     const list = updatedLists.find((list) => list.id === listId);
     if (list) {
-      list.items[itemId] = editedListValue;
+      const itemBeforeEdit = list.items[itemId].item; // Get the item name before edit
+      list.items[itemId].item = editedListValue; // Update the item name
       setShoppingLists(updatedLists);
       setEditedItems({ ...editedItems, [listId]: '' });
       setEditedList(null);
       setEditedListValue(''); // Reset the edited item value after updating
+      const itemAfterEdit = editedListValue; // Get the item name after edit
+  
+      const requestBody = {
+        email: userEmail,
+        listId: listId,
+        itemBeforeEdit: itemBeforeEdit,
+        itemAfterEdit: itemAfterEdit,
+        quantity: list.items[itemId].quantity, // Add this line
+        unit: list.items[itemId].unit    // Add this line
+      };
+  
+      console.log("Request Body:", requestBody);
+  
+      try {
+        const response = await fetch("http://localhost:8080/user/editInShoppingList", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody), // Pass the requestBody as a JSON string
+        });
+  
+        // Check if the response is ok (status 200-299)
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        // Optional: Update UI to reflect changes
+        // For example, show a success message to the user
+        console.log("Item edited in the shopping list successfully!");
+      } catch (error) {
+        // Handle errors: show a message to the user, log, etc.
+        console.error('Error editing item in shopping list:', error);
+      }
     }
   };
+  
+  
 
   const handleKeyPress = (event, listId, itemId) => {
     if (event.key === 'Enter') {
@@ -266,20 +634,36 @@ const GroceryList = () => {
           <DeleteIcon />
         </IconButton>
         <Button
-          variant="contained"
-          color="primary"
-          onClick={addShoppingList}
-          sx={{
-            width: '38%',
-            backgroundColor: "#e57373", // Choose a color that indicates danger/caution
-            color: "#FFFFFF",
-            "&:hover": {
-              backgroundColor: "#e53935", // Darken the color on hover
-            },
-          }}
-        >
-          + New List
-        </Button>
+  variant="contained"
+  color="primary"
+  onClick={addShoppingList}
+  sx={{
+    width: '38%',
+    backgroundColor: "#e57373",
+    color: "#FFFFFF",
+    "&:hover": {
+      backgroundColor: "#e53935",
+    },
+  }}
+>
+  + New List
+</Button>
+<Button
+        variant="outlined"
+        onClick={handlePrint} 
+        sx={{
+          ml: 1,
+          borderColor: "#e57373",
+          color: "#e57373",
+          "&:hover": {
+            backgroundColor: "transparent",
+            color: "#e53935",
+          },
+        }}
+      >
+        Print
+      </Button>
+
         </Box>
       </Box>
 
@@ -318,56 +702,87 @@ const GroceryList = () => {
                 {shoppingLists
                   .find((list) => list.id === selectedListId)
                   .items.map((item, itemIndex) => (
-                    <ListItem 
-                      key={itemIndex}
-                      onClick={() => {
-                        if (editedList !== selectedListId || editedItems[selectedListId] !== itemIndex) {
-                          setEditedList(selectedListId);
-                          setEditedItems({
-                            ...editedItems,
-                            [selectedListId]: itemIndex,
-                          });
-                          setEditedListValue(item);
-                        }
-                      }}
-                      sx={itemHoverStyle}
-                    >
-                      <ListItemText
-                        primary={
-                          editedList === selectedListId && editedItems[selectedListId] === itemIndex ? (
-                            <TextField
-                              value={editedListValue}
-                              onChange={(e) => setEditedListValue(e.target.value)}
-                              onKeyDown={(e) => handleKeyPress(e, selectedListId, itemIndex)}
-                              InputProps={{ disableUnderline: true }}
-                              sx={textFieldStyles}
-                              autoFocus
-                            />
-                          ) : (
-                            item
-                          )
-                        }
-                      />
-                      <ListItemSecondaryAction>
-                        {editedList === selectedListId && editedItems[selectedListId] === itemIndex && (
-                          <React.Fragment>
-                            <IconButton
-                              edge="end"
-                              onClick={() => editItemInList(selectedListId, itemIndex)}
-                              sx={{ mr: '1px', ml: '1px' }}
-                            >
-                              <CheckCircleIcon color="#000" />
-                            </IconButton>
-                            <IconButton
-                              edge="end"
-                              onClick={() => deleteItemFromList(selectedListId, itemIndex)}
-                            >
-                              <DeleteIcon color="error" />
-                            </IconButton>
-                          </React.Fragment>
-                        )}
-                      </ListItemSecondaryAction>
-                    </ListItem>
+<ListItem 
+    key={itemIndex}
+    onClick={() => {
+        if (editedList !== selectedListId || editedItems[selectedListId] !== itemIndex) {
+            setEditedList(selectedListId);
+            setEditedItems({
+                ...editedItems,
+                [selectedListId]: itemIndex,
+            });
+            setEditedListValue(item.item);
+        }
+    }}
+    sx={itemHoverStyle}
+>
+    {/* Use a grid layout to align items with specified proportions */}
+    <div style={{ display: 'grid', gridTemplateColumns: '5fr 1fr 1fr 1fr 2fr', alignItems: 'center' }}>
+        <ListItemText
+            primary={
+                editedList === selectedListId && editedItems[selectedListId] === itemIndex ? (
+                    <TextField
+                        value={editedListValue}
+                        onChange={(e) => setEditedListValue(e.target.value)}
+                        onKeyDown={(e) => handleKeyPress(e, selectedListId, itemIndex)}
+                        InputProps={{ disableUnderline: true }}
+                        sx={textFieldStyles}
+                        autoFocus
+                    />
+                ) : (
+                    item.item
+                )
+            }
+        />
+        
+        {editedList === selectedListId && editedItems[selectedListId] === itemIndex ? (
+            <React.Fragment>
+                <IconButton
+                    onClick={() => editItemInList(selectedListId, itemIndex)}
+                    sx={{ mr: '1px', ml: '1px' }}
+                >
+                    <CheckCircleIcon color="#000" />
+                </IconButton>
+                <IconButton
+                    onClick={() => deleteItemFromList(selectedListId, itemIndex)}
+                >
+                    <DeleteIcon color="error" />
+                </IconButton>
+            </React.Fragment>
+        ) : (
+            <>
+                <div></div> {/* Placeholder for save button */}
+                <div></div> {/* Placeholder for delete button */}
+            </>
+        )}
+
+        {/* Quantity Dropdown */}
+        <Select
+            value={item.quantity}
+            onChange={(e) => handleQuantityChange(selectedListId, itemIndex, e.target.value)}
+        >
+            {[...Array(10).keys()].map(num => (
+                <MenuItem key={num + 1} value={num + 1}>
+                    {num + 1}
+                </MenuItem>
+            ))}
+        </Select>
+        
+        {/* Unit Dropdown */}
+        <Select
+            value={item.unit}
+            onChange={(e) => handleUnitChange(selectedListId, itemIndex, e.target.value)}
+        >
+            {["count", "ounce", "gram", "liter", "kg"].map(unit => (
+                <MenuItem key={unit} value={unit}>
+                    {unit}
+                </MenuItem>
+            ))}
+        </Select>
+    </div>
+</ListItem>
+
+
                 ))}
                 {/* Placeholder for empty list */}
                 {shoppingLists.find((list) => list.id === selectedListId).items.length === 0 && (

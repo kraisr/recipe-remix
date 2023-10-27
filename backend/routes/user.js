@@ -2,6 +2,8 @@ import express from "express";
 import {addIngredient, getFromPantry, deleteIngredient, deleteRecipe} from "../controllers/user.js";
 import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting, deleteAccount } from "../controllers/user.js";
 import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js";
+import { createShoppingList, deleteShoppingList, editShoppingList, getShoppingLists} from "../controllers/user.js";
+import { addToShoppingList, deleteFromShoppingList, editInShoppingList} from "../controllers/user.js";
 import { sendEmail, updateReminder } from "../controllers/sendEmail.js";import {sendCode} from "../controllers/code.js"
 import { saveRecipes, getRecipes} from "../controllers/user.js";
 const router = express.Router();
@@ -22,6 +24,16 @@ router.post("/update-reminder", updateReminder);
 
 /* UPDATE PREFERENCES */
 router.post("/update-preferences", updatePreferences);
+
+/* UPDATE SHOPPINGLIST */
+router.post("/createShoppingList", createShoppingList);
+router.post("/deleteShoppingList", deleteShoppingList);
+router.get("/getShoppingLists", getShoppingLists);
+router.post("/editShoppingList", editShoppingList);
+
+router.post("/addToShoppingList", addToShoppingList);
+router.post("/deleteFromShoppingList", deleteFromShoppingList);
+router.post("/editInShoppingList", editInShoppingList);
 
 /* Set routes to redirect to the correct controller in /controllers/auth.js */
 router.post("/mode", mode);

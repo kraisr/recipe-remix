@@ -179,6 +179,28 @@ const userSchema = new mongoose.Schema({
             },        
         },      
     }, 
+    shoppingLists: [{
+        id: {
+            type: String,
+            required: false,
+        },
+        title: {
+            type: String,
+            required: true,
+        },
+        items: [{
+            item: {
+                type: String,
+                required: true,
+            },
+            quantity: {
+                type: Number,
+            },
+            unit: { 
+                type: String,
+            }
+        }],
+    }],
     
     set2FA: {
         type: Boolean,
