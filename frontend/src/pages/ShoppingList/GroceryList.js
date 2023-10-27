@@ -22,7 +22,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EmptyIcon from '@mui/icons-material/Inbox';
 
 
-const ShoppingList1 = () => {
+const GroceryList = () => {
   const [shoppingLists, setShoppingLists] = useState([
     { id: 1, title: 'test', items: ['Milk', 'Bread', 'Eggs'] },
     { id: 2, title: 'test2', items: ['a', 'a', 'a'] },
@@ -422,4 +422,4 @@ const ShoppingList1 = () => {
   );
 };
 
-export default ShoppingList1;
+export default GroceryList;
