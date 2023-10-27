@@ -8,6 +8,69 @@ import failSound from "../../audio/fail.mp3";
 import mixingBowl from "../../images/mixing_bowl.gif";
 import mixingBowlImg from "../../images/frame-1.png";
 
+import {
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    Modifier,
+} from '@dnd-kit/core';
+
+import {
+    sortableKeyboardCoordinates,
+    arrayMove,
+    SortableContext,
+    verticalListSortingStrategy,
+    SortableItem,
+    useSortable,
+} from '@dnd-kit/sortable';
+
+
+const restrictToBounds: Modifier = ({ transform, activeNodeRect, containerNodeRect }) => {
+    if (!activeNodeRect || !containerNodeRect) return transform;
+
+    const maxY = containerNodeRect.height - activeNodeRect.height;
+    const maxX = containerNodeRect.width - activeNodeRect.width;
+
+    return {
+        y: Math.min(Math.max(transform.y, 0), maxY),
+        x: Math.min(Math.max(transform.x, 0), maxX)
+    };
+};
+
+const SortableIngredient = ({ ingredient, selectedCheckboxes, handleCheckboxClick, handleDelete }) => {
+    const {
+        attributes: sortableAttributes,
+        listeners: sortableListeners,
+        setNodeRef,
+        transform,
+        transition
+    } = useSortable({ id: ingredient._id });    
+
+    return (
+        <div 
+            ref={setNodeRef}
+            style={{transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined, transition}}
+            className="ingredient-bubble"
+        >
+            <div className="drag-checkbox-wrapper">
+                <div className="drag-handle" {...sortableAttributes} {...sortableListeners}>:::</div>
+                <input type="checkbox" name="checkbox" checked={selectedCheckboxes[ingredient.ingredientName] || false} onChange={() => handleCheckboxClick(ingredient.ingredientName)}/>
+            </div>
+            <div className="ingredient-name">{ingredient.ingredientName}</div>
+            <button 
+                className="delete-button" 
+                onClick={() => handleDelete(ingredient.ingredientName)}
+            >
+                Delete
+            </button>
+        </div>
+    );
+};
+
+
+
 const Pantry = () => {
     const [pantryIngredients, setPantryIngredients] = useState([]);
     let [recipeSuggestions, setRecipeSuggestions] = useState([]);
@@ -21,6 +84,41 @@ const Pantry = () => {
     const [noRecipesMessage, setNoRecipesMessage] = useState("Nothing to see here yet, try hitting remix!");
     const[listLength, setListLength] = useState("");
     const [isGifPlaying, setIsGifPlaying] = useState(false);
+    const [sortedIngredients, setSortedIngredients] = useState(pantryIngredients);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor)
+    );
+      
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+    
+        // Ensure both active and over are defined
+        if (!active || !over || active.id === over.id) {
+            return;
+        }
+    
+        const oldIndex = pantryIngredients.findIndex(ingredient => ingredient && ingredient._id === active.id);
+        const newIndex = pantryIngredients.findIndex(ingredient => ingredient && ingredient._id === over.id);
+    
+        // Check that both oldIndex and newIndex are valid
+        if (oldIndex !== -1 && newIndex !== -1) {
+            setPantryIngredients(prevIngredients => arrayMove(prevIngredients, oldIndex, newIndex));
+        }
+    };
+    
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
+
+    useEffect(() => {
+        const container = document.querySelector('.ingredients-grid');
+        container.addEventListener('dragover', handleDragOver);
+        
+        return () => {
+            container.removeEventListener('dragover', handleDragOver);
+        };
+    }, []);
 
     //identify if the filtered recipe is being remixed or searched
     let remixStatus = false;
@@ -343,19 +441,19 @@ const Pantry = () => {
                     />
                     
                     <div className="ingredients-grid">
-                        {pantryIngredients.filter(ingredient => ingredient.ingredientName.toLowerCase().includes(searchTerm.toLowerCase())).map(ingredient => (
-                            <div key={ingredient._id} className="ingredient-bubble">
-                                <input type="checkbox" name="checkbox" checked={selectedCheckboxes[ingredient.ingredientName] || false} // Set checked state based on selectedCheckboxes
-                                                                       onChange={() => handleCheckboxClick(ingredient.ingredientName)}/>
-                                <div className="ingredient-name">{ingredient.ingredientName}</div>
-                                <button 
-                                    className="delete-button" 
-                                    onClick={() => handleDelete(ingredient.ingredientName)}
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        ))}
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToBounds]}>
+                            <SortableContext items={pantryIngredients.map(i => i._id)} strategy={verticalListSortingStrategy}>
+                                {pantryIngredients.filter(ingredient => ingredient.ingredientName.toLowerCase().includes(searchTerm.toLowerCase())).map(ingredient => (
+                                    <SortableIngredient 
+                                    key={ingredient._id} 
+                                    ingredient={ingredient} 
+                                    selectedCheckboxes={selectedCheckboxes} 
+                                    handleCheckboxClick={handleCheckboxClick} 
+                                    handleDelete={handleDelete}
+                                />
+                                ))}
+                            </SortableContext>
+                        </DndContext>
                     </div>
 
                     {pantryIngredients.length > 1 && (

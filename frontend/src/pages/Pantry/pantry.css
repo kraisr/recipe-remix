@@ -184,12 +184,15 @@ img {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 100%; /* Set to full width */
-    overflow-y: auto; /* Allow vertical scrolling for the entire list */
+    width: 95%; /* Set to full width */
+    /* Disabled because the drag and drop would infinitely scroll */
+    /* overflow-y: auto;*/ /* Allow vertical scrolling for the entire list */
     max-height: 550px;
+    min-height: 100px;
     padding-top: 10px;
     padding-left: 0; /* Remove left padding */
     padding-right: 0; /* Remove right padding */
+    overflow: hidden;
 }
 
 .ingredients-grid p {
@@ -468,10 +471,6 @@ input[type="checkbox"] {
     
   }
 
- 
-  
-
-
 @media (min-width: 769px) {
     .pantry-tag {
         display: none !important;
@@ -481,10 +480,14 @@ input[type="checkbox"] {
     }
 }
 
+.drag-checkbox-wrapper {
+    display: flex;
+    align-items: center;  /* Vertically align items in the center */
+}
 
-
-
-
+.drag-handle {
+    margin-right: 10px;
+}
 
 .button-17 {
     padding-left: 30px;
