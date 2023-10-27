@@ -344,3 +344,216 @@ export const deleteAccount = async (req, res) => {
         res.status(500).json({ error: 'User information retrieval failed' });
     }
 }
+
+export const createShoppingList = async (req, res) => {
+    try {
+      const { email, newList } = req.body;
+  
+      const user = await User.findOne({ email }); // Find the user by email
+  
+      if (!user) {
+        return res.status(400).json({ error: "User does not exist" });
+      }
+  
+      // Create a new shopping list
+      const newShoppingList = {
+        id: Date.now().toString(), // Generate a unique ID
+        title: newList.title,
+        items: [],
+      };
+  
+      user.shoppingLists.push(newShoppingList); // Push the new shopping list to the user's array
+      await user.save();
+  
+      res.status(200).json({ message: "Shopping list created successfully" });
+    } catch (err) {
+      console.error("Error in createShoppingList function:", err);
+      res.status(500).json({ error: err.message });
+    }
+  };
+
+  export const deleteShoppingList = async (req, res) => {
+    try {
+      const { email, listId } = req.body;
+  
+      console.log("Deleting shopping list with ID:", listId); // Print the listId
+  
+      const user = await User.findOne({ email }); // Find the user by email
+  
+      if (!user) {
+        return res.status(400).json({ error: "User does not exist" });
+      }
+  
+      // Remove the shopping list with the specified listId
+      user.shoppingLists = user.shoppingLists.filter((list) => list.id !== listId);
+  
+      await user.save();
+  
+      res.status(200).json({ message: "Shopping list deleted successfully" });
+    } catch (err) {
+      console.error("Error in deleteShoppingList function:", err);
+      res.status(500).json({ error: err.message });
+    }
+  };
+  
+  export const getShoppingLists = async (req, res) => {
+    try {
+      const { email } = req.body;
+  
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(400).json({ error: "User does not exist" });
+      }
+  
+      // Assuming the shopping lists are stored in the 'shoppingLists' property of the user document
+      const shoppingLists = user.shoppingLists;
+  
+      res.status(200).json(shoppingLists);
+    } catch (err) {
+      console.error("Error in getShoppingLists function:", err);
+      res.status(500).json({ error: err.message });
+    }
+  };
+  
+  export const editShoppingList = async (req, res) => {
+    try {
+      const { email, listId, newListName } = req.body;
+  
+      console.log("Editing shopping list with ID:", listId, "New name:", newListName);
+  
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(400).json({ error: "User does not exist" });
+      }
+  
+      const updatedShoppingLists = user.shoppingLists.map((list) => {
+        if (list.id === listId) {
+          // Only update the title, keep the same id
+          return { ...list, title: newListName };
+        }
+        return list;
+      });
+  
+      user.shoppingLists = updatedShoppingLists;
+  
+      await user.save();
+  
+      res.status(200).json({ message: "Shopping list edited successfully" });
+    } catch (err) {
+      console.error("Error in editShoppingList function:", err);
+      res.status(500).json({ error: err.message });
+    }
+  };
+
+  // Add item to shopping list
+export const addToShoppingList = async (req, res) => {
+    try {
+        const { email, listId, item, quantity } = req.body;
+
+        // Find the user by email
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        console.log("adding to shopping list with ID:", listId, "item name:", item, "quantity:", quantity);
+
+        // Find the shopping list by listId
+        const shoppingList = user.shoppingLists.find(list => list.id === listId);
+
+        if (!shoppingList) {
+            return res.status(404).json({ error: "Shopping list not found" });
+        }
+
+        // Add the item with quantity to the shopping list
+        shoppingList.items.push({ item, quantity });
+
+        // Save the updated user
+        await user.save();
+
+        res.status(200).json({ message: "Item added to the shopping list successfully" });
+    } catch (err) {
+        console.error("Error in addToShoppingList function:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+  export const editInShoppingList = async (req, res) => {
+    try {
+        const { email, listId, itemBeforeEdit, itemAfterEdit, quantity, unit } = req.body;
+  
+      // Find the user by email
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+  
+      console.log("Editing in shopping list with ID:", listId, "Item before edit:", itemBeforeEdit, "Item after edit:", itemAfterEdit);
+  
+      // Find the shopping list by listId
+      const shoppingList = user.shoppingLists.find((list) => list.id === listId);
+  
+      if (!shoppingList) {
+        return res.status(404).json({ error: "Shopping list not found" });
+      }
+  
+      // Find the index of the item to be edited
+      const itemIndex = shoppingList.items.findIndex((item) => item.item === itemBeforeEdit);
+  
+      if (itemIndex === -1) {
+        return res.status(404).json({ error: "Item not found in the shopping list" });
+      }
+  
+      // Update the item name with the specified itemAfterEdit in the shopping list
+      shoppingList.items[itemIndex].item = itemAfterEdit;
+      shoppingList.items[itemIndex].quantity = quantity; // Add this line
+      shoppingList.items[itemIndex].unit = unit;   // Add this line
+      // Save the updated user
+      await user.save();
+  
+      res.status(200).json({   message: `Item "${itemBeforeEdit}" edited to "${itemAfterEdit}" with quantity "${quantity}" and unit "${unit}" in the shopping list successfully`
+    });
+    } catch (err) {
+      console.error("Error in editInShoppingList function:", err);
+      res.status(500).json({ error: err.message });
+    }
+  };
+    
+  
+
+  export const deleteFromShoppingList = async (req, res) => {
+    try {
+      const { email, listId, itemName } = req.body;
+  
+      // Find the user by email
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      console.log("deleting to shopping list with ID:", listId, "item name:", itemName);
+  
+      // Find the shopping list by listId
+      const shoppingList = user.shoppingLists.find((list) => list.id === listId);
+  
+      if (!shoppingList) {
+        return res.status(404).json({ error: "Shopping list not found" });
+      }
+  
+      // Remove the item with the specified itemName from the shopping list
+      shoppingList.items = shoppingList.items.filter((item) => item.item !== itemName);
+  
+      // Save the updated user
+      await user.save();
+  
+      res.status(200).json({ message: `Item "${itemName}" deleted from the shopping list successfully` });
+    } catch (err) {
+      console.error("Error in deleteFromShoppingListByName function:", err);
+      res.status(500).json({ error: err.message });
+    }
+  };
