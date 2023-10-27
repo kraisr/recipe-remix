@@ -250,6 +250,25 @@ img {
     cursor: pointer;
     transition: background-color 0.3s;
 }
+.pantry-right-button-containter {
+    display: flex;
+    justify-content: space-between;
+}
+.pantry-save-button {
+    background-color: #A1C298;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 1rem;
+}
+
+.pantry-save-button:hover {
+    background-color: #4CAF50;
+    font-weight: bold;
+}
 
 .pantry-tag {
     display: block;
@@ -398,6 +417,7 @@ img {
     height: 40px;
     line-height: 40px;
     box-sizing: border-box;
+    overflow: hidden;
     margin-top: 30px;
     margin-bottom: 30px;
     margin-left:10px;

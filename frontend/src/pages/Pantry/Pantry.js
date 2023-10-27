@@ -577,14 +577,17 @@ const Pantry = () => {
 
                                     {recipe.node ? recipe.node.name : recipe.name}
                                 </div>
-                                <button onClick={() => handleSaveRecipes(recipe.node)}>Save Recipe</button>
-
-                                <button
-                                    className="delete-button"
-                                    onClick={() => handleDelete(recipe.node.name)}
-                                >
-                                    Delete
-                                </button>
+                                
+                                <div className="pantry-right-button-containter">
+                                    <button className="pantry-save-button" onClick={() => handleSaveRecipes(recipe.node)}>Save</button>
+                                    <button
+                                        className="delete-button"
+                                        onClick={() => handleDelete(recipe.node.name)}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                                
                             </div>
                         ))
                     ) : (

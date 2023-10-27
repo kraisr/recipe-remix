@@ -82,7 +82,7 @@
 }
 
 .download-button {
-    background-color: #FA7070;
+    background-color: #A1C298;
     border: none;
     border-radius: 15px;
     padding: 5px 10px;
@@ -113,7 +113,7 @@
 }
 
 .download-button:hover {
-    background-color: #FF3D3D;
+    background-color: #4CAF50;
     font-weight: bold;
 }
 
