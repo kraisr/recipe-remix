@@ -193,16 +193,16 @@ function SearchBar() {
                     </div>
                 ) : searchTerm && results.length > 0 ? (
                     // Display search results
-                       <div className="ingredient-dropdown">
-            <ul className="ingredient-table"> {results.map((label, index) => (
-                <li key={index} className={highlightedIndex === index ? "highlighted" : ""}>
-                    <div className="ingredient-container">
-                        <span className="ingredient-item">{highlightMatch(label, searchTerm)}</span>
-                    <button className="add-to-pantry-button" onClick={() => addToPantry(label)}>Add to Pantry</button>
-                    </div>
-                </li>
-              ))}
-            </ul>
+                    <div className="ingredient-dropdown">
+                    <ul className="ingredient-table"> {results.map((label, index) => (
+                        <li key={index} className={highlightedIndex === index ? "highlighted" : ""}>
+                            <div className="ingredient-container">
+                                <span className="ingredient-item">{highlightMatch(label, searchTerm)}</span>
+                            <button className="add-to-pantry-button" onClick={() => addToPantry(label)}>Add to Pantry</button>
+                            </div>
+                        </li>
+                    ))}
+                    </ul>
                  {errorMessage && (
                         <Typography variant="body2" sx={{ color: "red", fontWeight: "bold", mb: 2 }}>
                             {errorMessage}
