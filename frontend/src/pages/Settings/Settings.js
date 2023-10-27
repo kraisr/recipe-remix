@@ -489,8 +489,8 @@ const Settings = () => {
             onChange={handleReminderTimeChange}
             value={reminderTime}
         >
-            {Array.from({ length: (24 * 60) / 5 }, (_, index) => { // Change the length calculation here
-                const totalMinutes = index * 5; // Calculate total minutes for the current index
+            {Array.from({ length: (24) }, (_, index) => { // Change the length calculation here
+                const totalMinutes = index * 60; // Calculate total minutes for the current index
                 const hours = Math.floor(totalMinutes / 60);
                 const minutes = totalMinutes % 60;
                 return (
