@@ -181,18 +181,17 @@ img {
 }
 
 .ingredients-grid {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 95%; /* Set to full width */
-    /* Disabled because the drag and drop would infinitely scroll */
-    /* overflow-y: auto;*/ /* Allow vertical scrolling for the entire list */
+    overflow-y: auto; /* Allow vertical scrolling for the entire list */
     max-height: 550px;
     min-height: 100px;
     padding-top: 10px;
     padding-left: 0; /* Remove left padding */
     padding-right: 0; /* Remove right padding */
-    overflow: hidden;
 }
 
 .ingredients-grid p {
@@ -486,7 +485,25 @@ input[type="checkbox"] {
 }
 
 .drag-handle {
-    margin-right: 10px;
+    padding-right: 10px;
+    padding-left: 3px;
+}
+
+.dropzone {
+    width: 90%;
+    height: 20%;
+    background-color: rgba(238, 102, 102, 0.7); /* Slight transparency */
+    padding: 10px;
+    text-align: center;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropzone:hover {
+    background-color: rgba(229, 39, 39, 0.7); /* Slight transparency */
 }
 
 .button-17 {

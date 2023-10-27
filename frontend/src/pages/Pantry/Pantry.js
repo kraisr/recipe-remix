@@ -7,6 +7,7 @@ import remixSound from "../../audio/success.mp3";
 import failSound from "../../audio/fail.mp3";
 import mixingBowl from "../../images/mixing_bowl.gif";
 import mixingBowlImg from "../../images/frame-1.png";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import {
     DndContext,
@@ -15,7 +16,13 @@ import {
     useSensor,
     useSensors,
     Modifier,
+    useDroppable,
 } from '@dnd-kit/core';
+
+import {
+    restrictToVerticalAxis,
+    restrictToParentElement,
+  } from '@dnd-kit/modifiers';
 
 import {
     sortableKeyboardCoordinates,
@@ -27,19 +34,21 @@ import {
 } from '@dnd-kit/sortable';
 
 
-const restrictToBounds: Modifier = ({ transform, activeNodeRect, containerNodeRect }) => {
-    if (!activeNodeRect || !containerNodeRect) return transform;
+const DropZone = ({ onDelete }) => {
+    const { setNodeRef, isOver } = useDroppable({
+        id: 'dropzone',
+    });
 
-    const maxY = containerNodeRect.height - activeNodeRect.height;
-    const maxX = containerNodeRect.width - activeNodeRect.width;
+    // if (!isOver) return null;
 
-    return {
-        y: Math.min(Math.max(transform.y, 0), maxY),
-        x: Math.min(Math.max(transform.x, 0), maxX)
-    };
+    return (
+        <div ref={setNodeRef} className="dropzone" onDrop={onDelete}>
+            <DeleteIcon fontSize="large" />
+        </div>
+    );
 };
 
-const SortableIngredient = ({ ingredient, selectedCheckboxes, handleCheckboxClick, handleDelete }) => {
+const SortableIngredient = ({ ingredient, selectedCheckboxes, handleCheckboxClick, handleDelete, onStartDrag }) => {
     const {
         attributes: sortableAttributes,
         listeners: sortableListeners,
@@ -48,14 +57,19 @@ const SortableIngredient = ({ ingredient, selectedCheckboxes, handleCheckboxClic
         transition
     } = useSortable({ id: ingredient._id });    
 
+    const handlePointerDown = (e) => {
+        console.log("Pointer down!");
+        sortableListeners.onPointerDown(e);
+    };
+
     return (
         <div 
             ref={setNodeRef}
             style={{transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined, transition}}
-            className="ingredient-bubble"
+            className="ingredient-bubble"                             
         >
             <div className="drag-checkbox-wrapper">
-                <div className="drag-handle" {...sortableAttributes} {...sortableListeners}>:::</div>
+                <div className="drag-handle" {...sortableAttributes} {...sortableListeners} onClick={() => console.log("Handle clicked!")}>: : :</div>
                 <input type="checkbox" name="checkbox" checked={selectedCheckboxes[ingredient.ingredientName] || false} onChange={() => handleCheckboxClick(ingredient.ingredientName)}/>
             </div>
             <div className="ingredient-name">{ingredient.ingredientName}</div>
@@ -85,27 +99,45 @@ const Pantry = () => {
     const[listLength, setListLength] = useState("");
     const [isGifPlaying, setIsGifPlaying] = useState(false);
     const [sortedIngredients, setSortedIngredients] = useState(pantryIngredients);
+    const [draggedIngredientName, setDraggedIngredientName] = useState(null);
+    const [isDragging, setIsDragging] = useState(false);
+
 
     const sensors = useSensors(
         useSensor(PointerSensor)
     );
+
+    const startDrag = (ingredientName) => {
+        console.log("Setting dragged ingredient:", ingredientName);
+        setDraggedIngredientName(ingredientName);
+    };
       
     const handleDragEnd = (event) => {
         const { active, over } = event;
     
+        // If dropped over the drop zone, delete the ingredient
+        if (over && over.id === 'dropzone') {
+            handleDelete(draggedIngredientName);
+            setDraggedIngredientName(null); // Reset the state after use
+            return;
+        }    
+        
         // Ensure both active and over are defined
         if (!active || !over || active.id === over.id) {
             return;
         }
     
+        // Continue with reordering based on ingredient _id
         const oldIndex = pantryIngredients.findIndex(ingredient => ingredient && ingredient._id === active.id);
         const newIndex = pantryIngredients.findIndex(ingredient => ingredient && ingredient._id === over.id);
-    
+        
         // Check that both oldIndex and newIndex are valid
         if (oldIndex !== -1 && newIndex !== -1) {
             setPantryIngredients(prevIngredients => arrayMove(prevIngredients, oldIndex, newIndex));
         }
     };
+    
+    
     
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -420,6 +452,14 @@ const Pantry = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    const handleOnDragStart = (event) => {
+        const draggedItem = pantryIngredients.find(ingredient => ingredient._id === event.active.id);
+        if (draggedItem) {
+            setDraggedIngredientName(draggedItem.ingredientName);
+        }
+    };
+    
+
 
     // Determine if we're on a small screen
     const isSmallScreen = windowWidth < 769; // You can adjust this value as needed
@@ -441,7 +481,19 @@ const Pantry = () => {
                     />
                     
                     <div className="ingredients-grid">
-                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToBounds]}>
+                        <DndContext 
+                            sensors={sensors} 
+                            collisionDetection={closestCenter} 
+                            onDragEnd={(event) => {
+                                setIsDragging(false);
+                                handleDragEnd(event); 
+                            }}
+                            onDragStart={(event) => {
+                                setIsDragging(true);
+                                handleOnDragStart(event);
+                            }}
+                            modifiers={[restrictToParentElement, restrictToVerticalAxis]}
+                        >
                             <SortableContext items={pantryIngredients.map(i => i._id)} strategy={verticalListSortingStrategy}>
                                 {pantryIngredients.filter(ingredient => ingredient.ingredientName.toLowerCase().includes(searchTerm.toLowerCase())).map(ingredient => (
                                     <SortableIngredient 
@@ -450,9 +502,15 @@ const Pantry = () => {
                                     selectedCheckboxes={selectedCheckboxes} 
                                     handleCheckboxClick={handleCheckboxClick} 
                                     handleDelete={handleDelete}
+                                    onStartDrag={startDrag}
                                 />
                                 ))}
                             </SortableContext>
+
+                            {isDragging && <DropZone onDelete={(event) => {
+                                const ingredientName = event.dataTransfer.getData("text/plain");
+                                handleDelete(ingredientName);
+                            }} />}
                         </DndContext>
                     </div>
 
