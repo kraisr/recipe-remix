@@ -626,6 +626,31 @@ export const addRecipeToFolder = async (req, res) => {
       res.status(500).json({ error: err.message });
   }
 };
+export const removeRecipeFromFolder = async (req, res) => {
+  try {
+      const token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id;
+
+      const folderName = req.body.folderName;
+      const recipeId = req.body.recipeId; // This is the id of the recipe you want to remove
+
+      const user = await User.findOneAndUpdate(
+          { _id: userId, 'folders.name': folderName },
+          { $pull: { 'folders.$.recipes': { _id: recipeId } } }, // This pulls the recipe with the provided ID from the recipes array in the folder
+          { new: true }
+      );
+
+      if (!user) {
+          return res.status(400).json({ error: "Error removing recipe from folder" });
+      }
+
+      res.status(200).json({ message: "Recipe removed from folder successfully" });
+  } catch (err) {
+      console.error("Error in removeRecipeFromFolder function:", err);
+      res.status(500).json({ error: err.message });
+  }
+};
 
 export const deleteFolder = async (req, res) => {
   try {

@@ -6,7 +6,7 @@ import { createShoppingList, deleteShoppingList, editShoppingList, getShoppingLi
 import { addToShoppingList, deleteFromShoppingList, editInShoppingList} from "../controllers/user.js";
 import { sendEmail, updateReminder } from "../controllers/sendEmail.js";import {sendCode} from "../controllers/code.js"
 import { saveRecipes, getRecipes} from "../controllers/user.js";
-import { createFolder, getFolders, addRecipeToFolder, deleteFolder } from "../controllers/user.js"
+import { createFolder, getFolders, addRecipeToFolder, deleteFolder, removeRecipeFromFolder } from "../controllers/user.js"
 const router = express.Router();
 
 /* GET USER DATA */
@@ -62,5 +62,5 @@ router.post("/create-folder", createFolder);
 router.get("/get-folders", getFolders);
 router.post("/add-recipe-to-folder", addRecipeToFolder);
 router.post("/delete-folder", deleteFolder);
-
+router.post("/remove-recipe-from-folder", removeRecipeFromFolder);
 export default router;
