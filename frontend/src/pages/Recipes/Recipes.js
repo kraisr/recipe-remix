@@ -23,6 +23,7 @@ const Recipes = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [selectedRecipes, setSelectedRecipes] = useState(null);
     const [expandedFolder, setExpandedFolder] = useState(null);
+    const [activeFolder, setActiveFolder] = useState(null);
    
     const openRecipes = () => {
         setIsRecipesOpen(true);
@@ -165,6 +166,11 @@ const Recipes = () => {
     // Add a recipe to a folder
     const addRecipeToFolder = async (folderName) => {
         try {
+            const targetFolder = folders.find(f => f.name === folderName);
+            if (!targetFolder || (targetFolder.recipes && targetFolder.recipes.some(r => r._id === selectedRecipeForFolder._id))) {
+                window.alert("Either folder not found or recipe already exists in the folder");
+                return;
+            }
             const token = localStorage.getItem('token');
             const response = await fetch("http://localhost:8080/user/add-recipe-to-folder", {
                 method: "POST",
@@ -194,6 +200,37 @@ const Recipes = () => {
             console.error("Failed to add recipe to folder:", error);
         }
     };
+
+    const removeRecipeFromFolder = async (folderName, recipeId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch("http://localhost:8080/user/remove-recipe-from-folder", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ folderName, recipeId })
+            });
+    
+            if (response.ok) {
+                setFolders(prevFolders => prevFolders.map(folder => {
+                    if (folder.name === folderName) {
+                        return {
+                            ...folder,
+                            recipes: folder.recipes.filter(recipe => recipe._id !== recipeId)
+                        };
+                    }
+                    return folder;
+                }));
+            } else {
+                throw new Error('Failed to remove recipe from folder');
+            }
+        } catch (error) {
+            console.error("Failed to remove recipe from folder:", error);
+        }
+    };
+    
 
     // Delete a folder
     const deleteFolder = async (folderName) => {
@@ -229,13 +266,20 @@ const Recipes = () => {
              setSavedRecipes(prevRecipes => prevRecipes.filter(r => r.name !== recipe.name));
          }
     }
-
+    
     const toggleFolder = (folderName) => {
         if (expandedFolder === folderName) {
             setExpandedFolder(null);
         } else {
             setExpandedFolder(folderName);
         }
+    };
+
+    const handleFolderClick = (folder) => {
+        setActiveFolder({
+            name: folder.name,
+            recipes: folder.recipes
+        });
     };
 
     Font.register({
@@ -411,7 +455,7 @@ const Recipes = () => {
                     }
                 </div>
             </div>
-                        {
+            {
                 isFolderSelectorOpen && (
                     <div className="modal-shadow">
                     <div className="folder-selector-modal">
@@ -437,42 +481,58 @@ const Recipes = () => {
                 />
             }
             <div className="folders-section">
-            {
-                folders.map(folder => (
-                    <div key={folder.name} className="folder" onClick={() => toggleFolder(folder.name)}>
-                        {folder.name}
-                        <button onClick={e => { e.stopPropagation(); deleteFolder(folder.name); }}>Delete Folder</button>
-                        {/* Show recipes in this folder when it's clicked */}
-                        <div className="folder-recipes">
-                            {expandedFolder === folder.name && (
-                                !folder.recipes || folder.recipes.length === 0 ? (
-                                    <div>Collection Empty</div>
-                                ) : (
-                                    folder.recipes.map(recipe => (
-                                        <div key={recipe._id}>{recipe.name}</div>
-                                    ))
-                                )
-                            )}
-                        </div>
-                    </div>
-                ))
-            }
-                <button onClick={openFolderCreation}>+</button>
+                <button className="folder-create" onClick={openFolderCreation}>Create a Folder</button>
 
+                {folders.map(folder => (
+            <div 
+                key={folder.name} 
+                className="folder" 
+                onClick={() => handleFolderClick(folder)}
+            >
+                <div className="folder-header">
+                    <div className="folder-name">{folder.name}</div>
+                    <button className="recipe-delete-button" onClick={e => { e.stopPropagation(); deleteFolder(folder.name); }}>Delete</button>
+                </div>
+            </div>
+        ))}
+
+        {/* Modal to display the active folder's recipes */}
+        {activeFolder && (
+            <div className="modal-shadow">
+                <div className="active-folder-modal">
+                <center><h2>{activeFolder.name}</h2></center> {/* Displaying the folder's name in the modal */}
+                    {activeFolder.recipes && activeFolder.recipes.length > 0 ? (
+                        <ul style={{ paddingLeft: '20px', listStyleType: 'disc' }}>
+                            {activeFolder.recipes.map(recipe => (
+                                <li className="modal-container" key={recipe._id} onClick={() => handleRecipesClick(recipe)}>
+                                    <span className="modal-recipe" onClick={() => handleRecipesClick(recipe)}>{recipe.name}</span>
+                                    <button className="recipe-delete-button" onClick={e => { e.stopPropagation(); removeRecipeFromFolder(activeFolder.name, recipe._id); }}>Remove</button>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <div>Collection Empty</div>
+                    )}
+                    <center><button className="folder-cancel" onClick={() => setActiveFolder(null)}>Close</button></center>
+                </div>
+            </div>
+        )}
                 {isFolderCreationOpen && (
                     <div className="modal-shadow">
                          <div className="folder-creation-popup">
                             <center><input 
                                 value={newFolderName} 
                                 onChange={e => setNewFolderName(e.target.value)} 
+                                className="folder-bar"
                                 placeholder="Folder Name" 
                             /></center>
-                            <center><button onClick={createFolder}>Create Folder</button></center>
-                            <center><button onClick={closeFolderCreation}>Cancel</button></center>
+                            <center><button className="folder-select" onClick={createFolder}>Create Folder</button></center>
+                            <center><button className="folder-cancel" onClick={closeFolderCreation}>Cancel</button></center>
                         </div>
                     </div>
                    
                 )}
+
             </div>
 
         </div>
