@@ -105,8 +105,6 @@ const userSchema = new mongoose.Schema({
         },
         instructions: [String],
     }],
-    
-    
     preferences: {
         lactoseIntolerance: {
             type: Boolean,

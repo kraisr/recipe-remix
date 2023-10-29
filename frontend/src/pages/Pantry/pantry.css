@@ -263,6 +263,7 @@ img {
     cursor: pointer;
     transition: background-color 0.3s;
     margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .pantry-save-button:hover {
