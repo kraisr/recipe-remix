@@ -40,6 +40,7 @@ const GroceryList = () => {
   const [editListNameMode, setEditListNameMode] = useState(false);
   const [newListName, setNewListName] = useState('');
   
+  
   const handlePrint = () => {
     if (selectedListId !== null) {
       const list = shoppingLists.find((list) => list.id === selectedListId);
@@ -172,7 +173,7 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
     if (selectedListId !== null) {
       const selectedList = shoppingLists.find((list) => list.id === selectedListId);
       if (selectedList) {
-        console.log(`Selected Shopping List: ${selectedList.title}`);
+        console.log(`Selected Shopping List: ${selectedList.title}, ID, ${selectedList.id}`);
       }
     }
   }, [selectedListId, shoppingLists]);
@@ -218,9 +219,16 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
       })
     );
   
+    let newListNumber = maxListNumber === 0 ? 1 : maxListNumber + 1;
+  
+    // Check if the newListNumber is Infinity and set it to 1
+    if (!isFinite(newListNumber)) {
+      newListNumber = 1;
+    }
+  
     const newList = {
       id: Date.now(),
-      title: `New List ${maxListNumber + 1}`,
+      title: `New List ${newListNumber}`,
       items: [],
     };
   
@@ -230,7 +238,7 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
     };
   
     console.log("Request Body:", requestBody);
-
+  
     try {
       const response = await fetch("http://localhost:8080/user/createShoppingList", {
         method: "POST",
@@ -246,25 +254,36 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
       }
   
       // Update the local state after a successful request
-      setShoppingLists([...shoppingLists, newList]);
-      setSelectedListId(newList.id);
+      setShoppingLists((prevLists) => [...prevLists, newList]); // Append new list to the existing lists
+      setSelectedListId(null);
+      setSelectedListId(newList.id); // Select the new list
   
       // Optional: Update UI to reflect changes
-      // For example, show a success message to the user
       console.log("Shopping list created successfully!");
-  
     } catch (error) {
       // Handle errors: show a message to the user, log, etc.
       console.error('Error creating shopping list:', error);
     }
   };
+  
 
   const deleteShoppingList = async (listId) => {
     const updatedLists = shoppingLists.filter((list) => list.id !== listId);
     setShoppingLists(updatedLists);
-    if (listId === selectedListId) {
-      setSelectedListId(null);
+  
+    // Find the index of the list being deleted
+    const listIndex = shoppingLists.findIndex((list) => list.id === listId);
+  
+    // Determine the next available list, either the one after the deleted list or the one before if it's the last one
+    let nextListIndex = listIndex;
+    if (nextListIndex >= updatedLists.length) {
+      nextListIndex = listIndex - 1;
     }
+  
+    // Set the selected list to the next available list
+    const nextListId = nextListIndex >= 0 ? updatedLists[nextListIndex].id : null;
+    setSelectedListId(nextListId);
+  
     const requestBody = {
       email: userEmail,
       listId: listId,
@@ -275,61 +294,87 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(requestBody), // Pass the requestBody as JSON string
+        body: JSON.stringify(requestBody),
       });
   
-      // Check if the response is ok (status 200-299)
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
   
-      // Optional: Update UI to reflect changes
-      // For example, show a success message to the user
       console.log("Shopping list deleted successfully!");
-  
     } catch (error) {
-      // Handle errors: show a message to the user, log, etc.
       console.error('Error deleting shopping list:', error);
     }
   };
   
+  
   const handleEditListName = async () => {
-    const updatedLists = shoppingLists.map((list) =>
-  list.id === selectedListId ? { ...list, id: selectedListId, title: newListName } : list
-);
-    setShoppingLists(updatedLists);
-    setEditListNameMode(false);
-    const requestBody = {
-      email: userEmail,
-      listId: selectedListId,
-      newListName: newListName,
-    };
-
-    console.log("Request Body:", requestBody);
-
+    if (!selectedListId) return;
+  
     try {
+      let updatedLists = [...shoppingLists];
+      const existingList = updatedLists.find((list) => list.id === selectedListId);
+  
+      if (!existingList) return;
+  
+      let editedListName = newListName; // Start with the edited name
+  
+      const isListNameTaken = (name) =>
+        updatedLists.some((list) => list.title === name && list.id !== selectedListId);
+  
+      if (isListNameTaken(editedListName)) {
+        let suffix = 1;
+        const baseName = editedListName; // Use the intended new name as the base for suffix appending
+  
+        while (isListNameTaken(editedListName)) {
+          editedListName = `${baseName} (${suffix})`;
+          suffix++;
+        }
+      }
+  
+      existingList.title = editedListName;
+  
+      updatedLists = updatedLists.map((list) =>
+        list.id === selectedListId ? existingList : list
+      );
+  
+      setShoppingLists(updatedLists);
+      setEditListNameMode(false);
+  
+      const requestBody = {
+        email: userEmail,
+        listId: selectedListId,
+        newListName: editedListName,
+      };
+  
+      console.log("Request Body:", requestBody);
+  
       const response = await fetch("http://localhost:8080/user/editShoppingList", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(requestBody), // Pass the requestBody as JSON string
+        body: JSON.stringify(requestBody),
       });
   
-      // Check if the response is ok (status 200-299)
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
   
+      // After a successful request, fetch the updated list of shopping lists
+      // fetchShoppingListNames();
+  
       // Optional: Update UI to reflect changes
       // For example, show a success message to the user
       console.log("Shopping list edit successfully!");
-  
     } catch (error) {
       // Handle errors: show a message to the user, log, etc.
       console.error('Error editing shopping list:', error);
     }
   };
+  
+  
+  
 
   const deleteItemFromList = async (listId, itemId) => {
     const updatedLists = [...shoppingLists];
@@ -376,53 +421,105 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
     }
   };
   
-  
   const addItemToList = async (listId) => {
-    if (newItems[listId].trim() === '') return;
+    const newItemNames = newItems[listId]?.split(',').map((item) => item.trim());
+  
+    if (!newItemNames) {
+      return; // Return early if the string is empty or undefined
+    }
+  
     const updatedLists = [...shoppingLists];
     const list = updatedLists.find((list) => list.id === listId);
+  
     if (list) {
-      const newItemName = newItems[listId];
-      const newItem = { item: newItemName, quantity: 1 }; // Create the item object
-      list.items.push(newItem);
+      newItemNames.forEach(async (newItemName) => {
+        newItemName = newItemName.trim();
+        if (newItemName === '') return; // Skip empty items
+  
+        const existingItem = list.items.find((item) => item.item.toLowerCase() === newItemName.toLowerCase());
+  
+        if (existingItem) {
+          // Item already exists, increment its quantity
+          existingItem.quantity += 1;
+  
+          // You can define the requestBody here for editing
+          const requestBody = {
+            email: userEmail,
+            listId: listId,
+            itemBeforeEdit: existingItem.item,
+            itemAfterEdit: existingItem.item,
+            quantity: existingItem.quantity,
+            unit: existingItem.unit,
+          };
+          console.log("Request Body:", requestBody);
+
+          try {
+            const response = await fetch("http://localhost:8080/user/editInShoppingList", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(requestBody), // Pass the requestBody as a JSON string
+            });
+  
+            // Check if the response is ok (status 200-299)
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            // Optional: Update UI to reflect changes
+            // For example, show a success message to the user
+            console.log("Item edited in the shopping list successfully!");
+          } catch (error) {
+            // Handle errors: show a message to the user, log, etc.
+            console.error('Error editing item in shopping list:', error);
+          }
+        } else {
+          // Item doesn't exist, add it as a new item
+          const newItem = { item: newItemName, quantity: 1 };
+          list.items.push(newItem);
+  
+          const requestBody = {
+            email: userEmail,
+            listId: selectedListId,
+            item: newItemName,
+            quantity: 1, // Assuming quantity is always 1 for new items
+          };
+          console.log("Request Body:", requestBody);
+
+          try {
+            const response = await fetch("http://localhost:8080/user/addToShoppingList", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(requestBody),
+            });
+  
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+  
+            console.log("Item added to the shopping list successfully!");
+          } catch (error) {
+            console.error('Error adding item to shopping list:', error);
+          }
+        }
+  
+        console.log(`Added "${newItemName}" to List ID ${listId}`);
+      });
+  
       setShoppingLists(updatedLists);
       setNewItems({ ...newItems, [listId]: '' });
-      // Reset the editing states when a new item is added
       setEditedList(null);
       setEditedItems({ ...editedItems, [listId]: undefined });
       setEditedListValue('');
-      console.log(`Added "${newItemName}" to List ID ${listId}`);
-    }
-    const requestBody = {
-      email: userEmail,
-      listId: selectedListId,
-      item: newItems[listId], // Use newItemValue as an array
-      quantity: 1, // Assuming quantity is always 1 for now
-    };
-  
-    console.log("Request Body:", requestBody);
-  
-    try {
-      const response = await fetch("http://localhost:8080/user/addToShoppingList", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody), // Pass the requestBody as a JSON string
-      });
-  
-      // Check if the response is ok (status 200-299)
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      // Optional: Update UI to reflect changes
-      // For example, show a success message to the user
-      console.log("Item added to the shopping list successfully!");
-    } catch (error) {
-      // Handle errors: show a message to the user, log, etc.
-      console.error('Error adding item to shopping list:', error);
     }
   };
+  
+
+  
+  
+  
   
   const editItemInList = async (listId, itemId) => {
     const updatedLists = [...shoppingLists];
