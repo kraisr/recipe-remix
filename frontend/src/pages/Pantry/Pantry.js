@@ -435,7 +435,7 @@ const Pantry = () => {
                 } else {
                     fail.play();
                     setRemixStatus(false);
-                    setNoRecipesMessage("Oops! No recipes found");
+                    
                 }
     
                 // Delay for 5 seconds
@@ -448,6 +448,7 @@ const Pantry = () => {
                         // window.alert("Success!");
                     } else {
                         // window.alert("Dubious Food :(");
+                        setNoRecipesMessage("Oops! No recipes found");
                     }
                 }, 5000);
             } else {
