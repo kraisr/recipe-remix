@@ -214,15 +214,18 @@ const Recipes = () => {
             });
     
             if (response.ok) {
+                let updatedActiveFolder = null;
                 setFolders(prevFolders => prevFolders.map(folder => {
                     if (folder.name === folderName) {
-                        return {
+                        updatedActiveFolder = {
                             ...folder,
                             recipes: folder.recipes.filter(recipe => recipe._id !== recipeId)
                         };
+                        return updatedActiveFolder;
                     }
                     return folder;
                 }));
+                setActiveFolder(updatedActiveFolder);
             } else {
                 throw new Error('Failed to remove recipe from folder');
             }

@@ -275,6 +275,7 @@
 
 .folder-name {
     margin-right: 20%;
+    cursor: pointer;
 }
 
 .folder-name:hover {
@@ -334,6 +335,7 @@
 }
 .modal-recipe {
     margin-bottom: 1%;
+    cursor: pointer;
 }
 .modal-recipe:hover {
     font-weight: bold;
