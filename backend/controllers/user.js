@@ -327,7 +327,7 @@ export const reminderSetting = async (req, res) => {
 export const deleteAccount = async (req, res) => {
     try {
         const { email } = req.body;
-        console.log("email is ", email);
+        // console.log("email is ", email);
 
         // Find and delete user
         // const result = await User.deleteOne({ email });
@@ -366,13 +366,13 @@ export const createShoppingList = async (req, res) => {
     await user.save();
 
     // Log the ID and name of the newly created shopping list
-    console.log("New Shopping List Name:", newShoppingList.title);
-    console.log("New Shopping List ID:", newShoppingList.id);
+    // console.log("New Shopping List Name:", newShoppingList.title);
+    // console.log("New Shopping List ID:", newShoppingList.id);
 
     // Print all shopping lists in the schema
     user.shoppingLists.forEach((list) => {
-      console.log("Shopping List Name:", list.title);
-      console.log("Shopping List ID:", list.id);
+      // console.log("Shopping List Name:", list.title);
+      // console.log("Shopping List ID:", list.id);
     });
 
     res.status(200).json({ message: "Shopping list created successfully" });
@@ -399,11 +399,11 @@ export const deleteShoppingList = async (req, res) => {
     const listIndex = user.shoppingLists.findIndex((list) => list.id.toString() === listId.toString());
 
     if (listIndex === -1) {
-      console.log("Shopping list not found");
+      // console.log("Shopping list not found");
       return res.status(404).json({ error: "Shopping list not found" });
     }
 
-    console.log("List index found:", listIndex); // Print the list index
+    // console.log("List index found:", listIndex); // Print the list index
 
     // Remove the shopping list with the specified listId
     user.shoppingLists.splice(listIndex, 1);
@@ -432,7 +432,7 @@ export const deleteShoppingList = async (req, res) => {
       // Assuming the shopping lists are stored in the 'shoppingLists' property of the user document
       const shoppingLists = user.shoppingLists;
   
-      console.log("Shopping Lists:");
+      // console.log("Shopping Lists:");
       shoppingListInfo.forEach((list) => {
         console.log("ID:", list.id, "Name:", list.name);
       });
