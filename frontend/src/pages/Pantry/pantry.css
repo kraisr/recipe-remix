@@ -342,7 +342,22 @@ img {
     height:100%;
 }
 
+.mixing-bowl-gif{
+    width:100%;
+    height:100%;
+}
+
 @media (max-width: 768px) {
+    .mixing-bowl-static{
+        width:100%;
+        height:100%;
+    }
+    
+    .mixing-bowl-gif{
+        width:100%;
+        height:100%;
+    }
+
     .pantry-container {
         flex-direction: row;
         justify-content: space-between;
@@ -375,7 +390,7 @@ img {
 
     .pantry-center-container img{
         height: 100%;
-        width: 50%;
+        width: 100%;
     }
 
     .pantry-toggle-button {
