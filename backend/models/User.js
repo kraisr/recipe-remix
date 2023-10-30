@@ -203,6 +203,11 @@ const userSchema = new mongoose.Schema({
     set2FA: {
         type: Boolean,
         default: false,
+    },
+
+    animate: {
+        type: Boolean, 
+        default: true,
     }
 
 });
