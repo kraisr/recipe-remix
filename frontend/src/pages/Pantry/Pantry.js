@@ -104,6 +104,7 @@ const Pantry = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [expandedRecipeIndex, setExpandedRecipeIndex] = useState(null);
     const [addedIngredient, setAddedIngredient] = useState(null);
+    const [promptMessage, setPromptMessage] = useState("");
 
 
     const toggleRecipeExpansion = (index) => {
@@ -307,7 +308,10 @@ const Pantry = () => {
     };
     
 
-    const handleDelete = async (ingredientName) => {
+    const handleDelete = async (ingredientName, event) => {
+        if (event) {
+            event.stopPropagation();
+        }
         // Display a confirmation prompt to the user
         const userConfirmed = window.confirm(`Are you sure you want to delete ${ingredientName} from your pantry?`);
     
@@ -426,9 +430,12 @@ const Pantry = () => {
     } 
 
 
-    const handleSaveRecipes = async (recipe) => {
+    const handleSaveRecipes = async (recipe, event) => {
         console.log("handleSaveRecipes called");
         console.log("Recipe being sent:", recipe);
+        if (event) {
+            event.stopPropagation();
+        }
 
         try {
             const token = localStorage.getItem('token');
@@ -447,7 +454,18 @@ const Pantry = () => {
             });
     
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const responseData = await response.json();
+
+                if (responseData.error === "Error updating user recipes or recipe already exists") {
+                    setPromptMessage("The recipe was already saved!");
+    
+                    // Optionally, auto-hide the message after 3 seconds
+                    setTimeout(() => {
+                        setPromptMessage("");
+                    }, 2000);
+                } else {
+                    throw new Error('Network response was not ok');
+                }
             }
     
             const data = await response.json();
@@ -597,8 +615,9 @@ const Pantry = () => {
                                 </div>
                                 {expandedRecipeIndex !== index && (
                                     <div className="pantry-right-button-containter">
-                                        <button className="pantry-save-button" onClick={() => handleSaveRecipes(recipe.node)}>Save</button>
-                                        <button className="delete-button" onClick={() => handleDelete(recipe.node.name)}>Delete</button>
+                                        <button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.node, event)}>Save</button>
+<button className="delete-button" onClick={(event) => handleDelete(recipe.node.name, event)}>Delete</button>
+
                                     </div>
                                 )}
                             </div>
@@ -638,6 +657,11 @@ const Pantry = () => {
                                                 <button className="delete-button" onClick={() => handleDelete(recipe.node.name)}>Delete</button>
                                             </div>
                                         </div>
+                                        {promptMessage && (
+                                            <div className="prompt-message">
+                                                {promptMessage}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             )}
