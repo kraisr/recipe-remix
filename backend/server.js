@@ -78,14 +78,14 @@ const sendDailyReminders = async () => {
   let currentTime = `${String(currentHour).padStart(2, "0")}:${String(currentMinute).padStart(2, "0")}`;
   currentTime = currentTime.trim(); // Trim any whitespace
 
-  console.log("currentTime", currentTime);
+  //console.log("currentTime", currentTime);
 
   const allUsers = await User.find();
 
   // Print all users and their reminderSetting.everydayAt.bool status
-  console.log(`Total users: ${allUsers.length}`);
+  //console.log(`Total users: ${allUsers.length}`);
   allUsers.forEach(user => {
-    console.log(`User Reminder: ${user.reminder}, User email: ${user.email}, reminderSetting.everydayAt.bool: ${user.reminderSetting.everydayAt.bool}, user time: ${user.reminderSetting.everydayAt.time}`);
+    //console.log(`User Reminder: ${user.reminder}, User email: ${user.email}, reminderSetting.everydayAt.bool: ${user.reminderSetting.everydayAt.bool}, user time: ${user.reminderSetting.everydayAt.time}`);
   });
 
 
