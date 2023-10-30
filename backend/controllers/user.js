@@ -346,55 +346,78 @@ export const deleteAccount = async (req, res) => {
 }
 
 export const createShoppingList = async (req, res) => {
-    try {
-      const { email, newList } = req.body;
-  
-      const user = await User.findOne({ email }); // Find the user by email
-  
-      if (!user) {
-        return res.status(400).json({ error: "User does not exist" });
-      }
-  
-      // Create a new shopping list
-      const newShoppingList = {
-        id: Date.now().toString(), // Generate a unique ID
-        title: newList.title,
-        items: [],
-      };
-  
-      user.shoppingLists.push(newShoppingList); // Push the new shopping list to the user's array
-      await user.save();
-  
-      res.status(200).json({ message: "Shopping list created successfully" });
-    } catch (err) {
-      console.error("Error in createShoppingList function:", err);
-      res.status(500).json({ error: err.message });
-    }
-  };
+  try {
+    const { email, newList } = req.body;
 
-  export const deleteShoppingList = async (req, res) => {
-    try {
-      const { email, listId } = req.body;
-  
-      console.log("Deleting shopping list with ID:", listId); // Print the listId
-  
-      const user = await User.findOne({ email }); // Find the user by email
-  
-      if (!user) {
-        return res.status(400).json({ error: "User does not exist" });
-      }
-  
-      // Remove the shopping list with the specified listId
-      user.shoppingLists = user.shoppingLists.filter((list) => list.id !== listId);
-  
-      await user.save();
-  
-      res.status(200).json({ message: "Shopping list deleted successfully" });
-    } catch (err) {
-      console.error("Error in deleteShoppingList function:", err);
-      res.status(500).json({ error: err.message });
+    const user = await User.findOne({ email }); // Find the user by email
+
+    if (!user) {
+      return res.status(400).json({ error: "User does not exist" });
     }
-  };
+
+    // Create a new shopping list
+    const newShoppingList = {
+      id: newList.id,
+      title: newList.title,
+      items: [],
+    };
+
+    user.shoppingLists.push(newShoppingList); // Push the new shopping list to the user's array
+    await user.save();
+
+    // Log the ID and name of the newly created shopping list
+    console.log("New Shopping List Name:", newShoppingList.title);
+    console.log("New Shopping List ID:", newShoppingList.id);
+
+    // Print all shopping lists in the schema
+    user.shoppingLists.forEach((list) => {
+      console.log("Shopping List Name:", list.title);
+      console.log("Shopping List ID:", list.id);
+    });
+
+    res.status(200).json({ message: "Shopping list created successfully" });
+  } catch (err) {
+    console.error("Error in createShoppingList function:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+export const deleteShoppingList = async (req, res) => {
+  try {
+    const { email, listId } = req.body;
+
+    console.log("Deleting shopping list with ID:", listId); // Print the listId
+
+    const user = await User.findOne({ email }); // Find the user by email
+
+    if (!user) {
+      return res.status(400).json({ error: "User does not exist" });
+    }
+
+    // Find the index of the shopping list with the specified listId
+    const listIndex = user.shoppingLists.findIndex((list) => list.id.toString() === listId.toString());
+
+    if (listIndex === -1) {
+      console.log("Shopping list not found");
+      return res.status(404).json({ error: "Shopping list not found" });
+    }
+
+    console.log("List index found:", listIndex); // Print the list index
+
+    // Remove the shopping list with the specified listId
+    user.shoppingLists.splice(listIndex, 1);
+
+    await user.save();
+
+    res.status(200).json({ message: "Shopping list deleted successfully" });
+  } catch (err) {
+    console.error("Error in deleteShoppingList function:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
   
   export const getShoppingLists = async (req, res) => {
     try {
@@ -409,6 +432,11 @@ export const createShoppingList = async (req, res) => {
       // Assuming the shopping lists are stored in the 'shoppingLists' property of the user document
       const shoppingLists = user.shoppingLists;
   
+      console.log("Shopping Lists:");
+      shoppingListInfo.forEach((list) => {
+        console.log("ID:", list.id, "Name:", list.name);
+      });
+  
       res.status(200).json(shoppingLists);
     } catch (err) {
       console.error("Error in getShoppingLists function:", err);
@@ -416,10 +444,10 @@ export const createShoppingList = async (req, res) => {
     }
   };
   
+  
   export const editShoppingList = async (req, res) => {
     try {
       const { email, listId, newListName } = req.body;
-  
       console.log("Editing shopping list with ID:", listId, "New name:", newListName);
   
       const user = await User.findOne({ email });
@@ -428,15 +456,30 @@ export const createShoppingList = async (req, res) => {
         return res.status(400).json({ error: "User does not exist" });
       }
   
-      const updatedShoppingLists = user.shoppingLists.map((list) => {
-        if (list.id === listId) {
-          // Only update the title, keep the same id
-          return { ...list, title: newListName };
-        }
-        return list;
+      console.log("Before Update - Shopping Lists:");
+      user.shoppingLists.forEach((list) => {
+        console.log("List ID:", list.id, "Name:", list.title); // Print the list ID and name
       });
   
-      user.shoppingLists = updatedShoppingLists;
+      let updated = false;
+  
+      const listIndex = user.shoppingLists.findIndex((list) => list.id.toString() === listId.toString());
+  
+      if (listIndex === -1) {
+        console.log("Shopping list not found");
+        return res.status(404).json({ error: "Shopping list not found" });
+      }
+  
+      console.log("List index found:", listIndex); // Print the list index
+  
+      user.shoppingLists[listIndex].title = newListName;
+  
+      console.log("Editing shopping list with ID:", listId, "Old name:", user.shoppingLists[listIndex].title, "New name:", newListName);
+  
+      console.log("After Update - Shopping Lists:");
+      user.shoppingLists.forEach((list) => {
+        console.log("List ID:", list.id, "Name:", list.title); // Print the list ID and name
+      });
   
       await user.save();
   
@@ -446,6 +489,10 @@ export const createShoppingList = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
+  
+  
+  
+  
 
   // Add item to shopping list
 export const addToShoppingList = async (req, res) => {
