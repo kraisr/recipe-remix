@@ -576,9 +576,10 @@ const Pantry = () => {
                         className="recipe-input"
                     />
                 </div>
-                <div className="ingredients-grid">
+                <div className="recipes-grid">
                     {filteredRecipeSuggestions && filteredRecipeSuggestions.length > 0 && recipeSuggestions.length > 0? (
                         filteredRecipeSuggestions.map((recipe, index) => (
+                            <div>
                             <div key={index} className="recipe-bubble" onClick={() => toggleRecipeExpansion(index)}>
                                 <div className="recipe-name">
                                     {recipe.node ? recipe.node.name : recipe.name}
@@ -587,6 +588,12 @@ const Pantry = () => {
                                     <button className="pantry-save-button" onClick={(e) => { e.stopPropagation(); handleSaveRecipes(recipe.node); }}>Save</button>
                                     <button className="delete-button" onClick={(e) => { e.stopPropagation(); handleDelete(recipe.node.name); }}>Delete</button>
                                 </div>
+                            </div>
+                            {expandedRecipeIndex === index && (
+                                    <div className="expanded-content" style={{ transition: 'max-height 0.3s ease-in-out', overflow: 'hidden', maxHeight: expandedRecipeIndex === index ? '100px' : '0' }}>
+                                        Some text for now...Some text for now...Some text for now...Some text for now...Some text for now...
+                                    </div>
+                            )}
                             </div>
                         ))
                     ) : (
