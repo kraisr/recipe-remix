@@ -102,6 +102,15 @@ const Pantry = () => {
     const [sortedIngredients, setSortedIngredients] = useState(pantryIngredients);
     const [draggedIngredientName, setDraggedIngredientName] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [expandedRecipeIndex, setExpandedRecipeIndex] = useState(null);
+
+    const toggleRecipeExpansion = (index) => {
+        if (expandedRecipeIndex === index) {
+            setExpandedRecipeIndex(null);
+        } else {
+            setExpandedRecipeIndex(index);
+        }
+    };
 
 
     const sensors = useSensors(
@@ -566,38 +575,23 @@ const Pantry = () => {
                         onChange={handleRecipeSearchInputChange}
                         className="recipe-input"
                     />
-                    {/* <button class="magnifying-glass" type="button" onClick={handleRecipeSearch}>
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button> */}
-                    
                 </div>
-
                 <div className="ingredients-grid">
-
                     {filteredRecipeSuggestions && filteredRecipeSuggestions.length > 0 && recipeSuggestions.length > 0? (
                         filteredRecipeSuggestions.map((recipe, index) => (
-                            <div key={index} className="recipe-bubble">
+                            <div key={index} className="recipe-bubble" onClick={() => toggleRecipeExpansion(index)}>
                                 <div className="recipe-name">
-
                                     {recipe.node ? recipe.node.name : recipe.name}
                                 </div>
-                                
                                 <div className="pantry-right-button-containter">
-                                    <button className="pantry-save-button" onClick={() => handleSaveRecipes(recipe.node)}>Save</button>
-                                    <button
-                                        className="delete-button"
-                                        onClick={() => handleDelete(recipe.node.name)}
-                                    >
-                                        Delete
-                                    </button>
+                                    <button className="pantry-save-button" onClick={(e) => { e.stopPropagation(); handleSaveRecipes(recipe.node); }}>Save</button>
+                                    <button className="delete-button" onClick={(e) => { e.stopPropagation(); handleDelete(recipe.node.name); }}>Delete</button>
                                 </div>
-                                
                             </div>
                         ))
                     ) : (
                         <p>{noRecipesMessage}.</p>
                     )}
-
                 </div>
             </div>
         </div>
