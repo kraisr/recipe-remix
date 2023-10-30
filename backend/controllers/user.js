@@ -112,7 +112,7 @@ export const addIngredient = async (req, res) => {
             { new: true }
         ).select('-password');
 
-        console.log(updatedPantry);
+        // console.log(updatedPantry);
 
         if (!updatedPantry) {
             return res.status(400).json({ error: "Error updating pantry or ingredient already exists" });
@@ -226,7 +226,7 @@ export const updatePreferences = async (req, res) => {
 
 export const mode = async (req, res) => {
     try {
-        console.log(req.body);
+        // console.log(req.body);
         const { email, mode } = req.body;
 
         // Find the user by email
@@ -312,9 +312,9 @@ export const reminderSetting = async (req, res) => {
         // Save the updated user object
         const updatedUser = await user.save();
 
-        console.log(`Updated preferenceEmail to ${preferenceEmail}`);
-        console.log(`Updated everydayAt to ${everydayAt} and everydayAtTime to ${everydayAtTime} successfully`);
-        console.log(`Updated everyHour to ${everyHour} and everydayAtTime to ${everyHourTime} successfully`);
+        // console.log(`Updated preferenceEmail to ${preferenceEmail}`);
+        // console.log(`Updated everydayAt to ${everydayAt} and everydayAtTime to ${everydayAtTime} successfully`);
+        // console.log(`Updated everyHour to ${everyHour} and everydayAtTime to ${everyHourTime} successfully`);
 
         return res.status(200).json(updatedUser);
         
@@ -376,7 +376,7 @@ export const createShoppingList = async (req, res) => {
     try {
       const { email, listId } = req.body;
   
-      console.log("Deleting shopping list with ID:", listId); // Print the listId
+      // console.log("Deleting shopping list with ID:", listId); // Print the listId
   
       const user = await User.findOne({ email }); // Find the user by email
   
@@ -420,7 +420,7 @@ export const createShoppingList = async (req, res) => {
     try {
       const { email, listId, newListName } = req.body;
   
-      console.log("Editing shopping list with ID:", listId, "New name:", newListName);
+      // console.log("Editing shopping list with ID:", listId, "New name:", newListName);
   
       const user = await User.findOne({ email });
   
@@ -459,7 +459,7 @@ export const addToShoppingList = async (req, res) => {
             return res.status(404).json({ error: "User not found" });
         }
 
-        console.log("adding to shopping list with ID:", listId, "item name:", item, "quantity:", quantity);
+        // console.log("adding to shopping list with ID:", listId, "item name:", item, "quantity:", quantity);
 
         // Find the shopping list by listId
         const shoppingList = user.shoppingLists.find(list => list.id === listId);
@@ -492,7 +492,7 @@ export const addToShoppingList = async (req, res) => {
         return res.status(404).json({ error: "User not found" });
       }
   
-      console.log("Editing in shopping list with ID:", listId, "Item before edit:", itemBeforeEdit, "Item after edit:", itemAfterEdit);
+      // console.log("Editing in shopping list with ID:", listId, "Item before edit:", itemBeforeEdit, "Item after edit:", itemAfterEdit);
   
       // Find the shopping list by listId
       const shoppingList = user.shoppingLists.find((list) => list.id === listId);
@@ -536,7 +536,7 @@ export const addToShoppingList = async (req, res) => {
         return res.status(404).json({ error: "User not found" });
       }
 
-      console.log("deleting to shopping list with ID:", listId, "item name:", itemName);
+      // console.log("deleting to shopping list with ID:", listId, "item name:", itemName);
   
       // Find the shopping list by listId
       const shoppingList = user.shoppingLists.find((list) => list.id === listId);
