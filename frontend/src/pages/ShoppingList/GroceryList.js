@@ -40,6 +40,7 @@ const GroceryList = () => {
   const [editListNameMode, setEditListNameMode] = useState(false);
   const [newListName, setNewListName] = useState('');
   
+  
   const handlePrint = () => {
     if (selectedListId !== null) {
       const list = shoppingLists.find((list) => list.id === selectedListId);
@@ -450,7 +451,8 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
             quantity: existingItem.quantity,
             unit: existingItem.unit,
           };
-  
+          console.log("Request Body:", requestBody);
+
           try {
             const response = await fetch("http://localhost:8080/user/editInShoppingList", {
               method: "POST",
@@ -482,7 +484,8 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
             item: newItemName,
             quantity: 1, // Assuming quantity is always 1 for new items
           };
-  
+          console.log("Request Body:", requestBody);
+
           try {
             const response = await fetch("http://localhost:8080/user/addToShoppingList", {
               method: "POST",

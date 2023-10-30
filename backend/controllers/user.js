@@ -460,9 +460,7 @@ export const deleteShoppingList = async (req, res) => {
       user.shoppingLists.forEach((list) => {
         console.log("List ID:", list.id, "Name:", list.title); // Print the list ID and name
       });
-  
-      let updated = false;
-  
+    
       const listIndex = user.shoppingLists.findIndex((list) => list.id.toString() === listId.toString());
   
       if (listIndex === -1) {
@@ -494,81 +492,116 @@ export const deleteShoppingList = async (req, res) => {
   
   
 
-  // Add item to shopping list
+
+// Add item to shopping list
 export const addToShoppingList = async (req, res) => {
-    try {
-        const { email, listId, item, quantity } = req.body;
+  try {
+    const { email, listId, item, quantity } = req.body;
 
-        // Find the user by email
-        const user = await User.findOne({ email });
+    // Find the user by email
+    const user = await User.findOne({ email });
 
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        console.log("adding to shopping list with ID:", listId, "item name:", item, "quantity:", quantity);
-
-        // Find the shopping list by listId
-        const shoppingList = user.shoppingLists.find(list => list.id === listId);
-
-        if (!shoppingList) {
-            return res.status(404).json({ error: "Shopping list not found" });
-        }
-
-        // Add the item with quantity to the shopping list
-        shoppingList.items.push({ item, quantity });
-
-        // Save the updated user
-        await user.save();
-
-        res.status(200).json({ message: "Item added to the shopping list successfully" });
-    } catch (err) {
-        console.error("Error in addToShoppingList function:", err);
-        res.status(500).json({ error: err.message });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
+
+    console.log(
+      'Adding to shopping list with ID:',
+      listId,
+      'item name:',
+      item,
+      'quantity:',
+      quantity
+    );
+
+    const listIndex = user.shoppingLists.findIndex(
+      (list) => list.id.toString() === listId.toString()
+    );
+
+    if (listIndex === -1) {
+      console.log('Shopping list not found');
+      return res.status(404).json({ error: 'Shopping list not found' });
+    }
+
+    console.log('List index found:', listIndex); // Print the list index
+
+    // Find the shopping list by listId
+    const shoppingList = user.shoppingLists[listIndex];
+
+    // Add the item with quantity to the shopping list
+    shoppingList.items.push({ item, quantity });
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Item added to the shopping list successfully' });
+  } catch (err) {
+    console.error('Error in addToShoppingList function:', err);
+    res.status(500).json({ error: err.message });
+  }
 };
 
-  export const editInShoppingList = async (req, res) => {
-    try {
-        const { email, listId, itemBeforeEdit, itemAfterEdit, quantity, unit } = req.body;
-  
-      // Find the user by email
-      const user = await User.findOne({ email });
-  
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-  
-      console.log("Editing in shopping list with ID:", listId, "Item before edit:", itemBeforeEdit, "Item after edit:", itemAfterEdit);
-  
-      // Find the shopping list by listId
-      const shoppingList = user.shoppingLists.find((list) => list.id === listId);
-  
-      if (!shoppingList) {
-        return res.status(404).json({ error: "Shopping list not found" });
-      }
-  
-      // Find the index of the item to be edited
-      const itemIndex = shoppingList.items.findIndex((item) => item.item === itemBeforeEdit);
-  
-      if (itemIndex === -1) {
-        return res.status(404).json({ error: "Item not found in the shopping list" });
-      }
-  
-      // Update the item name with the specified itemAfterEdit in the shopping list
-      shoppingList.items[itemIndex].item = itemAfterEdit;
-      shoppingList.items[itemIndex].quantity = quantity; // Add this line
-      shoppingList.items[itemIndex].unit = unit;   // Add this line
-      // Save the updated user
-      await user.save();
-  
-      res.status(200).json({   message: `Item "${itemBeforeEdit}" edited to "${itemAfterEdit}" with quantity "${quantity}" and unit "${unit}" in the shopping list successfully`
-    });
-    } catch (err) {
-      console.error("Error in editInShoppingList function:", err);
-      res.status(500).json({ error: err.message });
+export const editInShoppingList = async (req, res) => {
+  try {
+    const { email, listId, itemBeforeEdit, itemAfterEdit, quantity, unit } = req.body;
+
+    // Find the user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
-  };
+
+    console.log(
+      "Editing in shopping list with ID:",
+      listId,
+      "Item before edit:",
+      itemBeforeEdit,
+      "Item after edit:",
+      itemAfterEdit
+    );
+
+    const listIndex = user.shoppingLists.findIndex(
+      (list) => list.id.toString() === listId.toString()
+    );
+
+    if (listIndex === -1) {
+      console.log("Shopping list not found");
+      return res.status(404).json({ error: "Shopping list not found" });
+    }
+
+    console.log("List index found:", listIndex); // Print the list index
+
+    // Find the shopping list by listId
+    const shoppingList = user.shoppingLists[listIndex];
+
+    const itemIndex = shoppingList.items.findIndex(
+      (item) => item.item === itemBeforeEdit
+    );
+
+    if (itemIndex === -1) {
+      return res
+        .status(404)
+        .json({ error: "Item not found in the shopping list" });
+    }
+
+    // Update the item name, quantity, and unit in the shopping list
+    shoppingList.items[itemIndex].item = itemAfterEdit;
+    shoppingList.items[itemIndex].quantity = quantity;
+    shoppingList.items[itemIndex].unit = unit;
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({
+      message: `Item "${itemBeforeEdit}" edited to "${itemAfterEdit}" with quantity "${quantity}" and unit "${unit}" in the shopping list successfully`,
+    });
+  } catch (err) {
+    console.error("Error in editInShoppingList function:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
     
   
 

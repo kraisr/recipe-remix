@@ -134,6 +134,10 @@ const userSchema = new mongoose.Schema({
             type: Boolean,
             default: false,
         },
+        nutAllergies: {
+            type: Boolean,
+            default: false,
+          },
         dairyFree: {
             type: Boolean,
             default: false,
