@@ -637,3 +637,123 @@ export const editInShoppingList = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
+
+  export const createFolder = async (req, res) => {
+    console.log(req.body);
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        
+        const newFolder = {
+            name: req.body.name,
+            recipes: req.body.recipes || []
+        };
+
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $addToSet: { folders: newFolder } },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(400).json({ error: "Error creating folder" });
+        }
+
+        res.status(200).json({ message: "Folder created successfully", folder: newFolder });
+    } catch (err) {
+        console.error("Error in createFolder function:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+export const getFolders = async (req, res) => {
+  try {
+      const token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id;
+
+      const user = await User.findById(userId, 'folders');
+      res.status(200).json(user.folders);
+  } catch (err) {
+      console.error("Error in getFolders function:", err);
+      res.status(500).json({ error: err.message });
+  }
+};
+
+export const addRecipeToFolder = async (req, res) => {
+  try {
+      const token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id;
+      
+      const folderName = req.body.folderName;
+      const recipe = req.body.recipe;
+
+      const user = await User.findOneAndUpdate(
+          { _id: userId, "folders.name": folderName },
+          { $addToSet: { "folders.$.recipes": recipe } },
+          { new: true }
+      );
+
+      if (!user) {
+          return res.status(400).json({ error: "Error adding recipe to folder" });
+      }
+
+      res.status(200).json({ message: "Recipe added successfully to folder" });
+  } catch (err) {
+      console.error("Error in addRecipeToFolder function:", err);
+      res.status(500).json({ error: err.message });
+  }
+};
+export const removeRecipeFromFolder = async (req, res) => {
+  try {
+      const token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id;
+
+      const folderName = req.body.folderName;
+      const recipeId = req.body.recipeId; // This is the id of the recipe you want to remove
+
+      const user = await User.findOneAndUpdate(
+          { _id: userId, 'folders.name': folderName },
+          { $pull: { 'folders.$.recipes': { _id: recipeId } } }, // This pulls the recipe with the provided ID from the recipes array in the folder
+          { new: true }
+      );
+
+      if (!user) {
+          return res.status(400).json({ error: "Error removing recipe from folder" });
+      }
+
+      res.status(200).json({ message: "Recipe removed from folder successfully" });
+  } catch (err) {
+      console.error("Error in removeRecipeFromFolder function:", err);
+      res.status(500).json({ error: err.message });
+  }
+};
+
+export const deleteFolder = async (req, res) => {
+  try {
+      const token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id;
+
+      const folderName = req.body.folderName;
+
+      const user = await User.findOneAndUpdate(
+          { _id: userId },
+          { $pull: { folders: { name: folderName } } },
+          { new: true }
+      );
+
+      if (!user) {
+          return res.status(400).json({ error: "Error deleting folder" });
+      }
+
+      res.status(200).json({ message: "Folder deleted successfully" });
+  } catch (err) {
+      console.error("Error in deleteFolder function:", err);
+      res.status(500).json({ error: err.message });
+  }
+};
+
