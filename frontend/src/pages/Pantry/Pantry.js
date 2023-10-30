@@ -135,33 +135,7 @@ const Pantry = () => {
 
                 const data = await response.json();
 
-                if (data.mode) {
-                    const rootElement = document.getElementById("root");
-
-                    if (!rootElement.classList.contains("dark-mode")) {
-                        rootElement.classList.remove("light-mode");
-                        rootElement.classList.add("dark-mode");
-                    }
-                } else {
-                    const rootElement = document.getElementById("root");
-
-                    if (!rootElement.classList.contains("light-mode")) {
-                        rootElement.classList.remove("dark-mode");
-                        rootElement.classList.add("light-mode");
-                    }
-                }
-
-
                 setAnimate(data.animate);
-
-                console.log("email is ", data.email);
-                console.log("data.reminderSetting.email is ", data.reminderSetting.email);
-                console.log("mode is ", data.mode);
-                console.log("reminder is ", data.reminder);
-                console.log("data.reminderSetting.everydayAt is ", data.reminderSetting.everydayAt);
-                console.log("data.reminderSetting.everyHour is ", data.reminderSetting.everyHour);
-                console.log("data.reminderSetting.everydayAt.time is ", data.reminderSetting.everydayAt.time);
-                console.log("data.reminderSetting.everyHour.time is ", data.reminderSetting.everyHour.time);
 
             } catch (error) {
                 console.error("Error fetching user settings:", error);
