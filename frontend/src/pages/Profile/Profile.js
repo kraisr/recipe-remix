@@ -9,6 +9,7 @@ import { setLogout } from "../../state";
 //components
 import EditProfile from "../../components/EditProfile/EditProfile";
 import UploadProfile from "../../components/EditProfile/UploadProfile"
+import Logout from "../../components/Logout/Logout"
 
 
 const Profile = () => {
@@ -125,11 +126,12 @@ const Profile = () => {
                           <Link to="/settings" className="card-dropdown-item">Settings</Link>
                           <Link to="/preferences" className="card-dropdown-item">Preferences</Link>
                           <Link to="/help" className="card-dropdown-item">Help</Link>
-                          <Link to="#" className="card-dropdown-item" onClick={toggleLogoutModal} >Logout</Link>
+                          <Link className="card-dropdown-item" onClick={toggleLogoutModal} >Logout</Link>
                         </div>
+                        
                       )}
                   </div>    
-                    
+                  {logoutModal && <Logout closeModal={toggleLogoutModal} isOpen={logoutModal} />}
                   
                         
                     <div className={`${!image ? "profile-picture": " uploaded-pfp"}`} onClick={toggleModal}>

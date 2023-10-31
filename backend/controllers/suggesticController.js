@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 
 
 export const searchIngredients = async (req, res) => {
-    console.log("searchIngredients endpoint hit");
+    // console.log("searchIngredients endpoint hit");
 
 
     try {
@@ -37,7 +37,7 @@ export const searchIngredients = async (req, res) => {
 
         const data = await response.json();
 
-        console.log("Data from Suggestic API:", data);
+        // console.log("Data from Suggestic API:", data);
 
         res.json(data);
 
@@ -48,11 +48,11 @@ export const searchIngredients = async (req, res) => {
 };
 
 export const searchRecipes = async (req, res) => {
-    console.log("searchRecipes endpoint hit");
+    // console.log("searchRecipes endpoint hit");
     try {
         
         const ingredientList = req.body.ingredientNames;
-        console.log("ingredient list:", ingredientList);
+        // console.log("ingredient list:", ingredientList);
         
         const query = `
         query SearchRecipes($ingredientNames: [String]!) {

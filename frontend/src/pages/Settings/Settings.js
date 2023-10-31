@@ -19,6 +19,7 @@ const Settings = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [mode, setMode] = useState(false); // Initially set to dark mode (false)
     const [deleteMessage, setDeleteMessage] = useState("");
+    const [animationState, setAnimationState] = useState("");
     const dispatch = useDispatch();
     const Navigate = useNavigate();
 
@@ -92,6 +93,8 @@ const Settings = () => {
 
                 //set 2FA state
                 setFAState(data.set2FA);
+
+                setAnimationState(data.animate);
 
                 console.log("email is ", data.email);
                 console.log("data.reminderSetting.email is ", data.reminderSetting.email);
@@ -223,6 +226,48 @@ const Settings = () => {
             setFAState(updatedFAState);
             console.log('updating 2FA state was a success');
             console.log('2FA status is: ', updatedFAState);
+            
+
+        } catch (error) {
+            console.error('Error updating 2FA status', error);
+        }
+    }
+
+    const toggleAnimation = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const updatedAnimateState = !animationState;
+
+            const userUpdateData = {
+                animate: updatedAnimateState,
+                
+            };
+    
+            //GET user data from backend
+            const response = await fetch("http://localhost:8080/user/user", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(userUpdateData),
+            });
+
+            if (!response.ok) {
+                throw new Error('updating animation failed');
+            }
+
+            const data = await response.json();
+            console.log('data: ', data);
+            console.log('new animation is', data.animate);
+
+            setAnimationState(updatedAnimateState);
+            console.log('updating animation state was a success');
+            console.log('animation status is: ', updatedAnimateState);
             
 
         } catch (error) {
@@ -460,6 +505,11 @@ const Settings = () => {
                                 label="Enable Two Factor Authentication"
                             />
 
+                            <FormControlLabel
+                                control={<Switch checked={animationState} onChange={toggleAnimation} />}
+                                label="Toggle Remix Animation"
+                            />
+
                             {reminder && (
                                 <TextField
                                     label="User Email"
@@ -478,32 +528,32 @@ const Settings = () => {
                             )}
 
                            {reminder && (
-    <FormControl fullWidth variant="outlined" margin="normal" sx={textFieldStyles}>
-        <InputLabel>Everyday at</InputLabel>
-        <Field
-            as={Select}
-            name="reminderTime"
-            label="Everyday at"
-            error={touched.reminderTime && Boolean(errors.reminderTime)}
-            onBlur={handleBlur}
-            onChange={handleReminderTimeChange}
-            value={reminderTime}
-        >
-            {Array.from({ length: (24 * 60) / 5 }, (_, index) => { // Change the length calculation here
-                const totalMinutes = index * 5; // Calculate total minutes for the current index
-                const hours = Math.floor(totalMinutes / 60);
-                const minutes = totalMinutes % 60;
-                return (
-                    <MenuItem
-                        key={index}
-                        value={`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`}>
-                        {`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`}
-                    </MenuItem>
-                );
-            })}
-        </Field>
-    </FormControl>
-)}
+                                <FormControl fullWidth variant="outlined" margin="normal" sx={textFieldStyles}>
+                                    <InputLabel>Everyday at</InputLabel>
+                                    <Field
+                                        as={Select}
+                                        name="reminderTime"
+                                        label="Everyday at"
+                                        error={touched.reminderTime && Boolean(errors.reminderTime)}
+                                        onBlur={handleBlur}
+                                        onChange={handleReminderTimeChange}
+                                        value={reminderTime}
+                                    >
+                                        {Array.from({ length: (24) }, (_, index) => { // Change the length calculation here
+                                            const totalMinutes = index * 60; // Calculate total minutes for the current index
+                                            const hours = Math.floor(totalMinutes / 60);
+                                            const minutes = totalMinutes % 60;
+                                            return (
+                                                <MenuItem
+                                                    key={index}
+                                                    value={`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`}>
+                                                    {`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`}
+                                                </MenuItem>
+                                            );
+                                        })}
+                                    </Field>
+                                </FormControl>
+                            )}
 
 
                             {reminder && (
