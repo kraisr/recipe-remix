@@ -47,13 +47,17 @@ export const searchIngredients = async (req, res) => {
     }
 };
 
+
+
 export const searchRecipes = async (req, res) => {
     // console.log("searchRecipes endpoint hit");
     try {
         
         const ingredientList = req.body.ingredientNames;
         // console.log("ingredient list:", ingredientList);
-        
+       // const dietaryTag = req.body.dietaryTag; 
+      console.log("ingredient list:", ingredientList);
+
         const query = `
         query SearchRecipes($ingredientNames: [String]!) {
             searchRecipesByIngredients(
@@ -74,6 +78,7 @@ export const searchRecipes = async (req, res) => {
                   }
                   mainImage
                   instructions
+                
 
                 }
               }
@@ -114,8 +119,76 @@ export const searchRecipes = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
 };
-
-
+export const recipeSearch = async (req, res) => {
+    try {
+      const ingredientList = req.body.ingredientNames;
+      const selectedDietaryTags = req.body.selectedDietaryTags; // Assuming this is how you receive the selected dietary tags
+  
+      const query = `
+        query recipeSearch($ingredientNames: [String]!, $selectedDietaryTags: [DietaryTag], maxPrepTime: [Int],  ) {
+          recipeSearch(
+            servingQuantity: $servingQuanity
+            filter: {
+                must: [$selectedDietaryTags,  ingredientNames: $ingredientNames ]
+            }
+            edges {
+              node {
+                name
+                ingredients {
+                  name
+                }
+                ingredientLines
+                id
+                totalTime
+                tags
+                maxPrepTime
+                numberOfServings
+                source {
+                  recipeUrl
+                }
+                mainImage
+                instructions
+              }
+            }
+          }
+        }
+      `;
+  
+      const variables = {
+        ingredientNames: ingredientList,
+        selectedDietaryTags: selectedDietaryTags, // Pass selected dietary tags here
+      };
+  
+      const response = await fetch("https://production.suggestic.com/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${process.env.SUGGESTIC_TOKEN}`,
+          "sg-user": process.env.SUGGESTIC_USER_ID,
+        },
+        body: JSON.stringify({ query, variables }), // Pass variables in the request body
+      });
+  
+      const text = await response.text();
+      console.log("Response Text:", text);
+  
+      // Try parsing the response
+      const data = JSON.parse(text);
+  
+      const matchedRecipes = data.data.recipeSearch.edges.map((edge) => edge.node);
+  
+      console.log("Data from Suggestic API:", data);
+      console.log("Matched recipes: ", matchedRecipes);
+  
+      res.json(data);
+    } catch (error) {
+      console.error("Error:", error);
+      res
+        .status(500)
+        .json({ error: "Internal Server Error", details: error.message });
+    }
+  };
+  
 export const searchAllRecipes = async (req, res) => {
     console.log("searchAllRecipes endpoint hit");
     try {

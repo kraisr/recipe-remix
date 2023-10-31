@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import "./pantry.css";
 
 class MyComponent extends Component {
+  
+  onFilterChange = (filterCriteria) => {
+    // Implement your logic to apply filters here
+    console.log('Filter criteria:', filterCriteria);
+    // You can update the state or perform any other actions based on filter criteria
+  }
+
   state = {
     mealFilter: {
       breakfast: false,
@@ -30,11 +37,22 @@ class MyComponent extends Component {
     showDietFilter: false,
     showServingFilter: false,
     showPrepTimeFilter: false,
+
+    selectedDietaryFilters: [], // Track selected dietary filters as an array
   };
 
   updateFilterCriteriaAndApply = () => {
     const { mealFilter, categoryFilter, dietFilter, servingSize, prepTime } = this.state;
-
+  
+    // Log the filter criteria to the console
+    console.log('Filter Criteria:', {
+      mealFilter,
+      categoryFilter,
+      dietFilter,
+      servingSize,
+      prepTime,
+    });
+  
     // Construct filter criteria based on your state
     const filterCriteria = {
       mealFilter,
@@ -43,12 +61,13 @@ class MyComponent extends Component {
       servingSize,
       prepTime,
     };
-
+  
     // Call the function passed as a prop to apply filters
     this.props.onFilterChange(filterCriteria);
   };
+  
 
-  handleMealFilterChange(mealOption) {
+  handleMealFilterChange = (mealOption) => {
     this.setState((prevState) => ({
       mealFilter: {
         ...prevState.mealFilter,
@@ -67,12 +86,20 @@ class MyComponent extends Component {
   }
 
   handleDietFilterChange(dietOption) {
-    this.setState((prevState) => ({
-      dietFilter: {
-        ...prevState.dietFilter,
-        [dietOption]: !prevState.dietFilter[dietOption],
-      },
-    }));
+    this.setState((prevState) => {
+      // Toggle the selected dietary filter in the array
+      const selectedDietaryFilters = prevState.selectedDietaryFilters.includes(dietOption)
+        ? prevState.selectedDietaryFilters.filter((filter) => filter !== dietOption)
+        : [...prevState.selectedDietaryFilters, dietOption];
+
+      return {
+        dietFilter: {
+          ...prevState.dietFilter,
+          [dietOption]: !prevState.dietFilter[dietOption],
+        },
+        selectedDietaryFilters, // Update the selected dietary filters array
+      };
+    });
   }
 
   toggleMealFilter = () => {
@@ -159,8 +186,12 @@ class MyComponent extends Component {
       prepTime: '0',
     });
   };
+  
 
   render() {
+   
+
+  
     const {
       showServingFilter,
       servingSize,
@@ -302,7 +333,7 @@ class MyComponent extends Component {
                   checked={dietFilter.vegetarian}
                   onChange={() => this.handleDietFilterChange('vegetarian')}
                 />
-                <label htmlFor="vegetarian">Vegitarian</label>
+                <label htmlFor="vegetarian">Vegetarian</label>
               </div>
               <div className="checkbox-label">
                 <input
@@ -326,7 +357,7 @@ class MyComponent extends Component {
                 min="0"
                 max="6"
                 step="1"
-                value={this.state.servingSize}
+                value={parseInt(this.state.servingSize, 10)}
                 onChange={this.handleServingSizeChange}
               />
               {this.state.servingSize === '6' ? '6+' : this.state.servingSize}
@@ -343,7 +374,7 @@ class MyComponent extends Component {
                 min="1"
                 max="10"
                 step="1"
-                value={this.state.prepTime}
+                value={parseInt(this.state.prepTime, 10)}
                 onChange={this.handlePrepTime}
               />
               {this.state.prepTime === '10' ? '10+' : this.state.prepTime}
@@ -352,6 +383,7 @@ class MyComponent extends Component {
         </div>
 
         <div className="filter-section">
+          <button onClick={this.updateFilterCriteriaAndApply}>Apply Filters</button>
           <button className="filter-section" onClick={this.clearAllFilters}>Clear Filters</button>
         </div>
       </div>

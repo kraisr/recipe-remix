@@ -423,6 +423,7 @@ const Pantry = () => {
             console.log("animate: ", animate);
             console.log("data: ", data);
             console.log('type remix: ', typeof(data));
+            //console.log("dietary tag: ", dietaryTag);
             
             if (animate) {
                 const success = new Audio(greatSound);
@@ -519,6 +520,80 @@ const Pantry = () => {
     };
     
 
+    const [filterCriteria, setFilterCriteria] = useState({
+        mealFilter: {
+          breakfast: false,
+          lunch: false,
+          dinner: false,
+          snack: false,
+        },
+        categoryFilter: {
+          nuts: false,
+          dairy: false,
+          gluten: false,
+        },
+        dietFilter: {
+          carb: false,
+          keto: false,
+          fat: false,
+          sugar: false,
+          vegetarian: false,
+          vegan: false,
+          kosher: false,
+        },
+        servingSize: '0',
+        prepTime: '0',
+      });
+  
+      // Define a function to handle filter changes in Pantry component
+      const handleFilterChange = (newFilterCriteria) => {
+          // Update the filter criteria state when the filter changes
+          setFilterCriteria(newFilterCriteria);
+          
+      };
+       
+      const mapDietaryTags = (dietFilter, categoryFilter, mealFilter) => {
+        const dietaryTags = [];
+      
+        if (dietFilter.vegetarian) {
+          dietaryTags.push('{dietaryTag: VEGETARIAN}');
+        }
+      
+        if (dietFilter.vegan) {
+          dietaryTags.push('{dietaryTag: VEGAN}');
+        }
+        if (dietFilter.keto) {
+            dietaryTags.push('{tag: "Keto-Friendly"}');
+          }
+      
+        if (categoryFilter.dairy) {
+          dietaryTags.push('{dietaryTag: DAIRY_FREE}');
+        }
+      
+        if (categoryFilter.gluten) {
+          dietaryTags.push('{dietaryTag: GLUTEN_FREE}');
+        }
+        if (categoryFilter.nuts) {
+            dietaryTags.push('{tag: "Tree-Nut-Free"}');
+          }
+      
+        if(mealFilter.breakfast) {
+            dietaryTags.push('{mealTime: BREAKFAST}')
+        }
+
+        if(mealFilter.lunch) {
+            dietaryTags.push('{mealTime: LUNCH}')
+        }
+        if(mealFilter.dinner) {
+            dietaryTags.push('{mealTime: DINNER}')
+        }
+        if(mealFilter.snack) {
+            dietaryTags.push('{mealTime: SNACK}')
+        }
+        return dietaryTags;
+      };
+      const dietaryTags = mapDietaryTags(filterCriteria.dietFilter, filterCriteria.categoryFilter, filterCriteria.mealFilter);
+      console.log(dietaryTags);
 
     // Determine if we're on a small screen
     const isSmallScreen = windowWidth < 769; // You can adjust this value as needed
@@ -609,7 +684,7 @@ const Pantry = () => {
                     <div className="recipe-title">Matched Recipes</div>
                     <button id="toggleDropdown">Filter</button>
                     <div id="filterDropdown" className="dropdown-content">
-                        <MyComponent/>
+                        <MyComponent filterCriteria={filterCriteria} onFilterChange={handleFilterChange} />
                     </div>
                 </div>
                 <div className="recipe-search-panel">

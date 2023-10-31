@@ -248,8 +248,14 @@ const userSchema = new mongoose.Schema({
     animate: {
         type: Boolean, 
         default: true,
-    }
+    },
 
+    filters: {
+        dietaryTag: {
+            type: String,
+            required: false,
+        },
+    }
 });
 
 // Hash the password before saving the user model
