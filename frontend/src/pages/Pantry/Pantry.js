@@ -1,8 +1,7 @@
 import "./pantry.css";
 import logoImg from "../../images/Vector.png";
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { deleteIngredientFromPantry } from "./DeleteIngredient.js";
-import MyComponent from "./filter.js";
 
 import remixSound from "../../audio/success.mp3";
 import failSound from "../../audio/fail.mp3";
@@ -608,10 +607,10 @@ const Pantry = () => {
                 <div className="recipe-top-panel">
                     <div className="recipe-title">Matched Recipes</div>
                     <button id="toggleDropdown">Filter</button>
-                    
                     <div id="filterDropdown" className="dropdown-content">
-                        <MyComponent    
-                        />
+                        <option value="option1">Option 1</option>
+                        <option value="option2">Option 2</option>
+                        <option value="option3">Option 3</option>
                     </div>
                 </div>
                 <div className="recipe-search-panel">
