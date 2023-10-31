@@ -18,6 +18,10 @@ class MyComponent extends Component {
       carb: false,
       keto: false,
       fat: false,
+      sugar: false,
+      vegetarian: false,
+      vegan: false,
+      kosher: false,
     },
     servingSize: '0',
     prepTime: '0',
@@ -146,6 +150,10 @@ class MyComponent extends Component {
         carb: false,
         keto: false,
         fat: false,
+        sugar: false,
+        vegetarian: false,
+        vegan: false,
+        kosher: false,
       },
       servingSize: '0',
       prepTime: '0',
@@ -277,6 +285,33 @@ class MyComponent extends Component {
                   onChange={() => this.handleDietFilterChange('fat')}
                 />
                 <label htmlFor="Fat">Low-Fat</label>
+              </div>
+              <div className="checkbox-label">
+                <input
+                  type="checkbox"
+                  id="sugar"
+                  checked={dietFilter.sugar}
+                  onChange={() => this.handleDietFilterChange('sugar')}
+                />
+                <label htmlFor="sugar">Low-Sugar</label>
+              </div>
+              <div className="checkbox-label">
+                <input
+                  type="checkbox"
+                  id="vegetarian"
+                  checked={dietFilter.vegetarian}
+                  onChange={() => this.handleDietFilterChange('vegetarian')}
+                />
+                <label htmlFor="vegetarian">Vegitarian</label>
+              </div>
+              <div className="checkbox-label">
+                <input
+                  type="checkbox"
+                  id="vegan"
+                  checked={dietFilter.vegan}
+                  onChange={() => this.handleDietFilterChange('vegan')}
+                />
+                <label htmlFor="vegan">Vegan</label>
               </div>
             </div>
           )}
