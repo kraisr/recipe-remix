@@ -11,8 +11,6 @@ const Community = () => {
         { id: '2', name: 'Recipe 2' }
     ]);
 
-    
-
     const handlePostSubmit = (selectedRecipe, caption) => {
         // Logic for handling post submission
         console.log("Posted recipe: ", selectedRecipe, " with caption: ", caption);
@@ -21,24 +19,35 @@ const Community = () => {
 
     return (
         <div className="community-container">
-            <div className="suggested-recipes">
-                {/* Content for suggested recipes */}
+            <div className="left-panel">
+                <div className="posted-title">
+                    <h4>My Posted Recipes</h4>  
+                </div>
+                <hr />
+                
+                <div className="post-grid">
+
+                </div>
+
+                <button className="create-post-btn" onClick={() => setIsPostWindowOpen(true)}>
+                    <i className="fas fa-plus"></i>
+                </button>
             </div>
 
-            <div className="community-feed">
-                <button className="create-post-button" onClick={() => setIsPostWindowOpen(true)}>+</button>
+            <div className="center-panel">
+
             </div>
 
-            <div className="close-friends">
-                {/* Content for close friends */}
+            <div className="right-panel">
+
             </div>
 
-            <CreatePost
-                isOpen={isPostWindowOpen}
-                onRequestClose={() => setIsPostWindowOpen(false)}
-                recipes={recipes}
-                onSubmit={handlePostSubmit}
-            />
+            {isPostWindowOpen && (
+                <CreatePost
+                    isOpen={isPostWindowOpen}
+                    onRequestClose={() => setIsPostWindowOpen(false)}
+                />
+            )}
         </div>
     );
 }
