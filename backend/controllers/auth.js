@@ -47,8 +47,13 @@ export const register = async (req, res) => {
             email,
             username,
             password: passwordHash,
+            shoppingLists: [{
+                id: Date.now(),
+                title: "All Missing Ingredients",
+                items: []
+            }]
         });
-        // console.log(newUser);
+        console.log(newUser);
         // Send back the saved user to the frontend
         const savedUser = await newUser.save();
         // console.log(savedUser);
