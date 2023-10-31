@@ -152,11 +152,11 @@ const Navbar = () => {
                                     <span>{'>'}</span>
                                 </Link>
 
-                            <Link to="/../preferences" className="sub-menu-link" onClick={toggleMenu}>
-                                <i className="fa-solid fa-gear"></i>
-                                <p>Preferences</p>
-                                <span>{">"}</span>
-                            </Link>
+                                <Link to="/../preferences" className="sub-menu-link" onClick={toggleMenu}>
+                                    <i class="fa-solid fa-asterisk"></i>
+                                    <p>Preferences</p>
+                                    <span>{">"}</span>
+                                </Link>
 
                                 <Link to="/../settings" className="sub-menu-link" onClick={toggleMenu}>
                                     <i className="fa-solid fa-gear"></i>
@@ -165,7 +165,7 @@ const Navbar = () => {
                                 </Link>
 
                                 <Link to="/../shoppingList" className="sub-menu-link" onClick={toggleMenu}>
-                                    <i className="fa-solid fa-gear"></i>
+                                    <i class="fa-solid fa-cart-shopping"></i>
                                     <p>Shopping List</p>
                                     <span>{'>'}</span>
                                 </Link>
@@ -177,7 +177,7 @@ const Navbar = () => {
                                 </Link> */}
 
                                 <Link to="/../help" className="sub-menu-link" onClick={toggleMenu}>
-                                    <i className="fa-solid fa-user"></i>
+                                    <i class="fa-solid fa-circle-info"></i>
                                     <p>Help</p>
                                     <span>{'>'}</span>
                                 </Link>

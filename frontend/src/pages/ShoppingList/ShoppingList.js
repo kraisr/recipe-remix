@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Container } from "@mui/material";
-import ShoppingList1 from "./ShoppingList1";
+import GroceryList from "./GroceryList";
 import GroceryStores from "./GroceryStores";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -17,7 +17,7 @@ function ShoppingList() {
         maxWidth="sm" 
         sx={{ marginRight: isSmallScreen ? 'auto' : 0 }} // Set marginRight to 0 only when isSmallScreen is false
       >
-        <ShoppingList1 />
+        <GroceryList />
       </Container>
       <Container 
         maxWidth="sm" 

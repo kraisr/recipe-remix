@@ -10,14 +10,13 @@ dotenv.config();
 export const register = async (req, res) => {
     // calls to mongoDB are asynchronous, so we need to use async/await
     try {
-        // console.log(req.body);
         const { 
             firstName, 
             lastName,
             email, 
             password 
         } = req.body;
-        console.log(req.body);
+        // console.log(req.body);
 
         // Find specified user given email using mongoose
         const oldUser = await User.findOne({ email: email });
@@ -49,10 +48,10 @@ export const register = async (req, res) => {
             username,
             password: passwordHash,
         });
-        console.log(newUser);
+        // console.log(newUser);
         // Send back the saved user to the frontend
         const savedUser = await newUser.save();
-        console.log(savedUser);
+        // console.log(savedUser);
         // // Send a confirmation email
         // await sendConfirmationEmail(req, res);
 
@@ -94,7 +93,7 @@ export const login = async (req, res) => {
         }
         
         if (user.set2FA) {
-            console.log('2FA enabled!');
+            // console.log('2FA enabled!');
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
             delete user.password;
             return res.status(200).json({ set2FA: true, user, token });
@@ -138,7 +137,7 @@ export const loginGoogle = async (req, res) => {
         }
 
         if (user.set2FA) {
-            console.log('2FA enabled!');
+            // console.log('2FA enabled!');
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
             
             return res.status(200).json({ set2FA: true, user, token });

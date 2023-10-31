@@ -204,12 +204,14 @@ img {
 }
 
 .ingredients-grid {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 100%; /* Set to full width */
+    width: 95%; /* Set to full width */
     overflow-y: auto; /* Allow vertical scrolling for the entire list */
     max-height: 550px;
+    min-height: 100px;
     padding-top: 10px;
     padding-left: 0; /* Remove left padding */
     padding-right: 0; /* Remove right padding */
@@ -270,6 +272,26 @@ img {
     font-size: 12px;
     cursor: pointer;
     transition: background-color 0.3s;
+}
+.pantry-right-button-containter {
+    display: flex;
+    justify-content: space-between;
+}
+.pantry-save-button {
+    background-color: #A1C298;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.pantry-save-button:hover {
+    background-color: #4CAF50;
+    font-weight: bold;
 }
 
 .pantry-tag {
@@ -332,7 +354,33 @@ img {
     /* Add other styles (background, color, etc.) as desired */
 }
 
+.recipe-success{
+    background-color: red;
+    height: 200px;
+    width: 200px;
+}
+
+.mixing-bowl-static{
+    width:100%;
+    height:100%;
+}
+
+.mixing-bowl-gif{
+    width:100%;
+    height:100%;
+}
+
 @media (max-width: 768px) {
+    .mixing-bowl-static{
+        width:100%;
+        height:100%;
+    }
+    
+    .mixing-bowl-gif{
+        width:100%;
+        height:100%;
+    }
+
     .pantry-container {
         flex-direction: row;
         justify-content: space-between;
@@ -363,10 +411,15 @@ img {
         transform: translateX(0); /* Comes in from the left or right */
     }
 
+    .pantry-center-container img{
+        height: 100%;
+        width: 100%;
+    }
+
     .pantry-toggle-button {
         display: block;
         justify-content: space-between;
-        position: absolute;
+        position: absolute; 
         top: 150px;
         left: 10px;
         z-index: 1000; 
@@ -379,10 +432,25 @@ img {
         position: absolute;
         top: 150px;
         right: 10px;
-        z-index: 1000;
+        /* z-index: 1000; */
         width: auto; 
         height: auto; 
         left: auto; 
+    }
+
+    .pantry-center-container{
+
+        width:100%
+    }
+
+    .mixing-bowl-static{
+        position: relative;
+        height: 100%;
+        width: 50%;
+    }
+    .pantry-button{
+        height: 100px;
+        width: 90%;
     }
 }
 
@@ -419,6 +487,7 @@ img {
     height: 40px;
     line-height: 40px;
     box-sizing: border-box;
+    overflow: hidden;
     margin-top: 30px;
     margin-bottom: 30px;
     margin-left:10px;
@@ -491,10 +560,6 @@ input[type="checkbox"] {
     
   }
 
- 
-  
-
-
 @media (min-width: 769px) {
     .pantry-tag {
         display: none !important;
@@ -504,10 +569,32 @@ input[type="checkbox"] {
     }
 }
 
+.drag-checkbox-wrapper {
+    display: flex;
+    align-items: center;  /* Vertically align items in the center */
+}
 
+.drag-handle {
+    padding-right: 10px;
+    padding-left: 3px;
+}
 
+.dropzone {
+    width: 90%;
+    height: 20%;
+    background-color: rgba(238, 102, 102, 0.7); /* Slight transparency */
+    padding: 10px;
+    text-align: center;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-
+.dropzone:hover {
+    background-color: rgba(229, 39, 39, 0.7); /* Slight transparency */
+}
 
 .button-17 {
     padding-left: 30px;

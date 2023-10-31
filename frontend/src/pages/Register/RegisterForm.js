@@ -92,6 +92,9 @@ const RegisterForm = ({ onRegistrationSuccess }) => {
       });
 
       const emailData = await emailResponse.json();
+      console.log(emailData);
+      console.log("response: " + emailResponse.ok);
+      console.log(emailData.error);
 
       if (emailData && emailResponse.ok) {
         // If email is sent successfully, redirect to login page

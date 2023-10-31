@@ -13,6 +13,7 @@ const Preferences = () => {
     kosher: false,
     keto: false,
     diabetes: false,
+    nutAllergies: false,
     dairyFree: false,
     others: false,
   });
@@ -100,6 +101,7 @@ const Preferences = () => {
     kosher: 'This option is for individuals who adhere to kosher dietary laws.',
     keto: 'This option is for individuals following a ketogenic diet, which is low in carbs and high in fats.',
     diabetes: 'This option is for individuals with diabetes who need to monitor their carbohydrate intake.',
+    nutAllergies: 'This option is for individuals who have allergies to nuts.',
     dairyFree: 'This option is for individuals who avoid all dairy products.',
     others: 'This option is for individuals who have other dietary restrictions and preferences.'
   };
