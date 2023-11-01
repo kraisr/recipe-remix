@@ -85,7 +85,100 @@ const SortableIngredient = ({ ingredient, selectedCheckboxes, handleCheckboxClic
     );
 };
 
+export const mapDietaryTags = (dietFilter, categoryFilter, mealFilter) => {
+    const dietaryTags = [];
+  
+    if (dietFilter.vegetarian) {
+      dietaryTags.push('{dietaryTag: VEGETARIAN}');
+    }
+  
+    if (dietFilter.vegan) {
+      dietaryTags.push('{dietaryTag: VEGAN}');
+    }
+    if (dietFilter.keto) {
+        dietaryTags.push('{tag: "Keto-Friendly"}');
+      }
+  
+    if (categoryFilter.dairy) {
+      dietaryTags.push('{dietaryTag: DAIRY_FREE}');
+    }
+  
+    if (categoryFilter.gluten) {
+      dietaryTags.push('{dietaryTag: GLUTEN_FREE}');
+    }
+    if (categoryFilter.nuts) {
+        dietaryTags.push('{tag: "Tree-Nut-Free"}');
+      }
+  
+    if(mealFilter.breakfast) {
+        dietaryTags.push('{mealTime: BREAKFAST}')
+    }
 
+    if(mealFilter.lunch) {
+        dietaryTags.push('{mealTime: LUNCH}')
+    }
+    if(mealFilter.dinner) {
+        dietaryTags.push('{mealTime: DINNER}')
+    }
+    if(mealFilter.snack) {
+        dietaryTags.push('{mealTime: SNACK}')
+    }
+    return dietaryTags;
+  };
+ 
+/*
+export async function sendDietaryTags (ingredientNames, mapDietaryTags, filterCriteria){
+    try {
+    
+        if (!ingredientNames || ingredientNames.length === 0) {
+            throw new Error("You must remix before you filter!");
+        }
+
+        if (!filterCriteria || !filterCriteria.dietFilter || !filterCriteria.categoryFilter || !filterCriteria.mealFilter) {
+            console.log(filterCriteria, filterCriteria.dietFilter, filterCriteria.categoryFilter, filterCriteria.mealFilter);
+            throw new Error("Invalid filter criteria");
+        }
+
+        console.log('Sending dietary tags...');
+    
+        const dietaryTags = mapDietaryTags(filterCriteria.dietFilter, filterCriteria.categoryFilter, filterCriteria.mealFilter);
+        console.log("tags array: ", dietaryTags);
+
+        const dietaryTagsRequest = await fetch("http://localhost:8080/api/recipe-search/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ingredientNames, dietaryTags }),
+        });
+
+        if (!dietaryTagsRequest.ok) {
+            console.error(`Network response for dietaryTags was not ok. Status: ${dietaryTagsRequest.status}, Response: ${await dietaryTagsRequest.text()}`);
+        } else {
+            console.log("Dietary tags sent successfully.");
+        }
+
+        // Continue with the rest of your code here
+    } catch (error) {
+        console.error("Failed to send dietaryTags:", error);
+    }
+}; */
+
+// Pantry.js
+export const sendDietaryTags = async (filterCriteria) => {
+    try {
+      // Use filterCriteria here to send dietary tags
+      console.log('Sending dietary tags:', filterCriteria);
+      const dietaryTags = mapDietaryTags(filterCriteria.dietFilter, filterCriteria.categoryFilter, filterCriteria.mealFilter);
+      console.log('Sending dietary tags was successful! Here they are:', dietaryTags);
+
+      
+      // Your logic to send dietary tags based on filterCriteria
+    } catch (error) {
+      console.error('Error sending dietary tags:', error);
+    }
+  };
+  
 
 const Pantry = () => {
     const [pantryIngredients, setPantryIngredients] = useState([]);
@@ -424,7 +517,34 @@ const Pantry = () => {
             console.log("data: ", data);
             console.log('type remix: ', typeof(data));
             //console.log("dietary tag: ", dietaryTag);
-            
+
+             const filterCriteria = {
+            mealFilter: {
+                breakfast: false,
+                lunch: false,
+                dinner: false,
+                snack: false,
+            },
+            categoryFilter: {
+                nuts: false,
+                dairy: false,
+                gluten: false,
+            },
+            dietFilter: {
+                carb: false,
+                keto: false,
+                fat: false,
+                sugar: false,
+                vegetarian: false,
+                vegan: false,
+                kosher: false,
+            },
+            servingSize: '0',
+            prepTime: '0',
+        };
+
+            await sendDietaryTags(ingredientNames, mapDietaryTags, filterCriteria);
+
             if (animate) {
                 const success = new Audio(greatSound);
                 const fail = new Audio(failSound);
@@ -465,7 +585,6 @@ const Pantry = () => {
                     setNoRecipesMessage("Oops! No recipes found");
                 }
             }
-            
         } catch (error) {
             console.error("Failed to fetch pantry ingredients:", error);
         }
@@ -552,48 +671,9 @@ const Pantry = () => {
           
       };
        
-      const mapDietaryTags = (dietFilter, categoryFilter, mealFilter) => {
-        const dietaryTags = [];
       
-        if (dietFilter.vegetarian) {
-          dietaryTags.push('{dietaryTag: VEGETARIAN}');
-        }
-      
-        if (dietFilter.vegan) {
-          dietaryTags.push('{dietaryTag: VEGAN}');
-        }
-        if (dietFilter.keto) {
-            dietaryTags.push('{tag: "Keto-Friendly"}');
-          }
-      
-        if (categoryFilter.dairy) {
-          dietaryTags.push('{dietaryTag: DAIRY_FREE}');
-        }
-      
-        if (categoryFilter.gluten) {
-          dietaryTags.push('{dietaryTag: GLUTEN_FREE}');
-        }
-        if (categoryFilter.nuts) {
-            dietaryTags.push('{tag: "Tree-Nut-Free"}');
-          }
-      
-        if(mealFilter.breakfast) {
-            dietaryTags.push('{mealTime: BREAKFAST}')
-        }
+///here i need to post the dietartTags 
 
-        if(mealFilter.lunch) {
-            dietaryTags.push('{mealTime: LUNCH}')
-        }
-        if(mealFilter.dinner) {
-            dietaryTags.push('{mealTime: DINNER}')
-        }
-        if(mealFilter.snack) {
-            dietaryTags.push('{mealTime: SNACK}')
-        }
-        return dietaryTags;
-      };
-      const dietaryTags = mapDietaryTags(filterCriteria.dietFilter, filterCriteria.categoryFilter, filterCriteria.mealFilter);
-      console.log(dietaryTags);
 
     // Determine if we're on a small screen
     const isSmallScreen = windowWidth < 769; // You can adjust this value as needed
