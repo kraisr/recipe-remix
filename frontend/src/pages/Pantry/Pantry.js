@@ -777,7 +777,7 @@ const Pantry = () => {
                             {expandedRecipeIndex !== index && (
                                 <div className="pantry-right-button-containter">
                                     <button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.node, event)}>Save</button>
-                                    <button className="delete-button" onClick={(event) => handleDelete(recipe.node.name, event)}>Delete</button>
+                                    {/* <button className="delete-button" onClick={(event) => handleDelete(recipe.node.name, event)}>Delete</button> */}
 
                                 </div>
                             )}
@@ -862,7 +862,7 @@ const Pantry = () => {
 
                                         <div className="save-delete-buttons">
                                             <button className="pantry-save-button" onClick={() => handleSaveRecipes(recipe.node)}>Save</button>
-                                            <button className="delete-button" onClick={() => handleDelete(recipe.node.name)}>Delete</button>
+                                            {/* <button className="delete-button" onClick={() => handleDelete(recipe.node.name)}>Delete</button> */}
                                         </div>
                                     </div>
                                     {promptMessage && recipe.node.name === currentlyModified && (
