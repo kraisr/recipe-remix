@@ -249,11 +249,19 @@ class MyComponent extends Component {
     }));
   };
 
-  handlePrepTime = (event) => {
+  handlePrepTimeInputChange = (event) => {
     const prepTime = parseInt(event.target.value, 10);
 
-    // Update the component state
-    this.setState({ prepTime });  };
+    // Check if prepTime is greater than 300
+    if (prepTime > 300) {
+      // Handle the error (e.g., show a message or prevent further action)
+      alert('Max Prep Time cannot exceed 300 minutes');
+      return;
+    }
+
+    // Update the component state with the new prep time
+    this.setState({ prepTime });
+  };
 
   clearAllFilters = () => {
     this.setState({
@@ -464,17 +472,17 @@ class MyComponent extends Component {
           {showPrepTimeFilter && (
             <label>
               <input
-                type="range"
+                type="number" // Use type "number" for numeric input
                 min="1"
-                max="10"
-                step="1"
-                value={parseInt(this.state.prepTime, 10)}
-                onChange={this.handlePrepTime}
+                max="300" // Set max value to 300
+                value={this.state.prepTime}
+                onChange={this.handlePrepTimeInputChange} // Use the new handler
               />
-              {this.state.prepTime === '10' ? '10+' : this.state.prepTime}
-            </label>
+             
+            minutes</label>
           )}
         </div>
+
 
         <div className="filter-section">
           <button onClick={this.updateFilterCriteriaAndApply}>Apply Filters</button>
