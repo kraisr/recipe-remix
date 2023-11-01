@@ -97,7 +97,7 @@ function EditProfile({closeModal, applyChanges, profileData}) {
 
   return (
     <div className="modal-background">
-        <div className="modal-container">
+        <div className="modal-container-edit">
 
             <div className="title">
                 <h1>Edit Profile</h1>
