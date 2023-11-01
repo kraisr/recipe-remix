@@ -804,7 +804,14 @@ const Pantry = () => {
                                                 {pantryIngredients.some(pantryItem => pantryItem.ingredientName.trim().toLowerCase() === ingredient.name.trim().toLowerCase()) ? (
                                                     ingredient.name
                                                 ) : (
-                                                    <a href="#" className="ingredient-link" onClick={(e) => { e.preventDefault(); handleMissingIngredientClick(ingredient.name); }}>
+                                                    <a href="#" className="ingredient-link" onClick={(e) => { 
+                                                        e.preventDefault(); 
+                                                        if (selectedIngredient === ingredient.name && showPrompt) {
+                                                            setShowPrompt(false);
+                                                        } else {
+                                                            handleMissingIngredientClick(ingredient.name); 
+                                                        } 
+                                                    }}>
                                                         {ingredient.name}
                                                     </a>
                                                 )}
