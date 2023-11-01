@@ -119,15 +119,15 @@ export const searchRecipes = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
 };
+
 export const recipeSearch = async (req, res) => {
     try {
       const ingredientList = req.body.ingredientNames;
-      const selectedDietaryTags = req.body.selectedDietaryTags; // Assuming this is how you receive the selected dietary tags
-  
+      const selectedDietaryTags = req.body.dietaryTags; // Assuming this is how you receive the selected dietary tags
+      console.log(selectedDietaryTags);
       const query = `
-        query recipeSearch($ingredientNames: [String]!, $selectedDietaryTags: [DietaryTag], maxPrepTime: [Int],  ) {
+        query recipeSearch($ingredientNames: [String]!, $selectedDietaryTags: [DietaryTag]) {
           recipeSearch(
-            servingQuantity: $servingQuanity
             filter: {
                 must: [$selectedDietaryTags,  ingredientNames: $ingredientNames ]
             }

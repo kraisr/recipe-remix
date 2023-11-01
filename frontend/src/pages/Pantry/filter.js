@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import "./pantry.css";
+import { sendDietaryTags } from "./Pantry.js";
 
 class MyComponent extends Component {
   
@@ -9,37 +10,117 @@ class MyComponent extends Component {
     // You can update the state or perform any other actions based on filter criteria
   }
 
-  state = {
-    mealFilter: {
-      breakfast: false,
-      lunch: false,
-      dinner: false,
-      snack: false,
-    },
-    categoryFilter: {
-      nuts: false,
-      dairy: false,
-      gluten: false,
-    },
-    dietFilter: {
-      carb: false,
-      keto: false,
-      fat: false,
-      sugar: false,
-      vegetarian: false,
-      vegan: false,
-      kosher: false,
-    },
-    servingSize: '0',
-    prepTime: '0',
-    showMealFilter: false,
-    showCategoryFilter: false,
-    showDietFilter: false,
-    showServingFilter: false,
-    showPrepTimeFilter: false,
+  constructor(props) {
+    super(props);
 
-    selectedDietaryFilters: [], // Track selected dietary filters as an array
-  };
+    this.state = {
+      userPreferences: {
+        lactoseIntolerance: false,
+        glutenIntolerance: false,
+        vegetarianism: false,
+        veganism: false,
+        kosher: false,
+        keto: false,
+        diabetes: false,
+        nutAllergies: false,
+        dairyFree: false,
+        others: false,
+      },
+      mealFilter: {
+        breakfast: false,
+        lunch: false,
+        dinner: false,
+        snack: false,
+      },
+      categoryFilter: {
+        nuts: false,
+        dairy: false,
+        gluten: false,
+      },
+      dietFilter: {
+        carb: false,
+        keto: false,
+        fat: false,
+        sugar: false,
+        vegetarian: false,
+        vegan: false,
+        kosher: false,
+      },
+      servingSize: 0,
+      prepTime: 0,
+      showMealFilter: false,
+      showCategoryFilter: false,
+      showDietFilter: false,
+      showServingFilter: false,
+      showPrepTimeFilter: false,
+    
+      selectedDietaryFilters: [], // Track selected dietary filters as an array
+    };
+  }
+
+
+  fetchUserPreferences = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+
+    const response = await fetch("http://localhost:8080/user/user", {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+
+    // Use the callback function to ensure you're working with the updated state
+    this.setState((prevState) => ({
+      userPreferences: {
+        ...prevState.userPreferences,
+        lactoseIntolerance: data.preferences.lactoseIntolerance,
+        glutenIntolerance: data.preferences.glutenIntolerance,
+        vegetarianism: data.preferences.vegetarianism,
+        veganism: data.preferences.veganism,
+        kosher: data.preferences.kosher,
+        keto: data.preferences.keto,
+        diabetes: data.preferences.diabetes,
+        nutAllergies: data.preferences.nutAllergies,
+        dairyFree: data.preferences.dairyFree,
+        others: data.preferences.others,
+      },
+    }), () => {
+      console.log('User Preferences:', this.state.userPreferences);
+
+      this.setState((prevState) => ({
+        dietFilter: {
+          ...prevState.dietFilter,
+          keto: this.state.userPreferences.keto,
+          vegetarian: this.state.userPreferences.vegetarianism,
+          vegan: this.state.userPreferences.veganism,
+          sugar: this.state.userPreferences.diabetes,
+        },
+        categoryFilter: {
+          ...prevState.categoryFilter,
+          nuts: this.state.userPreferences.nutAllergies,
+          dairy: this.state.userPreferences.dairyFree,
+          gluten: this.state.userPreferences.glutenIntolerance,
+        }
+      }));
+
+
+    });
+
+  } catch (error) {
+    console.error('Error fetching user preferences:', error);
+  }
+};
 
   updateFilterCriteriaAndApply = () => {
     const { mealFilter, categoryFilter, dietFilter, servingSize, prepTime } = this.state;
@@ -64,8 +145,16 @@ class MyComponent extends Component {
   
     // Call the function passed as a prop to apply filters
     this.props.onFilterChange(filterCriteria);
+    //here is where i call my controller?
+    sendDietaryTags(filterCriteria);
+    console.log("from filter.js ", filterCriteria);
+    
   };
   
+  componentDidMount() {
+    console.log("componentDidMount!")
+    this.fetchUserPreferences();
+  }
 
   handleMealFilterChange = (mealOption) => {
     this.setState((prevState) => ({
@@ -143,7 +232,11 @@ class MyComponent extends Component {
   };
 
   handleServingSizeChange = (event) => {
-    this.setState({ servingSize: event.target.value });
+    const servingSize = parseInt(event.target.value, 10);
+
+    // Update the component state
+    this.setState({ servingSize });
+  
   };
 
   togglePrepTimeFilter = () => {
@@ -157,8 +250,10 @@ class MyComponent extends Component {
   };
 
   handlePrepTime = (event) => {
-    this.setState({ prepTime: event.target.value });
-  };
+    const prepTime = parseInt(event.target.value, 10);
+
+    // Update the component state
+    this.setState({ prepTime });  };
 
   clearAllFilters = () => {
     this.setState({
@@ -188,10 +283,9 @@ class MyComponent extends Component {
   };
   
 
-  render() {
-   
 
   
+  render() {
     const {
       showServingFilter,
       servingSize,
