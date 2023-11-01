@@ -108,6 +108,8 @@ const Pantry = () => {
     const [addedIngredient, setAddedIngredient] = useState(null);
     const [promptMessage, setPromptMessage] = useState("");
     const [selectedRecipes, setSelectedRecipes] = useState(null);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [currentlyModified, setCurrentlyModified] = useState(null);
 
 
     const toggleRecipeExpansion = (index) => {
@@ -480,8 +482,7 @@ const Pantry = () => {
 
 
     const handleSaveRecipes = async (recipe, event) => {
-        console.log("handleSaveRecipes called");
-        console.log("Recipe being sent:", recipe);
+        setCurrentlyModified(recipe.name);
         if (event) {
             event.stopPropagation();
         }
@@ -506,6 +507,7 @@ const Pantry = () => {
                 const responseData = await response.json();
 
                 if (responseData.error === "Error updating user recipes or recipe already exists") {
+                    setSuccessMessage("");
                     setPromptMessage("The recipe was already saved!");
     
                     // Optionally, auto-hide the message after 3 seconds
@@ -518,6 +520,12 @@ const Pantry = () => {
             }
     
             const data = await response.json();
+            setPromptMessage("");
+            setSuccessMessage("Recipe saved successfully!");
+            setTimeout(() => {
+                setSuccessMessage("");
+            }, 2000);
+            
             console.log(data.message);
             
         } catch (error) {
@@ -525,6 +533,13 @@ const Pantry = () => {
         }
     }
 
+    const SuccessMessage = ({ message }) => {
+        return message ? (
+            <div style={{ color: 'green', textDecoration: 'underline' }}>
+                {message}
+            </div>
+        ) : null;
+    };
     
 
     useEffect(() => {
@@ -668,6 +683,16 @@ const Pantry = () => {
                                 </div>
                             )}
                         </div>
+                        {expandedRecipeIndex !== index && recipe.node.name === currentlyModified ? (
+                            <>
+                                {promptMessage && (
+                                    <div className="prompt-message" style={{ color: 'red', textDecoration: 'underline', marginLeft: '13px' }}>
+                                        {promptMessage}
+                                    </div>
+                                )}
+                                <SuccessMessage message={successMessage} />
+                            </>
+                        ) : null}
                         {expandedRecipeIndex === index && (
                             <div className={`expanded-content ${expandedRecipeIndex === index ? 'expanding' : 'collapsing'}`}>
                                 <img src={ recipe.node ? recipe.node.mainImage : recipe.image } alt="recipe" className="recipe-image" />
@@ -715,14 +740,15 @@ const Pantry = () => {
                                             <button className="delete-button" onClick={() => handleDelete(recipe.node.name)}>Delete</button>
                                         </div>
                                     </div>
-                                    {promptMessage && (
-                                        <div className="prompt-message">
+                                    {promptMessage && recipe.node.name === currentlyModified && (
+                                        <div className="prompt-message" style={{ color: 'red', textDecoration: 'underline' }}>
                                             {promptMessage}
                                         </div>
                                     )}
+                                    { recipe.node.name === currentlyModified && <SuccessMessage message={successMessage} /> }
                                 </div>
                             </div>
-                        )}
+                        )}                        
                         </div>
                     ))
                 ) : (
