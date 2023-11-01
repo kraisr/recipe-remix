@@ -101,6 +101,7 @@ img {
   border: none;
   cursor: pointer;
   position: flex;
+  border-radius: .5vw;	
 }
 
 #toggleDropdown:hover{
@@ -109,6 +110,10 @@ img {
 
 #filterDropdown{ /*actual filter*/
     background-color: white;
+    z-index: 1;	
+    padding: 2vw;	
+    width: auto;	
+    border-radius: 3vw;
 }
 
 /* Style the dropdown content (hidden by default) */
@@ -123,19 +128,37 @@ img {
   right: 0%;
   width: 20%;
 }
+.checkbox-label {	/* Style the dropdown links */
+    display: flex;
+    align-items: center;	 
+  }	 
 
-/* Style the dropdown links */
-.dropdown-content a {
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
+  .checkbox-label label {	
+    margin-left: 25px; /* Adjust the label spacing as needed */	
+  }	
 
-}
+  .checkbox-label label:hover {	
+    color: green;	
+  }	
 
-/* Change color on hover */
-.dropdown-content a:hover {
-  background-color: #ddd;
-}
+
+  .filter-section label{
+    display: flex;	
+  }	
+
+
+
+  .filter-section button{	/* Change color on hover */
+    background-color: #FA7070;	.dropdown-content a:hover {
+    border: none;	  background-color: #ddd;
+    color: black;	}
+    text-align: center;	
+    text-decoration: none;	
+    display: inline-block;	
+    border-radius: 80px;	
+    box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.25);	
+    font-size: medium;	
+  }
 
 .recipe-title {
     margin-bottom: 10px;
@@ -362,7 +385,22 @@ img {
     height:100%;
 }
 
+.mixing-bowl-gif{
+    width:100%;
+    height:100%;
+}
+
 @media (max-width: 768px) {
+    .mixing-bowl-static{
+        width:100%;
+        height:100%;
+    }
+    
+    .mixing-bowl-gif{
+        width:100%;
+        height:100%;
+    }
+
     .pantry-container {
         flex-direction: row;
         justify-content: space-between;
@@ -395,7 +433,7 @@ img {
 
     .pantry-center-container img{
         height: 100%;
-        width: 50%;
+        width: 100%;
     }
 
     .pantry-toggle-button {

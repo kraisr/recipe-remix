@@ -2,6 +2,7 @@ import "./pantry.css";
 import logoImg from "../../images/Vector.png";
 import React, { useEffect, useState } from "react";
 import { deleteIngredientFromPantry } from "./DeleteIngredient.js";
+import MyComponent from "./filter.js";
 
 import remixSound from "../../audio/success.mp3";
 import failSound from "../../audio/fail.mp3";
@@ -114,6 +115,39 @@ const Pantry = () => {
             setExpandedRecipeIndex(index);
         }
     };
+    const [animate, setAnimate] = useState(true);
+
+    useEffect(() => {
+        const fetchUserSettings = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    throw new Error("No token found");
+                }
+
+                const response = await fetch("http://localhost:8080/user/user", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    method: "GET",
+                });
+
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+
+                const data = await response.json();
+
+                setAnimate(data.animate);
+
+            } catch (error) {
+                console.error("Error fetching user settings:", error);
+            }
+        };
+
+        fetchUserSettings();
+    }, []);
 
 
     const sensors = useSensors(
@@ -359,7 +393,6 @@ const Pantry = () => {
     const handleDaRemix = async () => {
         try {
             
-            
             const selectedIngredients = pantryIngredients.filter(
                 (ingredient) => selectedCheckboxes[ingredient.ingredientName]
             );
@@ -393,36 +426,50 @@ const Pantry = () => {
             }
     
             const data = await response.json();
+            console.log("animate: ", animate);
             console.log("data: ", data);
             console.log('type remix: ', typeof(data));
             
-            console.log("recipes:", recipeSuggestions);
-            console.log("length: ", recipeSuggestions.length);
-            const success = new Audio(greatSound);
-            const fail = new Audio(failSound);
-            
-            if (data.data.searchRecipesByIngredients.edges.length !== 0){
-                success.play();
-                setNoRecipesMessage("");
-                setFilteredRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
-                setRemixStatus(true);
-            } else {
-                fail.play();
-                setRemixStatus(false);
-                setNoRecipesMessage("Oops! No recipes found");
-            }
-
-            setTimeout(() => {
-                setIsGifPlaying(false);
-                setRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
-                if(remixStatus) {
-                    console.log("status: ", remixStatus);
-                    // window.alert("Success!");
+            if (animate) {
+                const success = new Audio(greatSound);
+                const fail = new Audio(failSound);
+    
+                if (data.data.searchRecipesByIngredients.edges.length !== 0) {
+                    success.play();
+                    setNoRecipesMessage("");
+                    
+                    setRemixStatus(true);
                 } else {
-                    // window.alert("Dubious Food :(");
+                    fail.play();
+                    setRemixStatus(false);
+                    
                 }
-            }, 5000);
-            
+    
+                // Delay for 5 seconds
+                setTimeout(() => {
+                    setIsGifPlaying(false);
+                    setFilteredRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
+                    setRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
+                    if (remixStatus) {
+                        console.log("status: ", remixStatus);
+                        // window.alert("Success!");
+                    } else {
+                        // window.alert("Dubious Food :(");
+                        setNoRecipesMessage("Oops! No recipes found");
+                    }
+                }, 5000);
+            } else {
+                // If animation is disabled, set the results immediately without audio or delay
+                console.log("balls");
+                setFilteredRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
+                if (data.data.searchRecipesByIngredients.edges.length !== 0) {
+                    setRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
+                    setRemixStatus(true);
+                } else {
+                    setRemixStatus(false);
+                    setNoRecipesMessage("Oops! No recipes found");
+                }
+            }
             
         } catch (error) {
             console.error("Failed to fetch pantry ingredients:", error);
@@ -565,7 +612,7 @@ const Pantry = () => {
             <div className="pantry-center-container">
 
 
-                {isGifPlaying ? (
+                {isGifPlaying && animate ? (
                     <img
                         src={mixingBowl}
                         alt="Mixing Bowl"
@@ -591,9 +638,7 @@ const Pantry = () => {
                     <div className="recipe-title">Matched Recipes</div>
                     <button id="toggleDropdown">Filter</button>
                     <div id="filterDropdown" className="dropdown-content">
-                        <option value="option1">Option 1</option>
-                        <option value="option2">Option 2</option>
-                        <option value="option3">Option 3</option>
+                        <MyComponent/>
                     </div>
                 </div>
                 <div className="recipe-search-panel">

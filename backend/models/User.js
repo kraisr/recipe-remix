@@ -105,6 +105,42 @@ const userSchema = new mongoose.Schema({
         },
         instructions: [String],
     }],
+    folders: [{
+        name: {
+            type: String,
+            required: true,
+        },
+        recipes: [{
+            id: {
+                type: String,
+                required: true,
+            },
+            totalTime: {
+                type: String,
+                required: true,
+            },
+            name: {
+                type: String,
+                required: true,
+            },
+            numberOfServings: {
+                type: Number,
+                required: true,
+            },
+            ingredientLines: [String],
+            source: {
+                recipeUrl: {
+                    type: String,
+                    required: true,
+                }
+            },
+            mainImage: {
+                type: String,
+                required: true,
+            },
+            instructions: [String],
+        }],
+    }],
     preferences: {
         lactoseIntolerance: {
             type: Boolean,
@@ -134,6 +170,10 @@ const userSchema = new mongoose.Schema({
             type: Boolean,
             default: false,
         },
+        nutAllergies: {
+            type: Boolean,
+            default: false,
+          },
         dairyFree: {
             type: Boolean,
             default: false,
@@ -203,6 +243,11 @@ const userSchema = new mongoose.Schema({
     set2FA: {
         type: Boolean,
         default: false,
+    },
+
+    animate: {
+        type: Boolean, 
+        default: true,
     }
 
 });
