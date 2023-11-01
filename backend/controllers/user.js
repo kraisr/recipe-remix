@@ -489,9 +489,53 @@ export const deleteShoppingList = async (req, res) => {
     }
   };
   
-  
-  
-  
+
+// Add missing ingredient to default shopping list
+export const addMissingIngredient = async (req, res) => {
+  try {
+    const { email, item, quantity, unit } = req.body;  // Assuming unit is also passed in req.body
+
+    // Find the user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Find the shopping list by title "All Missing Ingredients"
+    const shoppingList = user.shoppingLists.find(
+      (list) => list.title === "All Missing Ingredients"
+    );
+
+    if (!shoppingList) {
+      // If the specific list doesn't exist, we could optionally create one. 
+      // For now, we'll just return an error.
+      return res.status(404).json({ error: 'Shopping list not found' });
+    } else {
+      // Check if the item already exists in the list
+      const existingItem = shoppingList.items.find(
+        (listItem) => listItem.item === item
+      );
+
+      if (existingItem) {
+        // If the item exists, increment its quantity by the provided quantity.
+        existingItem.quantity += quantity;
+      } else {
+        // If the item doesn't exist, add it to the list.
+        shoppingList.items.push({ item, quantity, unit });
+      }
+    }
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Item added to the shopping list successfully' });
+  } catch (err) {
+    console.error('Error in addMissingIngredient function:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 
 // Add item to shopping list
