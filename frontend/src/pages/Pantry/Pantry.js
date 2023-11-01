@@ -3,7 +3,8 @@ import logoImg from "../../images/Vector.png";
 import React, { useEffect, useState } from "react";
 import { deleteIngredientFromPantry } from "./DeleteIngredient.js";
 import MyComponent from "./filter.js";
-
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
 import remixSound from "../../audio/success.mp3";
 import failSound from "../../audio/fail.mp3";
 import greatSound from "../../audio/great.mp3";
@@ -110,7 +111,20 @@ const Pantry = () => {
     const [selectedRecipes, setSelectedRecipes] = useState(null);
     const [successMessage, setSuccessMessage] = useState("");
     const [currentlyModified, setCurrentlyModified] = useState(null);
+    const [showPrompt, setShowPrompt] = useState(false);
+    const [selectedIngredient, setSelectedIngredient] = useState(null);
+    const [refreshData, setRefreshData] = useState(false);
 
+
+    const StyledButton = styled(Button)({
+        backgroundColor: '#FFFAF0', // Light grey
+        '&:hover': {
+            backgroundColor: '#A9A9A9' // Darker shade of grey on hover
+        },
+        margin: '5px', // To give some space between buttons
+        color: 'black', // Black text
+    });
+    
 
     const toggleRecipeExpansion = (index) => {
         if (expandedRecipeIndex === index) {
@@ -274,7 +288,7 @@ const Pantry = () => {
         };
 
         fetchPantryIngredients();
-    }, []);
+    }, [refreshData]);
 
     //recipe search
     useEffect(() => {
@@ -343,6 +357,89 @@ const Pantry = () => {
             // Perform a live search
             handleRecipeSearch();
         } 
+    };
+
+    const addToPantry = async (ingredientName, recipe) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const response = await fetch('http://localhost:8080/user/add-pantry',
+            {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`  // Add this line to include the token in the request header
+                },
+                body: JSON.stringify({ ingredientName: ingredientName })  // Sending the ingredient data
+            });
+    
+            const data = await response.json();
+            if (response.ok) {
+                console.log(data.message); // Ingredient added successfully
+                setRefreshData(prev => !prev);
+                setPromptMessage(null);
+                setCurrentlyModified(recipe.node.name);
+                setSuccessMessage("Ingredient added to pantry!");
+                setTimeout(() => {
+                    setCurrentlyModified(null);
+                    setSuccessMessage(null);
+                }, 2000);
+            } else {
+                setCurrentlyModified(recipe.node.name);
+                setSuccessMessage(null);
+                setPromptMessage("Ingredient already exists in pantry!");
+                setTimeout(() => {
+                    setCurrentlyModified(null);
+                    setPromptMessage(null);
+                }, 2000);
+            }
+        } catch (error) {
+            console.error("Error adding ingredient to pantry:", error);
+        }
+    };
+
+    const addToShoppingList = async (ingredientName, recipe) => {
+        try {
+            const token = localStorage.getItem('token');
+            const email = localStorage.getItem('email');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const response = await fetch('http://localhost:8080/user/add-missing-ingredient',
+            {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`  // Add this line to include the token in the request header
+                },
+                body: JSON.stringify({ email: email, item: ingredientName, quantity: 1 })  // Sending the ingredient data
+            });
+    
+            const data = await response.json();
+            if (response.ok) {
+                console.log(data.message); // Ingredient added successfully
+                // setRefreshData(prev => !prev);
+                setPromptMessage(null);
+                setCurrentlyModified(recipe.node.name);
+                setSuccessMessage("Ingredient added to shopping list!");
+                setTimeout(() => {
+                    setCurrentlyModified(null);
+                    setSuccessMessage(null);
+                }, 2000);
+            } else {
+                setSuccessMessage(null);
+                setCurrentlyModified(recipe.node.name);
+                setPromptMessage("Ingredient already exists in shopping list!");
+                setTimeout(() => {
+                    setCurrentlyModified(null);
+                    setPromptMessage(null);
+                }, 2000);
+            }
+        } catch (error) {
+            console.error("Error adding ingredient to pantry:", error);
+        }
     };
     
 
@@ -558,7 +655,9 @@ const Pantry = () => {
     function handleMissingIngredientClick(ingredientName) {
         // Perform some action with the ingredientName
         console.log("Clicked on:", ingredientName);
-        setAddedIngredient(ingredientName);
+        // setAddedIngredient(ingredientName);
+        setSelectedIngredient(ingredientName);
+        setShowPrompt(true);
 
         setTimeout(() => {
             setAddedIngredient(null);
@@ -709,9 +808,28 @@ const Pantry = () => {
                                                         {ingredient.name}
                                                     </a>
                                                 )}
+                                                {
+                                                selectedIngredient === ingredient.name && showPrompt && (
+                                                    <div className="ingredient-prompt">
+                                                        <p style={{ color: 'black', marginBottom: '3px', marginTop: '3px' }}>
+                                                            Do you want to add <span style={{ textDecoration: 'underline' }}>{selectedIngredient}</span> to your:
+                                                        </p>
+                                                        <StyledButton variant="contained" onClick={() => addToPantry(selectedIngredient, recipe)}>
+                                                            Pantry
+                                                        </StyledButton>
+                                                        <StyledButton variant="contained" onClick={() => addToShoppingList(selectedIngredient, recipe)}>
+                                                            Shopping List
+                                                        </StyledButton>
+                                                        <StyledButton variant="contained" onClick={() => setShowPrompt(false)}>
+                                                            Cancel
+                                                        </StyledButton>
+                                                    </div>
+                                                )
+                                            }
                                             </li>
                                         ))}
                                     </ul>
+
                                     { addedIngredient && <p style={{color: 'green', fontSize: '0.8rem'}}>{addedIngredient} added to shopping list</p> }
                                     <div className="bottom-section">
                                         <div 
