@@ -4,9 +4,9 @@ import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting
 import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js";
 import { createShoppingList, deleteShoppingList, editShoppingList, getShoppingLists} from "../controllers/user.js";
 import { addToShoppingList, deleteFromShoppingList, editInShoppingList} from "../controllers/user.js";
-import { sendEmail, updateReminder } from "../controllers/sendEmail.js";import {sendCode} from "../controllers/code.js";
-import { saveRecipes, getRecipes} from "../controllers/user.js";
-import { createFolder, getFolders, addRecipeToFolder, deleteFolder, removeRecipeFromFolder } from "../controllers/user.js";
+import { sendEmail, updateReminder } from "../controllers/sendEmail.js";import {sendCode} from "../controllers/code.js"
+import { saveRecipes, getRecipes, addMissingIngredient } from "../controllers/user.js";
+import { createFolder, getFolders, addRecipeToFolder, deleteFolder, removeRecipeFromFolder } from "../controllers/user.js"
 const router = express.Router();
 
 /* GET USER DATA */
@@ -35,6 +35,8 @@ router.post("/editShoppingList", editShoppingList);
 router.post("/addToShoppingList", addToShoppingList);
 router.post("/deleteFromShoppingList", deleteFromShoppingList);
 router.post("/editInShoppingList", editInShoppingList);
+
+router.post("/add-missing-ingredient", addMissingIngredient);
 
 /* Set routes to redirect to the correct controller in /controllers/auth.js */
 router.post("/mode", mode);
