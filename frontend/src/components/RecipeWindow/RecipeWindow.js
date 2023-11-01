@@ -9,9 +9,45 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
         setEditField(field);
     };
 
-    const handleSave = () => {
-        onSave(editedData);
+    const handleCancel = () => {
+        setEditedData({ ...recipe });
         setEditField(null);
+    };
+
+    
+    
+
+    const handleSave = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('No token found in local storage.');
+                return;
+            }
+
+            const response = await fetch("http://localhost:8080/user/edit-recipe", { // Assuming the endpoint for editing is /edit-recipe
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(editedData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log(data.message);
+            alert(`${editedData.name} saved successfully!`); // Display confirmation message
+
+            onSave(editedData); // Update the local state
+            setEditField(null);
+
+        } catch (error) {
+            console.error("Failed to save edited recipe:", error);
+        }
     };
 
     const handleFieldChange = (e, field) => {
@@ -29,73 +65,77 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                             <>
                                 <input value={editedData.name} onChange={(e) => handleFieldChange(e, 'name')} />
                                 <button onClick={handleSave}>Save</button>
+                                <button onClick={handleCancel}>Cancel</button> 
                             </>
                         ) : (
                             <>
-                                {recipe.name}
-                                
-                                <button className = "editButtons" onClick={() => handleEdit('name')}>Edit</button>
+                                 {editedData.name} 
+                                <button className="editButtons" onClick={() => handleEdit('name')}>Edit</button>
                             </>
                         )}
                     </h1>
                 </div>
 
                 <div className="image-container">
-                    {editField === "mainImage" ? (
+                {editField === "mainImage" ? (
                         <>
                             <input value={editedData.mainImage} onChange={(e) => handleFieldChange(e, 'mainImage')} />
                             <button onClick={handleSave}>Save</button>
+                            <button onClick={handleCancel}>Cancel</button> 
                         </>
                     ) : (
                         <>
-                            <img src={recipe.mainImage} alt={recipe.name} className="recipe-image" />
-                            <button className = "editButtons" onClick={() => handleEdit('mainImage')}>Edit</button>
+                            <img src={editedData.mainImage} alt={editedData.name} className="recipe-image" />
+                            <button className="editButtons" onClick={() => handleEdit('mainImage')}>Edit</button>
                         </>
                     )}
                 </div>
 
                 <div className="time-container">
-                    {editField === "totalTime" ? (
+                {editField === "totalTime" ? (
                         <>
                             <input value={editedData.totalTime} onChange={(e) => handleFieldChange(e, 'totalTime')} />
                             <button onClick={handleSave}>Save</button>
+                            <button onClick={handleCancel}>Cancel</button> 
                         </>
                     ) : (
                         <>
-                            <div>Total Time: {recipe.totalTime}</div>
-                            <button className = "editButtons" onClick={() => handleEdit('totalTime')}>Edit</button>
+                            <div>Total Time: {editedData.totalTime}</div>
+                            <button className="editButtons" onClick={() => handleEdit('totalTime')}>Edit</button>
                         </>
                     )}
                 </div>
 
                 <div className="servings-container">
-                    {editField === "numberOfServings" ? (
+                {editField === "numberOfServings" ? (
                         <>
                             <input value={editedData.numberOfServings} onChange={(e) => handleFieldChange(e, 'numberOfServings')} />
                             <button onClick={handleSave}>Save</button>
+                            <button onClick={handleCancel}>Cancel</button> 
                         </>
                     ) : (
                         <>
-                            <div>Number of Servings: {recipe.numberOfServings}</div>
-                            <button className = "editButtons" onClick={() => handleEdit('numberOfServings')}>Edit</button>
+                            <div>Number of Servings: {editedData.numberOfServings}</div>
+                            <button className="editButtons" onClick={() => handleEdit('numberOfServings')}>Edit</button>
                         </>
                     )}
                 </div>
 
                 <div className="ingredientLines-container">
-                    {editField === "ingredientLines" ? (
+                {editField === "ingredientLines" ? (
                         <>
                             <textarea 
                                 value={editedData.ingredientLines.join('\n')} 
                                 onChange={(e) => handleFieldChange(e, 'ingredientLines')} 
                             />
                             <button onClick={handleSave}>Save</button>
+                            <button onClick={handleCancel}>Cancel</button> 
                         </>
                     ) : (
                         <>
                             <div className="window-title">Ingredients:</div>
                             <ul>
-                                {recipe.ingredientLines.map((line, index) => (
+                                {editedData.ingredientLines.map((line, index) => (
                                     <li key={index}>{line}</li>
                                 ))}
                             </ul>
@@ -105,19 +145,20 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                 </div>
 
                  <div className="instructions-container">
-                    {editField === "instructions" ? (
+                 {editField === "instructions" ? (
                         <>
                             <textarea 
                                 value={editedData.instructions.join('\n')} 
                                 onChange={(e) => handleFieldChange(e, 'instructions')} 
                             />
                             <button onClick={handleSave}>Save</button>
+                            <button onClick={handleCancel}>Cancel</button> 
                         </>
                     ) : (
                         <>
                             <div className="window-title">Instructions:</div>
                             <ol className="instructions-list">
-                                {recipe.instructions.map((instr, index) => (
+                                {editedData.instructions.map((instr, index) => (
                                     <li key={index} className="instruction-line">{instr}</li>
                                 ))}
                             </ol>
@@ -129,15 +170,16 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
 
 
                 <div className="source-container">
-                    {editField === "source" ? (
+                {editField === "source" ? (
                         <>
                             <input value={editedData.source} onChange={(e) => handleFieldChange(e, 'source')} />
                             <button onClick={handleSave}>Save</button>
+                            <button onClick={handleCancel}>Cancel</button> 
                         </>
                     ) : (
                         <>
-                            <div>Source: {recipe.source}</div>
-                            <button className = "editButtons" onClick={() => handleEdit('source')}>Edit</button>
+                            <div>Source: {editedData.source}</div>
+                            <button className="editButtons" onClick={() => handleEdit('source')}>Edit</button>
                         </>
                     )}
                 </div>

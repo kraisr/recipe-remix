@@ -1,5 +1,5 @@
 import express from "express";
-import {addIngredient, getFromPantry, deleteIngredient, deleteRecipe} from "../controllers/user.js";
+import {addIngredient, getFromPantry, deleteIngredient, deleteRecipe, editRecipe} from "../controllers/user.js";
 import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting, deleteAccount } from "../controllers/user.js";
 import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js";
 import { createShoppingList, deleteShoppingList, editShoppingList, getShoppingLists} from "../controllers/user.js";
@@ -53,6 +53,7 @@ router.post("/delete-pantry", deleteIngredient);
 router.post("/save-recipes", saveRecipes);
 router.get("/get-recipes", getRecipes);
 router.post("/delete-recipe", deleteRecipe);
+router.post("/edit-recipe", editRecipe)
 
 /* DELETE ACCOUNT */
 router.post("/delete-account", deleteAccount);
