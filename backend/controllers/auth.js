@@ -134,6 +134,11 @@ export const loginGoogle = async (req, res) => {
                 username,
                 image,
                 googleSignIn: true,
+                shoppingLists: [{
+                    id: Date.now(),
+                    title: "All Missing Ingredients",
+                    items: []
+                }]
             });
             // console.log(user);
             user = await user.save();
