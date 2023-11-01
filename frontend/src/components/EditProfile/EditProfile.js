@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Button } from "@mui/material";
 import "./editProfile.css";
-
-
+import { TextField } from '@mui/material';
 //components
 import UploadProfile from "./UploadProfile"
 import uploadImageToS3 from "../UploadImagetoS3/UploadImagetoS3";
@@ -95,6 +94,25 @@ function EditProfile({closeModal, applyChanges, profileData}) {
     setSelectedImage(null);
   }
 
+  const textFieldStyles = {
+    bgcolor: "#ffffff",
+    // width: '88%',
+    "& label.Mui-focused": {
+      color: "#000",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#a1c298",
+      },
+      "&:hover fieldset": {
+        borderColor: "#88b083",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#6b9466",
+      },
+    }
+  };
+
   return (
     <div className="modal-background">
         <div className="modal-container-edit">
@@ -126,22 +144,44 @@ function EditProfile({closeModal, applyChanges, profileData}) {
               <div className="user-info">
                 <div className="name">
                   <p>Name</p>
-                  <input type="text" onChange={handleNameChange} value={name}/>
+                  <TextField
+                    variant="outlined"
+                    onChange={handleNameChange}
+                    value={name}
+                    sx={textFieldStyles}
+                  />
                 </div>
 
                 <div className="username">
                   <p>username</p>
-                  <input type="text" onChange={handleUsernameChange} value={username}/>
+                  <TextField
+                    variant="outlined"
+                    onChange={handleUsernameChange}
+                    value={username}
+                    sx={textFieldStyles}
+                  />
                 </div>
 
                 <div className="bio">
                   <p>bio</p>
-                  <input type="text" onChange={handleBioChange} value={bio}/>
+                  <TextField
+                    variant="outlined"
+                    onChange={handleBioChange}
+                    value={bio}
+                    sx={textFieldStyles}
+                    multiline
+                    rows={2}
+                  />
                 </div>
 
                 <div className="Link" >
                   <p>Link</p>
-                  <input type="text" onChange={handleLinkChange} value={link}/>
+                  <TextField
+                    variant="outlined"
+                    onChange={handleLinkChange}
+                    value={link}
+                    sx={textFieldStyles}
+                  />
                 </div>
               </div>
 
