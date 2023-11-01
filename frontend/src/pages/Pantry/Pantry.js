@@ -861,7 +861,7 @@ const Pantry = () => {
                                         }
 
                                         <div className="save-delete-buttons">
-                                            <button className="pantry-save-button" onClick={() => handleSaveRecipes(recipe.node)}>Save</button>
+                                            <button className="pantry-save-button" style={{ marginRight: 0 }} onClick={() => handleSaveRecipes(recipe.node)}>Save</button>
                                             {/* <button className="delete-button" onClick={() => handleDelete(recipe.node.name)}>Delete</button> */}
                                         </div>
                                     </div>
