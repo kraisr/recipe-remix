@@ -632,7 +632,7 @@ const Pantry = () => {
 
     const SuccessMessage = ({ message }) => {
         return message ? (
-            <div style={{ color: 'green', textDecoration: 'underline' }}>
+            <div style={{ color: 'green', textDecoration: 'underline', marginLeft: '13px' }}>
                 {message}
             </div>
         ) : null;
@@ -855,8 +855,9 @@ const Pantry = () => {
                                                 recipe={selectedRecipes} 
                                                 onClose={() => setSelectedRecipes(null)} 
                                                 onSave={(updatedRecipe) => {
-                                                    // Logic to save updatedRecipe to backend and update savedRecipes state
-                                                }}
+                                                    setSelectedRecipes(updatedRecipe);
+                                                 }}
+                                                 edit={false}
                                             />
                                         }
 

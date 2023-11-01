@@ -502,8 +502,10 @@ const Recipes = () => {
                 recipe={selectedRecipes} 
                 onClose={() => setSelectedRecipes(null)} 
                 onSave={(updatedRecipe) => {
+                    setSelectedRecipes(updatedRecipe);
                     refreshSavedRecipes();
                  }}
+                 edit={true}
                 />
             }
             <div className="folders-section">

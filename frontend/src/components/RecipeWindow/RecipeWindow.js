@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './recipewindow.css';
 
-const RecipeWindow = ({ recipe, onClose, onSave }) => {
+const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
     const [editField, setEditField] = useState(null);
     const [editedData, setEditedData] = useState({ ...recipe });
 
@@ -70,7 +70,7 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                         ) : (
                             <>
                                  {editedData.name} 
-                                <button className="editButtons" onClick={() => handleEdit('name')}>Edit</button>
+                                 {edit && <button className="editButtons" onClick={() => handleEdit('name')}>Edit</button>}
                             </>
                         )}
                     </h1>
@@ -86,7 +86,7 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                     ) : (
                         <>
                             <img src={editedData.mainImage} alt={editedData.name} className="recipe-image" />
-                            <button className="editButtons" onClick={() => handleEdit('mainImage')}>Edit</button>
+                            {edit && <button className="editButtons" onClick={() => handleEdit('mainImage')}>Edit</button>}
                         </>
                     )}
                 </div>
@@ -101,7 +101,7 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                     ) : (
                         <>
                             <div>Total Time: {editedData.totalTime}</div>
-                            <button className="editButtons" onClick={() => handleEdit('totalTime')}>Edit</button>
+                            {edit && <button className="editButtons" onClick={() => handleEdit('totalTime')}>Edit</button>}
                         </>
                     )}
                 </div>
@@ -116,7 +116,7 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                     ) : (
                         <>
                             <div>Number of Servings: {editedData.numberOfServings}</div>
-                            <button className="editButtons" onClick={() => handleEdit('numberOfServings')}>Edit</button>
+                            {edit && <button className="editButtons" onClick={() => handleEdit('numberOfServings')}>Edit</button>}
                         </>
                     )}
                 </div>
@@ -139,7 +139,7 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                                     <li key={index}>{line}</li>
                                 ))}
                             </ul>
-                            <button className="editButtons" onClick={() => handleEdit('ingredientLines')}>Edit</button>
+                            {edit && <button className="editButtons" onClick={() => handleEdit('ingredientLines')}>Edit</button>}
                         </>
                     )}
                 </div>
@@ -162,7 +162,7 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                                     <li key={index} className="instruction-line">{instr}</li>
                                 ))}
                             </ol>
-                            <button className="editButtons" onClick={() => handleEdit('instructions')}>Edit</button>
+                            {edit && <button className="editButtons" onClick={() => handleEdit('instructions')}>Edit</button>}
                         </>
                     )}
                 </div>
@@ -179,7 +179,7 @@ const RecipeWindow = ({ recipe, onClose, onSave }) => {
                     ) : (
                         <>
                             <div>Source: {editedData.source}</div>
-                            <button className="editButtons" onClick={() => handleEdit('source')}>Edit</button>
+                            {edit && <button className="editButtons" onClick={() => handleEdit('source')}>Edit</button>}
                         </>
                     )}
                 </div>
