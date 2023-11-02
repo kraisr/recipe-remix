@@ -42,14 +42,17 @@ function UploadProfile({ closeModal, onImageChange}) {
         </div>
       
       <div className="crop-container">
-        <Avatar
-          width={390}
-          height={295}
-          onCrop={onCrop}
-          onClose={onClose} 
-          onBeforeFileLoad={onBeforeFileLoad}
-          
-        />
+        <div className="recipe-image">
+          <Avatar
+            width={390}
+            height={295}
+            onCrop={onCrop}
+            onClose={onClose} 
+            onBeforeFileLoad={onBeforeFileLoad}
+            
+          />
+        </div>
+        
       </div>
 
       <Button 
