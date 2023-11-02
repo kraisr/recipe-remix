@@ -225,7 +225,7 @@ export const recipeSearch = async (req, res) => {
     console.log("Data from Suggestic API:", data);
     console.log("Matched recipes: ", matchedRecipes);
 
-    res.json(data);
+    res.json(matchedRecipes);
   } catch (error) {
     console.error("Error:", error);
     res
