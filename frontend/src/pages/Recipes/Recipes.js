@@ -24,6 +24,7 @@ const Recipes = () => {
     const [selectedRecipes, setSelectedRecipes] = useState(null);
     const [expandedFolder, setExpandedFolder] = useState(null);
     const [activeFolder, setActiveFolder] = useState(null);
+
    
     const openRecipes = () => {
         setIsRecipesOpen(true);
@@ -74,21 +75,41 @@ const Recipes = () => {
         // Cleanup event listener on component unmount
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+    const refreshSavedRecipes = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/user/get-recipes", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            const data = await response.json();
+            setSavedRecipes(data);
+        } catch (error) {
+            console.error("Failed to fetch saved recipes:", error);
+        }
+    };
+    
     
 
     useEffect(() => {
         // This assumes you have an endpoint to fetch saved recipes for a user
         const fetchSavedRecipes = async () => {
             try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No token found');
-                }
+               
+                
                 const response = await fetch("http://localhost:8080/user/get-recipes", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
+                        "Authorization": `Bearer ${localStorage.getItem('token')}`
                     }
                 });
 
@@ -162,6 +183,8 @@ const Recipes = () => {
             console.error("Failed to create folder:", error);
         }
     };
+
+
 
     // Add a recipe to a folder
     const addRecipeToFolder = async (folderName) => {
@@ -476,11 +499,13 @@ const Recipes = () => {
             {
                 selectedRecipes && 
                 <RecipeWindow 
-                    recipe={selectedRecipes} 
-                    onClose={() => setSelectedRecipes(null)} 
-                    onSave={(updatedRecipe) => {
-                    // Logic to save updatedRecipe to backend and update savedRecipes state
+                recipe={selectedRecipes} 
+                onClose={() => setSelectedRecipes(null)} 
+                onSave={(updatedRecipe) => {
+                    setSelectedRecipes(updatedRecipe);
+                    refreshSavedRecipes();
                  }}
+                 edit={true}
                 />
             }
             <div className="folders-section">
