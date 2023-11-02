@@ -17,7 +17,7 @@ const Post = ({ recipe }) => {
         <img src={recipe.image} alt={recipe.name} className="recipe-image" />
       </div>
 
-      <div className="time-container">
+      {/* <div className="time-container">
         <div>
             <span style={{ fontWeight: 'bold', marginRight: '0.5em' }}>Total Time:</span>
             {recipe.totalTime}
@@ -27,24 +27,22 @@ const Post = ({ recipe }) => {
       <div>
           <span style={{ fontWeight: 'bold', marginRight: '0.5em' }}>Number of Servings:</span>
           {recipe.numberOfServings}
-      </div>
+      </div> */}
 
       <div className="ingredientLines-container">
         <div className="window-title">Ingredients:</div>
         <ul>
-            {/* {recipe.ingredients.map((line, index) => (
+            {recipe.ingredients.map((line, index) => (
                 <li key={index}>{line}</li>
-            ))} */}
+            ))}
         </ul>
       </div>
 
       <div className="instructions-container">
-        <div className="window-title">Instructions:</div>
-        {/* <ol className="instructions-list">
-            {recipe.instructions.map((instr, index) => (
-                <li key={index} className="instruction-line">{instr}</li>
-            ))}
-        </ol> */}
+        <div className="window-title">Caption:</div>
+        <ol className="instructions-list">
+            {recipe.caption}
+        </ol>
       </div>
   </div>
   );
