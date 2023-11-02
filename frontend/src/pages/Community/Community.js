@@ -3,6 +3,7 @@ import "./community.css";
 import CreatePost from '../../components/CreatePost/CreatePost.js';
 import Post from '../../components/Post/Post.js';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useParams } from 'react-router-dom';
 
 const theme = createTheme({
   components: {
@@ -26,6 +27,8 @@ const Community = () => {
     const [posts, setPosts] = useState([]);
     const [clickedRecipe, setClickedRecipe] = useState('');
     const [currentPost, setCurrentPost] = useState(null);
+    const [currentPostId, setCurrentPostId] = useState(null);
+    const { postId } = useParams();
 
     const fetchUserPosts = async () => {
         try {
@@ -66,16 +69,16 @@ const Community = () => {
         console.log("posts: ", posts);
     }
 
-    const handlePostClick = (recipeName) => {
+    const handlePostClick = (postId) => {
       // Find the recipe object
-      const foundRecipe = posts.find(post => post.name === recipeName);
-      console.log("found recipe: ", foundRecipe)
-      console.log("posts: ", posts);
-      console.log("recipeName: ", recipeName);
-      // Set the states of clickedRecipe and currentPost
-      setClickedRecipe(recipeName);
-      setCurrentPost(foundRecipe);
+      setCurrentPostId(postId);
     };
+    useEffect(() => {
+      if (postId) {
+        setCurrentPostId(postId);
+      }
+    }, [postId]);
+    
 
     // Fetch user's posts when the component mounts
     useEffect(() => {
@@ -91,15 +94,15 @@ const Community = () => {
                 {/* <hr /> */}
                 
                 <div className="recipe-grid">
-                    {recipes.map((recipe, index) => (
-                      <ul className="recipe-list">
-                        <li>
-                          <div key={index} className="recipe-item button-33" onClick={() => handlePostClick(recipe)}>
-                              {recipe}
-                          </div>
-                        </li>
-                      </ul>
-                    ))}
+                  {posts.map((post) => (
+                    <ul className="recipe-list" key={post._id}>
+                      <li>
+                        <div className="recipe-item button-33" onClick={() => handlePostClick(post._id)}>
+                            {post.name}
+                        </div>
+                      </li>
+                    </ul>
+                  ))}
                 </div>
 
                 <button className="create-post-btn button-44" onClick={() => setIsPostWindowOpen(true)}>
@@ -111,8 +114,8 @@ const Community = () => {
 
             <div className="scroll-wrapper">
               <div className="center-panel">
-                {currentPost && (
-                  <Post recipe={currentPost} />
+                {currentPostId && (
+                  <Post postId={currentPostId} />
                 )}
               </div>
             </div>

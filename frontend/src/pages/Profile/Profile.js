@@ -13,6 +13,7 @@ import EditProfile from "../../components/EditProfile/EditProfile";
 import UploadProfile from "../../components/EditProfile/UploadProfile"
 import Logout from "../../components/Logout/Logout"
 
+
 const Profile = () => {
   const [image, setImage] = useState(null);
   const [editModal, setEditModal] = useState(false);
@@ -27,6 +28,11 @@ const Profile = () => {
   const Navigate = useNavigate();
   const [logoutModal, setLogoutModal] = useState(false);
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
+
+  const handlePostClick = (postId) => {
+    navigate(`/community/${postId}`);
+  };
 
   const handleLogoutClick = () => {
     // Logout logic
@@ -166,10 +172,6 @@ const Profile = () => {
     }
   };
 
-  const handlePostClick = (post) => { 
-    console.log("post: ", post);
-  }
-
   return (
     <div className="container">
       <div className="left-container">
@@ -239,7 +241,7 @@ const Profile = () => {
         <div className="post-grid">
           {posts.map((post, index) => (
             <div className="post">
-              <div className="image-wrapper">
+              <div className="image-wrapper" onClick={() => handlePostClick(post._id)}>
                 <img
                   className="post-image"
                   src={post.image}
