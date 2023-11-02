@@ -227,7 +227,7 @@ const Profile = () => {
       </div>
       <div className="center-container">
       <div className="post-title">
-        <h4>Posts</h4>
+        <h4>My Posts</h4>
       </div>
       <div className="post-grid-container">
         <div className="post-grid">
