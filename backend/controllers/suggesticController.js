@@ -1,3 +1,36 @@
+const query = `
+      query RecipeSearch($ingredientNames, $selectedDietaryTags) {
+        recipeSearch(
+          filter: {
+            must: [
+              { ingredients: $ingredientNames },
+              $selectedDietaryTags
+            ]
+          }
+        ) {
+          edges {
+            node {
+              id
+              name
+              ingredients {
+                name
+              }
+              ingredientLines
+              totalTime
+              tags
+              maxPrepTime
+              numberOfServings
+              source {
+                recipeUrl
+              }
+              mainImage
+              instructions
+            }
+          }
+        }
+      }
+    `;
+
 import fetch from "node-fetch";
 
 
@@ -122,16 +155,20 @@ export const searchRecipes = async (req, res) => {
 
 export const recipeSearch = async (req, res) => {
   try {
+    console.log("we're in recipe search wow")
+    console.log(req.body);
     const ingredientList = req.body.ingredientNames;
+    console.log('Receiving ingredientNames was successful! Here they are:', ingredientList);
     const selectedDietaryTags = req.body.dietaryTags; // Assuming this is how you receive the selected dietary tags
+    console.log('Retreiving dietary tags was successful! Here they are:', selectedDietaryTags);
 
     const query = `
-      query RecipeSearch($ingredientNames: [String]!, $selectedDietaryTags: [DietaryTag]) {
+      query RecipeSearch( $ingredientNames: [String!], $selectedDietaryTags: [String]) {
         recipeSearch(
           filter: {
             must: [
               { ingredients: $ingredientNames },
-              $selectedDietaryTags
+              { tags: $selectedDietaryTags}
             ]
           }
         ) {
@@ -145,7 +182,7 @@ export const recipeSearch = async (req, res) => {
               ingredientLines
               totalTime
               tags
-              maxPrepTime
+              
               numberOfServings
               source {
                 recipeUrl
@@ -172,7 +209,7 @@ export const recipeSearch = async (req, res) => {
       },
       body: JSON.stringify({ query, variables }), // Pass variables in the request body
     });
-
+  
     const text = await response.text();
     console.log("Response Text:", text);
 
@@ -189,7 +226,7 @@ export const recipeSearch = async (req, res) => {
     console.error("Error:", error);
     res
       .status(500)
-      .json({ error: "Internal Server Error", details: error.message });
+      .json({ error: "Internal Server Error RAHHH", details: error.message });
   }
 };
 
