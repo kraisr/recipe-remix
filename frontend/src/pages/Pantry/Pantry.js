@@ -343,20 +343,23 @@ const Pantry = () => {
         }
     };
 
+
     const handleRecipeSearchInputChange = (event) => {
-
-        const searchTerm = event.target.value;
-        setRecipeSearchTerm(searchTerm);
-
-        // Check if there are no recipe suggestions or if the "noRecipesMessage" is displayed
-        
-        if ( 
-            (noRecipesMessage === "Oops! No recipes found" || noRecipesMessage === "Nothing to see here yet, try hitting remix!") 
-            
+        const newSearchTerm = event.target.value;
+        setRecipeSearchTerm(newSearchTerm);
+        if (
+            (noRecipesMessage === "Oops! No recipes found" || noRecipesMessage === "Nothing to see here yet, try hitting remix!")
         ) {
-            // Perform a live search
+            // Perform a live search with an empty searchTerm to get all recipes
             handleRecipeSearch();
-        } 
+            return;
+        }
+        
+        // Filter the recipe suggestions based on the search term
+        const filteredRecipes = recipeSuggestions.filter((recipe) =>
+            recipe.node.name.toLowerCase().includes(newSearchTerm.toLowerCase())
+        );
+        setFilteredRecipeSuggestions(filteredRecipes);
     };
 
     const addToPantry = async (ingredientName, recipe) => {
@@ -766,22 +769,31 @@ const Pantry = () => {
                 />
             </div>
             <div className="recipes-grid">
-                {filteredRecipeSuggestions && filteredRecipeSuggestions.length > 0 && recipeSuggestions.length > 0? (
+                {filteredRecipeSuggestions && filteredRecipeSuggestions.length > 0 && recipeSuggestions.length > 0 ? (
                     filteredRecipeSuggestions.map((recipe, index) => (
-                        <div>
+                    <div>
+                        
                         <div key={index} className="recipe-bubble" onClick={() => toggleRecipeExpansion(index)}>
                             <div className="recipe-name">
-                                {recipe.node ? recipe.node.name : recipe.name}
+                                {recipe.node ? 
+                                    (recipe.node.name) : 
+                                    (console.log(recipe.name), recipe.name)
+                                }
                             </div>
                             {expandedRecipeIndex !== index && (
-                                <div className="pantry-right-button-containter">
-                                    <button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.node, event)}>Save</button>
-                                    {/* <button className="delete-button" onClick={(event) => handleDelete(recipe.node.name, event)}>Delete</button> */}
+                                <div className="pantry-right-button-container">
+                                    {recipe.node ? 
+                                        (<button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.node, event)}>Save</button>)
+                                        :
+                                        <button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.name, event)}>Save</button>
+                                    }
+                                    
 
                                 </div>
                             )}
                         </div>
-                        {expandedRecipeIndex !== index && recipe.node.name === currentlyModified ? (
+                        
+                        {expandedRecipeIndex !== index && (recipe.node ? recipe.node.name : recipe.name) === currentlyModified ? (
                             <>
                                 {promptMessage && (
                                     <div className="prompt-message" style={{ color: 'red', textDecoration: 'underline', marginLeft: '13px' }}>
@@ -794,11 +806,12 @@ const Pantry = () => {
                         {expandedRecipeIndex === index && (
                             <div className={`expanded-content ${expandedRecipeIndex === index ? 'expanding' : 'collapsing'}`}>
                                 <img src={ recipe.node ? recipe.node.mainImage : recipe.image } alt="recipe" className="recipe-image" />
-                                <p style={{ width: '100%', marginTop: '10px' }}><b>Total time:</b> { recipe.node.totalTime }</p>
+                                <p style={{ width: '100%', marginTop: '10px' }}><b>Total time:</b> {(recipe.node ? recipe.node.totalTime : recipe.totalTime) }</p>
                                 <div style={{ width: '100%', marginTop: '10px', textAlign: 'left' }}>
                                     <b>Ingredients:</b>
                                     <ul style={{ marginTop: '3px', marginBottom: '20px' }}>
-                                        {recipe.node.ingredients
+                                        {console.log("i:" , recipe.ingredients)}
+                                        {(recipe.node ? recipe.node.ingredients : recipe.ingredients)
                                             .reduce((unique, ingredient) => {
                                             const isDuplicate = unique.some(
                                                 uni => uni.name.trim().toLowerCase() === ingredient.name.trim().toLowerCase()
@@ -821,7 +834,7 @@ const Pantry = () => {
                                                     {ingredient.name}
                                                 </a>
                                                 )}
-                                                {selectedIngredient === ingredient.name && showPrompt && (
+                                                {selectedIngredient === (recipe.node ? recipe.node.name : recipe.name) && showPrompt && (
                                                 <div className="ingredient-prompt">
                                                         <p style={{ color: 'black', marginBottom: '3px', marginTop: '3px' }}>
                                                             Do you want to add <span style={{ textDecoration: 'underline' }}>{selectedIngredient}</span> to your:
@@ -867,20 +880,20 @@ const Pantry = () => {
                                         }
 
                                         <div className="save-delete-buttons">
-                                            <button className="pantry-save-button" style={{ marginRight: 0 }} onClick={() => handleSaveRecipes(recipe.node)}>Save</button>
+                                            <button className="pantry-save-button" style={{ marginRight: 0 }} onClick={() => handleSaveRecipes((recipe.node ? recipe.node : recipe))}>Save</button>
                                             {/* <button className="delete-button" onClick={() => handleDelete(recipe.node.name)}>Delete</button> */}
                                         </div>
                                     </div>
-                                    {promptMessage && recipe.node.name === currentlyModified && (
+                                    {promptMessage && (recipe.node ? recipe.node.name : recipe.name) === currentlyModified && (
                                         <div className="prompt-message" style={{ color: 'red', textDecoration: 'underline' }}>
                                             {promptMessage}
                                         </div>
                                     )}
-                                    { recipe.node.name === currentlyModified && <SuccessMessage message={successMessage} /> }
+                                    { (recipe.node ? recipe.node.name : recipe.name) === currentlyModified && <SuccessMessage message={successMessage} /> }
                                 </div>
                             </div>
                         )}                        
-                        </div>
+                    </div>
                     ))
                 ) : (
                     <p>{noRecipesMessage}.</p>
