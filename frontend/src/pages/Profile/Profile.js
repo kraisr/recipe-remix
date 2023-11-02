@@ -5,11 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../state";
 import { v4 as uuidv4 } from 'uuid'; // Import the uuid library
+import VisibilityIcon from '@material-ui/icons/Visibility';
+
 
 //components
 import EditProfile from "../../components/EditProfile/EditProfile";
 import UploadProfile from "../../components/EditProfile/UploadProfile"
 import Logout from "../../components/Logout/Logout"
+
 
 const Profile = () => {
   const [image, setImage] = useState(null);
@@ -25,6 +28,11 @@ const Profile = () => {
   const Navigate = useNavigate();
   const [logoutModal, setLogoutModal] = useState(false);
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
+
+  const handlePostClick = (postId) => {
+    navigate(`/community/${postId}`);
+  };
 
   const handleLogoutClick = () => {
     // Logout logic
@@ -232,17 +240,22 @@ const Profile = () => {
       <div className="post-grid-container">
         <div className="post-grid">
           {posts.map((post, index) => (
-            <div key={post._id} className="post">
-              <img
-                src={post.image}
-                alt={`Post ${index}`}
-                onClick={() => handlePostDeletion(post._id)}
-                style={{ cursor: 'pointer' }}
-              />
-              {/* You can also display other post details here */}
+            <div className="post">
+              <div className="image-wrapper" onClick={() => handlePostClick(post._id)}>
+                <img
+                  className="post-image"
+                  src={post.image}
+                  alt={`Post ${index}`}
+                />
+                <div className="middle-icon">
+                  <VisibilityIcon style={{ fontSize: 40, color: 'white' }} />
+                </div>
             </div>
+          </div>
+          
           ))}
         </div>
+
       </div>
     </div>
       <div className="right-container"></div>
