@@ -605,7 +605,7 @@ const Pantry = () => {
 
                 if (responseData.error === "Error updating user recipes or recipe already exists") {
                     setSuccessMessage("");
-                    setPromptMessage("The recipe was already saved!");
+                    setPromptMessage("Recipe already saved!");
     
                     // Optionally, auto-hide the message after 3 seconds
                     setTimeout(() => {
