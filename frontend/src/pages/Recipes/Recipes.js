@@ -442,9 +442,6 @@ const Recipes = () => {
                         <Text style={styles.instructionItem}>Adjust to your preferences.</Text>
                     )}
                     </View>
-                    <View style={styles.source}>
-                        <Text>Source: {recipe.source}</Text>
-                    </View>
                 </View>
             </Page>
         </Document>
