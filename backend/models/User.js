@@ -96,7 +96,7 @@ const userSchema = new mongoose.Schema({
         source: {
             recipeUrl: {
                 type: String,
-                required: true,
+                required: false,
             }
         },
         mainImage: {
@@ -131,7 +131,7 @@ const userSchema = new mongoose.Schema({
             source: {
                 recipeUrl: {
                     type: String,
-                    required: true,
+                    required: false,
                 }
             },
             mainImage: {
