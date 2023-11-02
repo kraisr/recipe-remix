@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import './recipewindow.css';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
     const [editField, setEditField] = useState(null);
@@ -40,7 +43,7 @@ const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
 
             const data = await response.json();
             console.log(data.message);
-            alert(`${editedData.name} saved successfully!`); // Display confirmation message
+            // alert(`${editedData.name} saved successfully!`); // Display confirmation message
 
             onSave(editedData); // Update the local state
             setEditField(null);
@@ -51,7 +54,30 @@ const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
     };
 
     const handleFieldChange = (e, field) => {
-        setEditedData({ ...editedData, [field]: e.target.value });
+        if (field === "ingredientLines" || field === "instructions") {
+            setEditedData({ ...editedData, [field]: e.target.value.split('\n') });
+        } else {
+            setEditedData({ ...editedData, [field]: e.target.value });
+        }
+    };
+
+    const textFieldStyles = {
+        bgcolor: "#ffffff",
+        // width: '88%',
+        "& label.Mui-focused": {
+          color: "#000",
+        },
+        "& .MuiOutlinedInput-root": {
+          "& fieldset": {
+            borderColor: "#a1c298",
+          },
+          "&:hover fieldset": {
+            borderColor: "#88b083",
+          },
+          "&.Mui-focused fieldset": {
+            borderColor: "#6b9466",
+          },
+        }
     };
 
     return (
@@ -63,14 +89,34 @@ const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
                     <h1>
                         {editField === "name" ? (
                             <>
-                                <input value={editedData.name} onChange={(e) => handleFieldChange(e, 'name')} />
-                                <button onClick={handleSave}>Save</button>
-                                <button onClick={handleCancel}>Cancel</button> 
+                                <TextField
+                                    variant="outlined"
+                                    fullWidth
+                                    value={editedData.name}
+                                    onChange={(e) => handleFieldChange(e, 'name')}
+                                    sx={textFieldStyles}
+                                />
+                                <Button sx={{color: '#4CAF50'}} onClick={handleSave}>Save</Button>
+                                <Button sx={{color: '#FA7070'}} onClick={handleCancel}>Cancel</Button>  
                             </>
                         ) : (
                             <>
                                  {editedData.name} 
-                                 {edit && <button className="editButtons" onClick={() => handleEdit('name')}>Edit</button>}
+                                 {/* {edit && <button className="editButtons" onClick={() => handleEdit('name')}>Edit</button>} */}
+                                 {edit && <Button
+                                    variant="contained"
+                                    className="editButtons"
+                                    onClick={() => handleEdit('name')}
+                                    sx={{
+                                    bgcolor: 'grey.500', // Use the grey palette from the theme
+                                    ml: 1.5,
+                                    '&:hover': {
+                                        bgcolor: 'grey.700', // Darker shade for hover state
+                                    },
+                                    }}
+                                >
+                                    Edit
+                                </Button>}
                             </>
                         )}
                     </h1>
@@ -79,44 +125,124 @@ const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
                 <div className="image-container">
                 {editField === "mainImage" ? (
                         <>
-                            <input value={editedData.mainImage} onChange={(e) => handleFieldChange(e, 'mainImage')} />
-                            <button onClick={handleSave}>Save</button>
-                            <button onClick={handleCancel}>Cancel</button> 
+                            {/* <input value={editedData.mainImage} onChange={(e) => handleFieldChange(e, 'mainImage')} /> */}
+                            <TextField
+                                variant="outlined"
+                                value={editedData.mainImage}
+                                // fullWidth
+                                onChange={(e) => handleFieldChange(e, 'mainImage')}
+                                sx={{...textFieldStyles, width: '45%'}}
+                            />
+                            <Button sx={{color: '#4CAF50'}} onClick={handleSave}>Save</Button>
+                            <Button sx={{color: '#FA7070'}} onClick={handleCancel}>Cancel</Button> 
                         </>
                     ) : (
                         <>
                             <img src={editedData.mainImage} alt={editedData.name} className="recipe-image" />
-                            {edit && <button className="editButtons" onClick={() => handleEdit('mainImage')}>Edit</button>}
+                            {/* {edit && <button className="editButtons" onClick={() => handleEdit('mainImage')}>Edit</button>} */}
+                            {edit && <Button
+                                    variant="contained"
+                                    className="editButtons"
+                                    onClick={() => handleEdit('mainImage')}
+                                    sx={{
+                                    bgcolor: 'grey.500', // Use the grey palette from the theme
+                                    ml: 1.5,
+                                    '&:hover': {
+                                        bgcolor: 'grey.700', // Darker shade for hover state
+                                    },
+                                    }}
+                                >
+                                    Edit
+                                </Button>}
                         </>
                     )}
                 </div>
 
                 <div className="time-container">
                 {editField === "totalTime" ? (
-                        <>
-                            <input value={editedData.totalTime} onChange={(e) => handleFieldChange(e, 'totalTime')} />
-                            <button onClick={handleSave}>Save</button>
-                            <button onClick={handleCancel}>Cancel</button> 
-                        </>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            {/* <input value={editedData.totalTime} onChange={(e) => handleFieldChange(e, 'totalTime')} /> */}
+                            <TextField
+                                variant="outlined"
+                                value={editedData.totalTime}
+                                fullWidth
+                                onChange={(e) => handleFieldChange(e, 'totalTime')}
+                                sx={{...textFieldStyles, width: '30%'}}
+                            />
+                            <Button sx={{color: '#4CAF50'}} onClick={handleSave}>Save</Button>
+                            <Button sx={{color: '#FA7070'}} onClick={handleCancel}>Cancel</Button> 
+                        </div>
                     ) : (
                         <>
-                            <div>Total Time: {editedData.totalTime}</div>
-                            {edit && <button className="editButtons" onClick={() => handleEdit('totalTime')}>Edit</button>}
+                            <div>
+                                <span style={{ fontWeight: 'bold', marginRight: '0.5em' }}>Total Time:</span>
+                                {editedData.totalTime}
+                            </div>
+                            {/* {edit && <button className="editButtons" onClick={() => handleEdit('totalTime')}>Edit</button>} */}
+
+                            {edit && <Button
+                                    variant="contained"
+                                    className="editButtons"
+                                    // size="small"
+                                    onClick={() => handleEdit('totalTime')}
+                                    sx={{
+                                    bgcolor: 'grey.500', // Use the grey palette from the theme
+                                    mb: 1,
+                                    padding: '1px 1px', // Smaller padding
+                                    fontSize: '0.75rem',
+                                    height: 0.1,
+                                    '&:hover': {
+                                        bgcolor: 'grey.700', // Darker shade for hover state
+                                    },
+                                    }}
+                                >
+                                    Edit
+                                </Button>}
                         </>
                     )}
                 </div>
 
                 <div className="servings-container">
                 {editField === "numberOfServings" ? (
-                        <>
-                            <input value={editedData.numberOfServings} onChange={(e) => handleFieldChange(e, 'numberOfServings')} />
-                            <button onClick={handleSave}>Save</button>
-                            <button onClick={handleCancel}>Cancel</button> 
-                        </>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            {/* <input value={editedData.numberOfServings} onChange={(e) => handleFieldChange(e, 'numberOfServings')} /> */}
+
+                            <TextField
+                                variant="outlined"
+                                value={editedData.numberOfServings}
+                                fullWidth
+                                onChange={(e) => handleFieldChange(e, 'numberOfServings')}
+                                sx={{...textFieldStyles, width: '20%'}}
+                            />
+                            <Button sx={{color: '#4CAF50'}} onClick={handleSave}>Save</Button>
+                            <Button sx={{color: '#FA7070'}} onClick={handleCancel}>Cancel</Button> 
+                        </div>
                     ) : (
                         <>
-                            <div>Number of Servings: {editedData.numberOfServings}</div>
-                            {edit && <button className="editButtons" onClick={() => handleEdit('numberOfServings')}>Edit</button>}
+                            {/* <div>Number of Servings: {editedData.numberOfServings}</div> */}
+                            <div>
+                                <span style={{ fontWeight: 'bold', marginRight: '0.5em' }}>Number of Servings:</span>
+                                {editedData.numberOfServings}
+                            </div>
+                            {/* {edit && <button className="editButtons" onClick={() => handleEdit('numberOfServings')}>Edit</button>} */}
+                            {edit && <Button
+                                    variant="contained"
+                                    className="editButtons"
+                                    // size="small"
+                                    onClick={() => handleEdit('numberOfServings')}
+                                    sx={{
+                                    bgcolor: 'grey.500', // Use the grey palette from the theme
+                                    mb: 1,
+                                    padding: '1px 1px', // Smaller padding
+                                    fontSize: '0.75rem',
+                                    height: 0.1,
+                                    '&:hover': {
+                                        bgcolor: 'grey.700', // Darker shade for hover state
+                                    },
+                                    }}
+                                >
+                                    Edit
+                                </Button>}
                         </>
                     )}
                 </div>
@@ -124,12 +250,16 @@ const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
                 <div className="ingredientLines-container">
                 {editField === "ingredientLines" ? (
                         <>
-                            <textarea 
-                                value={editedData.ingredientLines.join('\n')} 
-                                onChange={(e) => handleFieldChange(e, 'ingredientLines')} 
+                            <TextField
+                                multiline
+                                rows={8} // Adjust the number of rows as needed
+                                variant="outlined"
+                                fullWidth
+                                value={editedData.ingredientLines.join('\n')}
+                                onChange={(e) => handleFieldChange(e, 'ingredientLines')}
                             />
-                            <button onClick={handleSave}>Save</button>
-                            <button onClick={handleCancel}>Cancel</button> 
+                            <Button sx={{color: '#4CAF50'}} onClick={handleSave}>Save</Button>
+                            <Button sx={{color: '#FA7070'}} onClick={handleCancel}>Cancel</Button> 
                         </>
                     ) : (
                         <>
@@ -139,7 +269,25 @@ const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
                                     <li key={index}>{line}</li>
                                 ))}
                             </ul>
-                            {edit && <button className="editButtons" onClick={() => handleEdit('ingredientLines')}>Edit</button>}
+                            {/* {edit && <button className="editButtons" onClick={() => handleEdit('ingredientLines')}>Edit</button>} */}
+                            {edit && <Button
+                                    variant="contained"
+                                    className="editButtons"
+                                    // size="small"
+                                    onClick={() => handleEdit('ingredientLines')}
+                                    sx={{
+                                    bgcolor: 'grey.500', // Use the grey palette from the theme
+                                    mb: 1,
+                                    padding: '1px 1px', // Smaller padding
+                                    fontSize: '0.75rem',
+                                    height: 0.1,
+                                    '&:hover': {
+                                        bgcolor: 'grey.700', // Darker shade for hover state
+                                    },
+                                    }}
+                                >
+                                    Edit
+                                </Button>}
                         </>
                     )}
                 </div>
@@ -147,12 +295,20 @@ const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
                  <div className="instructions-container">
                  {editField === "instructions" ? (
                         <>
-                            <textarea 
+                            {/* <textarea 
+                                value={editedData.instructions.join('\n')} 
+                                onChange={(e) => handleFieldChange(e, 'instructions')} 
+                            /> */}
+                            <TextField
+                                multiline
+                                rows={8} // Adjust the number of rows as needed
+                                variant="outlined"
+                                fullWidth
                                 value={editedData.instructions.join('\n')} 
                                 onChange={(e) => handleFieldChange(e, 'instructions')} 
                             />
-                            <button onClick={handleSave}>Save</button>
-                            <button onClick={handleCancel}>Cancel</button> 
+                            <Button sx={{color: '#4CAF50'}} onClick={handleSave}>Save</Button>
+                            <Button sx={{color: '#FA7070'}} onClick={handleCancel}>Cancel</Button> 
                         </>
                     ) : (
                         <>
@@ -162,19 +318,37 @@ const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
                                     <li key={index} className="instruction-line">{instr}</li>
                                 ))}
                             </ol>
-                            {edit && <button className="editButtons" onClick={() => handleEdit('instructions')}>Edit</button>}
+                            {/* {edit && <button className="editButtons" onClick={() => handleEdit('instructions')}>Edit</button>} */}
+                            {edit && <Button
+                                    variant="contained"
+                                    className="editButtons"
+                                    // size="small"
+                                    onClick={() => handleEdit('instructions')}
+                                    sx={{
+                                    bgcolor: 'grey.500', // Use the grey palette from the theme
+                                    mb: 1,
+                                    padding: '1px 1px', // Smaller padding
+                                    fontSize: '0.75rem',
+                                    height: 0.1,
+                                    '&:hover': {
+                                        bgcolor: 'grey.700', // Darker shade for hover state
+                                    },
+                                    }}
+                                >
+                                    Edit
+                                </Button>}
                         </>
                     )}
                 </div>
 
 
-
-                <div className="source-container">
+                {/* SOURCE FIELD IN RECIPE OBJECT IS NULL */}
+                {/* <div className="source-container">
                 {editField === "source" ? (
                         <>
                             <input value={editedData.source} onChange={(e) => handleFieldChange(e, 'source')} />
-                            <button onClick={handleSave}>Save</button>
-                            <button onClick={handleCancel}>Cancel</button> 
+                            <Button sx={{color: '#4CAF50'}} onClick={handleSave}>Save</Button>
+                            <Button sx={{color: '#FA7070'}} onClick={handleCancel}>Cancel</Button> 
                         </>
                     ) : (
                         <>
@@ -182,7 +356,7 @@ const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
                             {edit && <button className="editButtons" onClick={() => handleEdit('source')}>Edit</button>}
                         </>
                     )}
-                </div>
+                </div> */}
 
             </div>
         </div>
