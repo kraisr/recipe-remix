@@ -1,5 +1,5 @@
 import express from "express";
-import {addIngredient, getFromPantry, deleteIngredient, deleteRecipe} from "../controllers/user.js";
+import {addIngredient, getFromPantry, deleteIngredient, deleteRecipe, retreiveDietaryTags} from "../controllers/user.js";
 import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting, deleteAccount } from "../controllers/user.js";
 import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js";
 import { createShoppingList, deleteShoppingList, editShoppingList, getShoppingLists} from "../controllers/user.js";
@@ -7,6 +7,7 @@ import { addToShoppingList, deleteFromShoppingList, editInShoppingList} from "..
 import { sendEmail, updateReminder } from "../controllers/sendEmail.js";import {sendCode} from "../controllers/code.js"
 import { saveRecipes, getRecipes} from "../controllers/user.js";
 import { createFolder, getFolders, addRecipeToFolder, deleteFolder, removeRecipeFromFolder } from "../controllers/user.js"
+
 const router = express.Router();
 
 /* GET USER DATA */
@@ -57,6 +58,8 @@ router.post("/delete-account", deleteAccount);
 
 /* 2FA CODE */
 router.post("/code", sendCode);
+
+router.post("/retreive-dietary-tags", retreiveDietaryTags);
 
 router.post("/create-folder", createFolder);
 router.get("/get-folders", getFolders);

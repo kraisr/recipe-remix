@@ -93,7 +93,17 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
         vegan: data.preferences.veganism,
         sugar: data.preferences.diabetes,
       }));
-      
+
+      setCategoryFilter((prevState) => ({
+        ...prevState,
+        categoryFilter: {
+          nuts: userPreferences.nutAllergies,
+          dairy: userPreferences.dairyFree,
+          gluten: userPreferences.glutenIntolerance,
+        },
+      }));
+            console.log('User Preferences:', userPreferences);
+
     } catch (error) {
       console.error('Error fetching user preferences:', error);
     }
@@ -103,43 +113,43 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
     const dietaryTags = [];
 
     if (dietFilter.vegetarian) {
-      dietaryTags.push('{dietaryTag: VEGETARIAN}');
+      dietaryTags.push('VEGETARIAN');
     }
 
     if (dietFilter.vegan) {
-      dietaryTags.push('{dietaryTag: VEGAN}');
+      dietaryTags.push('VEGAN');
     }
 
     if (dietFilter.keto) {
-      dietaryTags.push('{tag: "Keto-Friendly"}');
+      dietaryTags.push('Keto-Friendly');
     }
 
     if (categoryFilter.dairy) {
-      dietaryTags.push('{dietaryTag: DAIRY_FREE}');
+      dietaryTags.push('DAIRY_FREE');
     }
 
     if (categoryFilter.gluten) {
-      dietaryTags.push('{dietaryTag: GLUTEN_FREE}');
+      dietaryTags.push('GLUTEN_FREE');
     }
 
     if (categoryFilter.nuts) {
-      dietaryTags.push('{tag: "Tree-Nut-Free"}');
+      dietaryTags.push('Tree-Nut-Free');
     }
 
     if(mealFilter.breakfast) {
-      dietaryTags.push('{mealTime: BREAKFAST}')
+      dietaryTags.push('BREAKFAST')
     }
 
     if(mealFilter.lunch) {
-      dietaryTags.push('{mealTime: LUNCH}')
+      dietaryTags.push('LUNCH')
     }
 
     if(mealFilter.dinner) {
-      dietaryTags.push('{mealTime: DINNER}')
+      dietaryTags.push('DINNER')
     }
 
     if(mealFilter.snack) {
-      dietaryTags.push('{mealTime: SNACK}')
+      dietaryTags.push('SNACK')
     }
 
     return dietaryTags;
@@ -156,8 +166,31 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
         filterCriteria.categoryFilter,
         filterCriteria.mealFilter
       );
-      console.log('Sending dietary tags was successful! Here they are:', dietaryTags);
-      console.log('list of ingredients after mapping', ingredientNames);
+      //console.log('Sending dietary tags was successful! Here they are:', dietaryTags);
+      //console.log('list of ingredients after mapping', ingredientNames);
+      
+      const requestBody = {
+        ingredientNames: ingredientNames,
+        dietaryTags: dietaryTags,
+      };
+
+      const dietaryTagsRequest = await fetch("http://localhost:8080/api/recipe-search/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({ 
+          ingredientNames: ingredientNames,
+          dietaryTags: dietaryTags,
+         }),
+      });
+
+      if (!dietaryTagsRequest.ok) {
+          console.error(`Network response for dietaryTags was not ok. Status: ${dietaryTagsRequest.status}, Response: ${await dietaryTagsRequest.text()}`);
+      } else {
+          console.log("Dietary tags sent successfully.");
+      }
 
       // Your logic to send dietary tags based on filterCriteria
     } catch (error) {
@@ -175,6 +208,10 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
     };
 
     onFilterChange(filterCriteria);
+
+    if (!ingredientNames || ingredientNames.length === 0) {
+      alert("You must remix before you filter!");
+    }
     sendDietaryTags(ingredientNames, filterCriteria);
     console.log("from line 179, updateFilterCriteria", ingredientNames);
   };
