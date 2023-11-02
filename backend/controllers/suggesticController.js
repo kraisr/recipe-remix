@@ -158,17 +158,21 @@ export const recipeSearch = async (req, res) => {
     console.log("we're in recipe search wow")
     console.log(req.body);
     const ingredientList = req.body.ingredientNames;
+    const servingSize = req.body.servingSize;
+    const prepTime = req.body.prepTime;
     console.log('Receiving ingredientNames was successful! Here they are:', ingredientList);
     const selectedDietaryTags = req.body.dietaryTags; // Assuming this is how you receive the selected dietary tags
     console.log('Retreiving dietary tags was successful! Here they are:', selectedDietaryTags);
 
     const query = `
-      query RecipeSearch( $ingredientNames: [String!], $selectedDietaryTags: [String]) {
+      query RecipeSearch( $ingredientNames: [String!], $selectedDietaryTags: [String], $servingSize: Int, $prepTime: Int) {
         recipeSearch(
+          servingQuantity: $servingSize,
+          maxPrepTime: $prepTime,
           filter: {
             must: [
               { ingredients: $ingredientNames },
-              { tags: $selectedDietaryTags}
+              { tags: $selectedDietaryTags },
             ]
           }
         ) {

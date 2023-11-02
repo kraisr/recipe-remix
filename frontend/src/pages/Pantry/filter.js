@@ -73,7 +73,6 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
       const data = await response.json();
 
       setUserPreferences((prevState) => ({
-        ...prevState,
         lactoseIntolerance: data.preferences.lactoseIntolerance,
         glutenIntolerance: data.preferences.glutenIntolerance,
         vegetarianism: data.preferences.vegetarianism,
@@ -87,7 +86,6 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
       }));
 
       setDietFilter((prevState) => ({
-        ...prevState,
         keto: data.preferences.keto,
         vegetarian: data.preferences.vegetarianism,
         vegan: data.preferences.veganism,
@@ -95,12 +93,9 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
       }));
 
       setCategoryFilter((prevState) => ({
-        ...prevState,
-        categoryFilter: {
           nuts: userPreferences.nutAllergies,
           dairy: userPreferences.dairyFree,
           gluten: userPreferences.glutenIntolerance,
-        },
       }));
             console.log('User Preferences:', userPreferences);
 
@@ -155,7 +150,7 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
     return dietaryTags;
   };
 
-  const sendDietaryTags = async (ingredientNames, filterCriteria) => {
+  const sendDietaryTags = async (ingredientNames, filterCriteria, servingSize, prepTime) => {
     try {
       // Use filterCriteria here to send dietary tags
       console.log('list of ingredients', ingredientNames);
@@ -168,24 +163,34 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
       );
       //console.log('Sending dietary tags was successful! Here they are:', dietaryTags);
       //console.log('list of ingredients after mapping', ingredientNames);
-      
-      const requestBody = {
+      let requestBody = {
         ingredientNames: ingredientNames,
         dietaryTags: dietaryTags,
       };
-
-      const dietaryTagsRequest = await fetch("http://localhost:8080/api/recipe-search/", {
+  
+      if (servingSize > 0) {
+        requestBody = {
+          ...requestBody,
+          servingSize: servingSize, // Include servingSize if greater than 0
+        };
+      }
+  
+      if (prepTime > 5) {
+        requestBody = {
+          ...requestBody,
+          prepTime: prepTime, // Include prepTime if greater than 5
+        };
+      }
+  
+      const dietaryTagsRequest = await fetch("http://localhost:8080/api/recipe-search/", { //contains results of filter
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
-
-        body: JSON.stringify({ 
-          ingredientNames: ingredientNames,
-          dietaryTags: dietaryTags,
-         }),
+        body: JSON.stringify(requestBody), // Use the constructed requestBody
+       
       });
-
+      
       if (!dietaryTagsRequest.ok) {
           console.error(`Network response for dietaryTags was not ok. Status: ${dietaryTagsRequest.status}, Response: ${await dietaryTagsRequest.text()}`);
       } else {
@@ -212,7 +217,7 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
     if (!ingredientNames || ingredientNames.length === 0) {
       alert("You must remix before you filter!");
     }
-    sendDietaryTags(ingredientNames, filterCriteria);
+    sendDietaryTags(ingredientNames, filterCriteria, servingSize, prepTime);
     console.log("from line 179, updateFilterCriteria", ingredientNames);
   };
 
@@ -290,9 +295,12 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
 
   const handlePrepTimeInputChange = (event) => {
     const prepTime = parseInt(event.target.value, 10);
-
+    if (prepTime < 5) {
+      alert('Max Prep Time cannot be less than 5 minutes.');
+      return;
+    }
     if (prepTime > 300) {
-      alert('Max Prep Time cannot exceed 300 minutes');
+      alert('Max Prep Time cannot exceed 300 minutes.');
       return;
     }
 
@@ -493,7 +501,7 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
         <label>
           <input
             type="number" // Use type "number" for numeric input
-            min="1"
+            min="4"
             max="300" // Set max value to 300
             value={prepTime}
             onChange={handlePrepTimeInputChange} // Use the new handler
