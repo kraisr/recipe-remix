@@ -78,30 +78,30 @@ const userSchema = new mongoose.Schema({
     recipes: [{
         id: {
             type: String,
-            required: true,
+            required: false,
         },
         totalTime: {
             type: String,
-            required: true,
+            required: false,
         },
         name: {
             type: String,
-            required: true,
+            required: false,
         },
         numberOfServings: {
             type: Number,
-            required: true,
+            required: false,
         },
         ingredientLines: [String],
         source: {
             recipeUrl: {
                 type: String,
-                required: true,
+                required: false,
             }
         },
         mainImage: {
             type: String,
-            required: true,
+            required: false,
         },
         instructions: [String],
     }],
@@ -121,26 +121,56 @@ const userSchema = new mongoose.Schema({
             },
             name: {
                 type: String,
-                required: true,
+                required: false,
             },
             numberOfServings: {
                 type: Number,
-                required: true,
+                required: false,
             },
             ingredientLines: [String],
             source: {
                 recipeUrl: {
                     type: String,
-                    required: true,
+                    required: false,
                 }
             },
             mainImage: {
                 type: String,
-                required: true,
+                required: false,
             },
             instructions: [String],
         }],
     }],
+    filters: {
+        vegetarian: {
+            type: Boolean,
+            default: false,
+        },
+        vegan: {
+            type: Boolean,
+            default: false,
+        },
+        dairy: {
+            type: Boolean,
+            default: false,
+        },
+        gluten: {
+            type: Boolean,
+            default: false,
+        },
+        keto: {
+            type: Boolean,
+            default: false,
+        },
+        kosher: {
+            type: Boolean,
+            default: false,
+        },
+        sugar: {
+            type: Boolean,
+            default: false,
+        },
+    },
     preferences: {
         lactoseIntolerance: {
             type: Boolean,
@@ -224,12 +254,12 @@ const userSchema = new mongoose.Schema({
         },
         title: {
             type: String,
-            required: true,
+            required: false,
         },
         items: [{
             item: {
                 type: String,
-                required: true,
+                required: false,
             },
             quantity: {
                 type: Number,
@@ -243,15 +273,15 @@ const userSchema = new mongoose.Schema({
     posts: [{
         id: {
             type:String,
-            required: true,
+            required: false,
         },
         name: {
             type: String,
-            required: true
+            required: false
         },
         image: {
             type: String,
-            required: true,
+            required: false,
         },
         caption: {
             type: String, 
@@ -259,7 +289,7 @@ const userSchema = new mongoose.Schema({
         },
         ingredients: [{
             type: String,
-            required: true,
+            required: false,
         }]
 
     }],
@@ -272,8 +302,7 @@ const userSchema = new mongoose.Schema({
     animate: {
         type: Boolean, 
         default: true,
-    }
-
+    },
 });
 
 // Hash the password before saving the user model
