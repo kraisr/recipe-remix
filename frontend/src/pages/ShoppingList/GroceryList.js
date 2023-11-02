@@ -351,7 +351,7 @@ useEffect(() => {
   
   const handleEditListName = async () => {
     if (!selectedListId) return;
-  
+
     try {
       let updatedLists = [...shoppingLists];
       const existingList = updatedLists.find((list) => list.id === selectedListId);
@@ -739,11 +739,20 @@ useEffect(() => {
         <IconButton
           onClick={() => {
             if (editListNameMode) {
-              handleEditListName(); // Save the new list name if we're in edit mode
+
+                handleEditListName(); // Save the new list name if we're in edit mode
+              
             } else {
+              const listToEdit = shoppingLists.find((list) => list.id === selectedListId);
+    
+              if(listToEdit && listToEdit.title === "All Missing Ingredients"){
+                  console.warn("The 'All Missing Ingredients' list cannot be edited!");
+                  return;
+              } else {
               setEditListNameMode(true); // Otherwise, switch to edit mode
               const currentListName = shoppingLists.find(list => list.id === selectedListId)?.title || '';
               setNewListName(currentListName);
+              }
             }
           }}
           sx={{
