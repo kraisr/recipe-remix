@@ -244,7 +244,10 @@ const Pantry = () => {
         fetchUserSettings();
     }, []);
 
-
+    const setterForRecipes = (newFilteredRecipeSuggestions) => {
+        setFilteredRecipeSuggestions(newFilteredRecipeSuggestions);
+      };
+      
     const sensors = useSensors(
         useSensor(PointerSensor)
     );
@@ -768,7 +771,8 @@ const Pantry = () => {
                     <div className="recipe-title">Matched Recipes</div>
                     <button id="toggleDropdown">Filter</button>
                     <div id="filterDropdown" className="dropdown-content">
-                        <MyComponent ingredientNames={ingredientNames} filterCriteria={filterCriteria} onFilterChange={handleFilterChange} />
+                        <MyComponent   setFilteredRecipeSuggestions={setterForRecipes} // Pass the function as a prop
+                                       ingredientNames={ingredientNames} filterCriteria={filterCriteria} onFilterChange={handleFilterChange} />
                     </div>
                 </div>
                 <div className="recipe-search-panel">
