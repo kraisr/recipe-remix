@@ -75,6 +75,8 @@
   .profile-field {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    overflow-wrap: break-word;
     /* margin-bottom: 5%; */
   }
   

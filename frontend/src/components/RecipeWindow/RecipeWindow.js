@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import './recipewindow.css';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import { TextField, Button, Box } from '@mui/material';
 
 const RecipeWindow = ({ recipe, onClose, onSave, edit }) => {
     const [editField, setEditField] = useState(null);

@@ -5,7 +5,7 @@ import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/
 import ReactPDF from '@react-pdf/renderer';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { deleteRecipe } from "./DeleteRecipe.js";
-
+import TextField from '@mui/material/TextField';
 
 
 //ingredientLines
@@ -382,6 +382,27 @@ const Recipes = () => {
             marginTop: 8,
         }
     });
+
+    const textFieldStyles = {
+        bgcolor: "#ffffff",
+        width: '70%',
+        mb: 3,
+        mt: 1,
+        "& label.Mui-focused": {
+          color: "#000",
+        },
+        "& .MuiOutlinedInput-root": {
+          "& fieldset": {
+            borderColor: "#a1c298",
+          },
+          "&:hover fieldset": {
+            borderColor: "#88b083",
+          },
+          "&.Mui-focused fieldset": {
+            borderColor: "#6b9466",
+          },
+        }
+    };
     
     
      // ZA PDF ITSELF 
@@ -462,9 +483,10 @@ const Recipes = () => {
                                         fileName={`${recipe.name}.pdf`}
                                         style={{ textDecoration: 'none' }}
                                     >
-                                        {({ blob, url, loading, error }) => 
-                                            loading ? "Loading..." : <button className="download-button">Download</button>
-                                        }
+                                        {/* {({ blob, url, loading, error }) => 
+                                            loading ? <button className="download-button">Download</button> : <button className="download-button">Download</button>
+                                        } */}
+                                        <button className="download-button">Download</button>
                                     </PDFDownloadLink>
                                     <button 
                                         className="recipe-delete-button" 
@@ -548,12 +570,24 @@ const Recipes = () => {
                 {isFolderCreationOpen && (
                     <div className="modal-shadow">
                          <div className="folder-creation-popup">
-                            <center><input 
-                                value={newFolderName} 
-                                onChange={e => setNewFolderName(e.target.value)} 
-                                className="folder-bar"
-                                placeholder="Folder Name" 
-                            /></center>
+                            <center>
+                                {/* <input 
+                                    value={newFolderName} 
+                                    onChange={e => setNewFolderName(e.target.value)} 
+                                    className="folder-bar"
+                                    placeholder="Folder Name" 
+                                /> */}
+                                <TextField
+                                    value={newFolderName}
+                                    onChange={e => setNewFolderName(e.target.value)}
+                                    className="folder-bar"
+                                    placeholder="Folder Name"
+                                    variant="outlined"
+                                    fullWidth
+                                    sx={textFieldStyles}
+                                />
+
+                            </center>
                             <center><button className="folder-select" onClick={createFolder}>Create Folder</button></center>
                             <center><button className="folder-cancel" onClick={closeFolderCreation}>Cancel</button></center>
                         </div>
