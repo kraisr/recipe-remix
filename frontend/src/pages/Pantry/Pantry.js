@@ -664,7 +664,6 @@ const Pantry = () => {
         }, 2000);
     }    
 
-
     // Determine if we're on a small screen
     const isSmallScreen = windowWidth < 769; // You can adjust this value as needed
     
@@ -798,26 +797,32 @@ const Pantry = () => {
                                 <p style={{ width: '100%', marginTop: '10px' }}><b>Total time:</b> { recipe.node.totalTime }</p>
                                 <div style={{ width: '100%', marginTop: '10px', textAlign: 'left' }}>
                                     <b>Ingredients:</b>
-                                    <ul style={{marginTop: '3px', marginBottom: '20px'}}>
-                                        {recipe.node.ingredients.map((ingredient, index) => (
+                                    <ul style={{ marginTop: '3px', marginBottom: '20px' }}>
+                                        {recipe.node.ingredients
+                                            .reduce((unique, ingredient) => {
+                                            const isDuplicate = unique.some(
+                                                uni => uni.name.trim().toLowerCase() === ingredient.name.trim().toLowerCase()
+                                            );
+                                            return isDuplicate ? unique : [...unique, ingredient];
+                                            }, [])
+                                            .map((ingredient, index) => (
                                             <li key={index} style={{ color: pantryIngredients.some(pantryItem => pantryItem.ingredientName.trim().toLowerCase() === ingredient.name.trim().toLowerCase()) ? 'inherit' : 'red' }}>
                                                 {pantryIngredients.some(pantryItem => pantryItem.ingredientName.trim().toLowerCase() === ingredient.name.trim().toLowerCase()) ? (
-                                                    ingredient.name
+                                                ingredient.name
                                                 ) : (
-                                                    <a href="#" className="ingredient-link" onClick={(e) => { 
-                                                        e.preventDefault(); 
-                                                        if (selectedIngredient === ingredient.name && showPrompt) {
-                                                            setShowPrompt(false);
-                                                        } else {
-                                                            handleMissingIngredientClick(ingredient.name); 
-                                                        } 
-                                                    }}>
-                                                        {ingredient.name}
-                                                    </a>
+                                                <a href="#" className="ingredient-link" onClick={(e) => { 
+                                                    e.preventDefault(); 
+                                                    if (selectedIngredient === ingredient.name && showPrompt) {
+                                                    setShowPrompt(false);
+                                                    } else {
+                                                    handleMissingIngredientClick(ingredient.name); 
+                                                    } 
+                                                }}>
+                                                    {ingredient.name}
+                                                </a>
                                                 )}
-                                                {
-                                                selectedIngredient === ingredient.name && showPrompt && (
-                                                    <div className="ingredient-prompt">
+                                                {selectedIngredient === ingredient.name && showPrompt && (
+                                                <div className="ingredient-prompt">
                                                         <p style={{ color: 'black', marginBottom: '3px', marginTop: '3px' }}>
                                                             Do you want to add <span style={{ textDecoration: 'underline' }}>{selectedIngredient}</span> to your:
                                                         </p>
@@ -828,7 +833,7 @@ const Pantry = () => {
                                                             Shopping List
                                                         </StyledButton>
                                                         <StyledButton variant="contained" onClick={() => setShowPrompt(false)}>
-                                                            Cancel
+                                                            Close
                                                         </StyledButton>
                                                     </div>
                                                 )
