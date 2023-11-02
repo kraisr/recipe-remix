@@ -1,11 +1,13 @@
 import express from "express";
-import {addIngredient, getFromPantry, deleteIngredient, deleteRecipe, retreiveDietaryTags} from "../controllers/user.js";
-import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting, deleteAccount } from "../controllers/user.js";
+import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting, deleteAccount, savePost, deletePost } from "../controllers/user.js";
+
+import {addIngredient, getFromPantry, deleteIngredient, deleteRecipe, editRecipe, retreiveDietaryTags} from "../controllers/user.js";
+
 import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js";
 import { createShoppingList, deleteShoppingList, editShoppingList, getShoppingLists} from "../controllers/user.js";
 import { addToShoppingList, deleteFromShoppingList, editInShoppingList} from "../controllers/user.js";
 import { sendEmail, updateReminder } from "../controllers/sendEmail.js";import {sendCode} from "../controllers/code.js"
-import { saveRecipes, getRecipes} from "../controllers/user.js";
+import { saveRecipes, getRecipes, addMissingIngredient } from "../controllers/user.js";
 import { createFolder, getFolders, addRecipeToFolder, deleteFolder, removeRecipeFromFolder } from "../controllers/user.js"
 
 const router = express.Router();
@@ -37,6 +39,8 @@ router.post("/addToShoppingList", addToShoppingList);
 router.post("/deleteFromShoppingList", deleteFromShoppingList);
 router.post("/editInShoppingList", editInShoppingList);
 
+router.post("/add-missing-ingredient", addMissingIngredient);
+
 /* Set routes to redirect to the correct controller in /controllers/auth.js */
 router.post("/mode", mode);
 router.post("/reminder", reminder);
@@ -52,6 +56,7 @@ router.post("/delete-pantry", deleteIngredient);
 router.post("/save-recipes", saveRecipes);
 router.get("/get-recipes", getRecipes);
 router.post("/delete-recipe", deleteRecipe);
+router.post("/edit-recipe", editRecipe)
 
 /* DELETE ACCOUNT */
 router.post("/delete-account", deleteAccount);
@@ -66,4 +71,8 @@ router.get("/get-folders", getFolders);
 router.post("/add-recipe-to-folder", addRecipeToFolder);
 router.post("/delete-folder", deleteFolder);
 router.post("/remove-recipe-from-folder", removeRecipeFromFolder);
+
+/*POSTING*/
+router.post("/save-post", savePost);
+router.delete("/delete-post", deletePost);
 export default router;

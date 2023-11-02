@@ -247,18 +247,25 @@ export const searchAllRecipes = async (req, res) => {
             onPlan {
                 id
                 name
-                servingWeight
                 author
+                adherence
+                ingredients {
+                    name
+                }
             }
             otherResults {
                 id
                 name
-                servingWeight
                 author
+                adherence
+                ingredients {
+                    name
+                }
             }
             }
         }
         `;
+
 
 
         const variables = {

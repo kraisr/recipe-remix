@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import logoImg from '../../images/logo.png';
 import "./navbar.css"
+import Logo from "./Logo.js";
 
 //components
 import Logout from "../Logout/Logout";
@@ -115,9 +116,10 @@ const Navbar = () => {
     return (
         <nav>
             <div className="container">
-                <Link to="/">
+                {/* <Link to="/">
                     <img alt="logo" src={logoImg}/>
-                </Link>
+                </Link> */}
+                <Logo />
 
                 <div className={click ? 'nav-menu active' : 'nav-menu'}>
                     
@@ -153,7 +155,7 @@ const Navbar = () => {
                                 </Link>
 
                                 <Link to="/../preferences" className="sub-menu-link" onClick={toggleMenu}>
-                                    <i class="fa-solid fa-asterisk"></i>
+                                    <i className="fa-solid fa-asterisk"></i>
                                     <p>Preferences</p>
                                     <span>{">"}</span>
                                 </Link>
@@ -165,7 +167,7 @@ const Navbar = () => {
                                 </Link>
 
                                 <Link to="/../shoppingList" className="sub-menu-link" onClick={toggleMenu}>
-                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    <i className="fa-solid fa-cart-shopping"></i>
                                     <p>Shopping List</p>
                                     <span>{'>'}</span>
                                 </Link>
@@ -177,7 +179,7 @@ const Navbar = () => {
                                 </Link> */}
 
                                 <Link to="/../help" className="sub-menu-link" onClick={toggleMenu}>
-                                    <i class="fa-solid fa-circle-info"></i>
+                                    <i className="fa-solid fa-circle-info"></i>
                                     <p>Help</p>
                                     <span>{'>'}</span>
                                 </Link>
