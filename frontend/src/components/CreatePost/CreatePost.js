@@ -15,6 +15,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   const [recipeName, setRecipeName] = useState("");
   const [recipeIngredient, setRecipeIngredient] = useState("");
   const [caption, setCaption] = useState("");
+  const [selectedImage, setSelectedImage] = useState("");
 
   // Use useEffect to fetch user's recipes when the component mounts
   useEffect(() => {
@@ -47,6 +48,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
       const recipeIngredientsArray = data.recipes.map((recipe) => recipe.ingredientLines);
       setRecipeNames(recipeNamesArray);
       setRecipeImages(recipeImagesArray);
+      
       setRecipeIngredients(recipeIngredientsArray);
 
     } catch (error) {
@@ -55,20 +57,30 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   };
 
   const handleRecipeSelection = (event) => {
-    console.log("ingredients: ", recipeIngredients[1]);
     const selectedRecipeName = event.target.value;
     const index = recipeNames.indexOf(selectedRecipeName);
-   
     setSelectedRecipeIndex(index);
     setRecipeName(selectedRecipeName);
-    if (index !== -1) {
-      const ingredientsArray = recipeIngredients[index];
-      const parsedIngredients = ingredientsArray.join(', '); // Join the ingredients with commas
   
-      setRecipeIngredient(parsedIngredients);
+    // Update recipeIngredient with the ingredients of the selected recipe
+    if (index !== -1) {
+      const selectedIngredients = recipeIngredients[index];
+      setRecipeIngredient(selectedIngredients);
+    } else {
+      // If no recipe is selected, clear the ingredients
+      setRecipeIngredient('');
     }
-    
+  
+    if (index !== -1) {
+      const selectedImage = recipeImages[index];
+      setSelectedImage(selectedImage);
+      
+      // Optionally, if you want to clear any existing custom image selection:
+      // setSelectedImage(""); 
+    }
   };
+  
+  
 
   const handleRecipeNameChange = (event) => {
     // Update the recipe name as the user types
@@ -77,13 +89,75 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
 
   const handleIngredientNameChange = (event) => {
     // Update the recipe name as the user types
-    setRecipeIngredients(event.target.value);
+    setRecipeIngredient(event.target.value);
+    // console.log("ing: ", recipeIngredient);
   };
 
   const handleCaptionChange = (event) => {
     // Update the recipe name as the user types
     setCaption(event.target.value);
   };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0]; // Get the selected file
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSelectedImage(e.target.result); // Set the selected image as a data URL
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const createPost = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw Error('No token found');
+      }
+  
+      // Check if an image is selected
+      if (!selectedImage) {
+        // Display a warning message here
+        alert('Please select an image before creating the post.');
+        return; // Do not proceed with post creation
+      }
+  
+      const post = {
+        name: recipeName,
+        image: selectedImage,
+        caption: caption,
+        ingredients: recipeIngredient,
+      };
+  
+      console.log("post: ", post);
+  
+      const response = await fetch("http://localhost:8080/user/save-post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(post)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      console.log("data ", data);
+  
+      // Optionally, you can reset the form or perform other actions after a successful post creation
+      // setRecipeName("");
+      // setSelectedImage("");
+      // setCaption("");
+    } catch (error) {
+      console.error('Error creating a post:', error);
+    }
+  };
+  
+  
 
   
 
@@ -116,13 +190,14 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
         
         <div className="image-panel">
           {selectedRecipeIndex > -1 ? (
-            <img src={recipeImages[selectedRecipeIndex]} alt="Recipe" className='image'/>
+            
+            <img src={selectedImage} alt="Recipe" className='image'/>
           ) : (
-            <Avatar 
-              width={290} 
-              height={195} 
-              className="image"
-            />
+            <div className="custom-image">
+              <img src={selectedImage} />
+              <input type="file" onChange={handleImageChange} />
+            </div>
+            
           )}
         </div>
         
@@ -147,7 +222,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
         </div>
           
 
-        <button className='button-18'> Create Post</button>
+        <button className='button-18' onClick={createPost}> Create Post </button>
        
       </div>
     </div>

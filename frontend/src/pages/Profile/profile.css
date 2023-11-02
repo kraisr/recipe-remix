@@ -143,4 +143,59 @@
     background-color: #f1f1f1
   }
 
+  .center-container {
+    display:flex;
+    flex-direction: column;
+    position:relative;
+    right:0%;
+    /* border: 1px red solid; */
+    width:60%;
+  }
 
+  .post-grid-container {
+    max-height: 90%; /* Set the desired height for the scrollable area */
+    overflow: auto;
+    position: relative;
+    bottom:8%;
+  }
+  
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    justify-content: center;
+  }
+  .post-title{
+    position: relative;
+    bottom:5%;
+  }
+  .post-title h4{
+    font-size: 32px;
+  }
+  
+  .post {
+    /* border: 1px solid #ccc; */
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .post img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius:10%;
+    object-fit: cover;
+  }
+  
+
+  
+  
+  
+  
+  
+  

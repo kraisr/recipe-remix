@@ -1,6 +1,6 @@
 import express from "express";
 import {addIngredient, getFromPantry, deleteIngredient, deleteRecipe} from "../controllers/user.js";
-import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting, deleteAccount } from "../controllers/user.js";
+import { getUser, updateUser, updatePreferences, mode, reminder, reminderSetting, deleteAccount, savePost, deletePost } from "../controllers/user.js";
 import { requestResetPassword, resetPassword } from"../controllers/resetPassword.js";
 import { createShoppingList, deleteShoppingList, editShoppingList, getShoppingLists} from "../controllers/user.js";
 import { addToShoppingList, deleteFromShoppingList, editInShoppingList} from "../controllers/user.js";
@@ -63,4 +63,8 @@ router.get("/get-folders", getFolders);
 router.post("/add-recipe-to-folder", addRecipeToFolder);
 router.post("/delete-folder", deleteFolder);
 router.post("/remove-recipe-from-folder", removeRecipeFromFolder);
+
+/*POSTING*/
+router.post("/save-post", savePost);
+router.delete("/delete-post", deletePost);
 export default router;

@@ -25,7 +25,7 @@ const Community = () => {
                 </div>
                 <hr />
                 
-                <div className="post-grid">
+                <div className="recipe-grid">
 
                 </div>
 
