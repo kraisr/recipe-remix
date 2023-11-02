@@ -90,6 +90,7 @@ const SortableIngredient = ({ ingredient, selectedCheckboxes, handleCheckboxClic
 
 
 const Pantry = () => {
+
     const [pantryIngredients, setPantryIngredients] = useState([]);
     let [recipeSuggestions, setRecipeSuggestions] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -347,19 +348,23 @@ const Pantry = () => {
     const handleRecipeSearchInputChange = (event) => {
         const newSearchTerm = event.target.value;
         setRecipeSearchTerm(newSearchTerm);
+        
         if (
             (noRecipesMessage === "Oops! No recipes found" || noRecipesMessage === "Nothing to see here yet, try hitting remix!")
         ) {
             // Perform a live search with an empty searchTerm to get all recipes
             handleRecipeSearch();
             return;
-        }
-        
-        // Filter the recipe suggestions based on the search term
+        } else {
+            // Filter the recipe suggestions based on the search term
+        console.log("hello");
         const filteredRecipes = recipeSuggestions.filter((recipe) =>
             recipe.node.name.toLowerCase().includes(newSearchTerm.toLowerCase())
         );
         setFilteredRecipeSuggestions(filteredRecipes);
+        }
+        
+        
     };
 
     const addToPantry = async (ingredientName, recipe) => {
@@ -568,6 +573,7 @@ const Pantry = () => {
                 setFilteredRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
                 if (data.data.searchRecipesByIngredients.edges.length !== 0) {
                     setRecipeSuggestions(data.data.searchRecipesByIngredients.edges);
+                    setNoRecipesMessage("");
                     setRemixStatus(true);
                 } else {
                     setRemixStatus(false);
@@ -782,10 +788,10 @@ const Pantry = () => {
                             </div>
                             {expandedRecipeIndex !== index && (
                                 <div className="pantry-right-button-container">
-                                    {recipe.node ? 
+                                    {recipe.node &&
                                         (<button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.node, event)}>Save</button>)
-                                        :
-                                        <button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.name, event)}>Save</button>
+                                        
+                                        // <button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.name, event)}>Save</button>
                                     }
                                     
 
