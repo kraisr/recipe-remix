@@ -957,13 +957,8 @@ const Pantry = () => {
                                 }
                             </div>
                             {expandedRecipeIndex !== index && (
-                                <div className="pantry-right-button-container">
-                                    {recipe.node &&
-                                        (<button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.node, event)}>Save</button>)
-                                        
-                                        // <button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.name, event)}>Save</button>
-                                    }
-                                    
+                                <div className="pantry-right-button-containter">
+                                    <button className="pantry-save-button" onClick={(event) => handleSaveRecipes(recipe.node, event)}>Save</button>
 
                                 </div>
                             )}
