@@ -127,47 +127,59 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
 };
 
 
-  useEffect(() => {
-    const fetchUserGroceryList = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('No token found');
-        }
-  
-        const response = await fetch("http://localhost:8080/user/user", {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          method: "GET",
-        });
-  
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-  
-        const data = await response.json();
-  
-        // Transform the shopping lists data to include the items structure
-        const transformedShoppingLists = data.shoppingLists.map((list) => ({
-          ...list,
-          items: list.items.map((item) => ({
-            item: item.item,
-            quantity: item.quantity,
-            unit: item.unit
-          })),
-        }));
-  
-        setUserEmail(data.email);
-        setShoppingLists(transformedShoppingLists);
-      } catch (error) {
-        console.error('Error fetching user preferences:', error);
+useEffect(() => {
+  const fetchUserGroceryList = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
       }
-    };
-    fetchUserGroceryList();
-    fetchShoppingListNames();
-  }, []);
+
+      const response = await fetch("http://localhost:8080/user/user", {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      // Transform the shopping lists data to include the items structure
+      const transformedShoppingLists = data.shoppingLists.map((list) => ({
+        ...list,
+        items: list.items.map((item) => ({
+          item: item.item,
+          quantity: item.quantity,
+          unit: item.unit
+        })),
+      }));
+
+      setUserEmail(data.email);
+      setShoppingLists(transformedShoppingLists);
+
+      console.log("initial user email: ", data.email);
+      // Find the list ID with name "All Missing Ingredients"
+      transformedShoppingLists.forEach(list => {
+        console.log(`List Name: ${list.title}, List ID: ${list.id}`);
+      
+        if (list.title === 'All Missing Ingredients') {
+          setSelectedListId(list.id);
+        }
+      });
+
+    } catch (error) {
+      console.error('Error fetching user preferences:', error);
+    }
+  };
+  fetchUserGroceryList();
+  //fetchShoppingListNames();
+}, []);
+
   
   useEffect(() => {
     if (selectedListId !== null) {
@@ -178,13 +190,27 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
     }
   }, [selectedListId, shoppingLists]);
 
+  useEffect(() => {
+    fetchShoppingListNames();
+  }, [userEmail]);
+
   const fetchShoppingListNames = async () => {
+    console.log("fetching list names");
+    if (!userEmail) return; // Exit if userEmail is not set
+  
     try {
+      const requestBody = {
+        email: userEmail,
+      };
+
+      console.log("fetch shoppinglist name ", userEmail);
+  
       const response = await fetch("http://localhost:8080/user/getShoppingLists", {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(requestBody),
       });
   
       // Check if the response is ok (status 200-299)
@@ -194,6 +220,12 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
   
       // Assuming the response contains an array of shopping lists
       const data = await response.json();
+
+      // Set the "All Missing Ingredients" list as the default selection
+      const defaultList = data.find(list => list.title === 'All Missing Ingredients');
+      if (defaultList) {
+        setSelectedListId(defaultList.id);
+      }
   
       // Extract the list numbers from the titles and find the greatest number
       const listNumbers = data.map((list) => {
@@ -208,7 +240,9 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
       // Handle errors: show a message to the user, log, etc.
       console.error("Error fetching shopping list names:", error);
     }
-  };
+};
+
+  
 
   
   const addShoppingList = async () => {
@@ -268,6 +302,13 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
   
 
   const deleteShoppingList = async (listId) => {
+    const listToDelete = shoppingLists.find((list) => list.id === listId);
+    
+    if(listToDelete && listToDelete.title === "All Missing Ingredients"){
+        console.warn("The 'All Missing Ingredients' list cannot be deleted!");
+        return;
+    }
+
     const updatedLists = shoppingLists.filter((list) => list.id !== listId);
     setShoppingLists(updatedLists);
   
@@ -661,41 +702,39 @@ const handleUnitChange = (listId, itemIndex, newUnit) => {
               />
             </Box>
           ) : (
-            <FormControl
-              variant="outlined"
-              style={{ width: '48%' }}
-            >
-              <InputLabel>Select a List</InputLabel>
-              <Select
-                value={selectedListId}
-                onChange={(e) => setSelectedListId(e.target.value)}
-                label="Select a List"
-                sx={{
-                  bgcolor: "#e7ede6",
-                  "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                          borderColor: "#a1c298", // Default border color
-                      },
-                      "&:hover fieldset": {
-                          borderColor: "#88b083", // Border color on hover
-                      },
-                  },
-                  "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                      borderColor: "#000 !important", // Border color when focused
-                  },
-                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#000 !important", // Border color when focused
-                  }
-              }}
-            >
-            <MenuItem value={null}>Select a List</MenuItem>
-            {shoppingLists.map((list) => (
-                <MenuItem key={list.id} value={list.id}>
-                    {list.title}
-                </MenuItem>
-            ))}
-            </Select>
-          </FormControl>
+<FormControl variant="outlined" style={{ width: '48%' }}>
+  <InputLabel shrink={selectedListId ? true : false}>Select a List</InputLabel>
+  <Select
+    value={selectedListId}
+    onChange={(e) => setSelectedListId(e.target.value)}
+    label="Select a List"
+    sx={{
+      bgcolor: "#e7ede6",
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: "#a1c298", // Default border color
+        },
+        "&:hover fieldset": {
+          borderColor: "#88b083", // Border color on hover
+        },
+      },
+      "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+        borderColor: "#000 !important", // Border color when focused
+      },
+      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: "#000 !important", // Border color when focused
+      }
+    }}
+  >
+    {shoppingLists.map((list) => (
+      <MenuItem key={list.id} value={list.id}>
+        {list.title}
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
+
+
         )}
         <IconButton
           onClick={() => {

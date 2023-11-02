@@ -9,6 +9,8 @@ const postSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Recipe'
   },
+  name: String, 
+  image: String,
   caption: String,
   isCustom: Boolean,
   customRecipe: {

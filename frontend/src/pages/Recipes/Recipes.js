@@ -5,7 +5,7 @@ import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/
 import ReactPDF from '@react-pdf/renderer';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { deleteRecipe } from "./DeleteRecipe.js";
-
+import TextField from '@mui/material/TextField';
 
 
 //ingredientLines
@@ -24,6 +24,7 @@ const Recipes = () => {
     const [selectedRecipes, setSelectedRecipes] = useState(null);
     const [expandedFolder, setExpandedFolder] = useState(null);
     const [activeFolder, setActiveFolder] = useState(null);
+
    
     const openRecipes = () => {
         setIsRecipesOpen(true);
@@ -74,21 +75,41 @@ const Recipes = () => {
         // Cleanup event listener on component unmount
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+    const refreshSavedRecipes = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/user/get-recipes", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            const data = await response.json();
+            setSavedRecipes(data);
+        } catch (error) {
+            console.error("Failed to fetch saved recipes:", error);
+        }
+    };
+    
     
 
     useEffect(() => {
         // This assumes you have an endpoint to fetch saved recipes for a user
         const fetchSavedRecipes = async () => {
             try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No token found');
-                }
+               
+                
                 const response = await fetch("http://localhost:8080/user/get-recipes", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
+                        "Authorization": `Bearer ${localStorage.getItem('token')}`
                     }
                 });
 
@@ -162,6 +183,8 @@ const Recipes = () => {
             console.error("Failed to create folder:", error);
         }
     };
+
+
 
     // Add a recipe to a folder
     const addRecipeToFolder = async (folderName) => {
@@ -359,6 +382,27 @@ const Recipes = () => {
             marginTop: 8,
         }
     });
+
+    const textFieldStyles = {
+        bgcolor: "#ffffff",
+        width: '70%',
+        mb: 3,
+        mt: 1,
+        "& label.Mui-focused": {
+          color: "#000",
+        },
+        "& .MuiOutlinedInput-root": {
+          "& fieldset": {
+            borderColor: "#a1c298",
+          },
+          "&:hover fieldset": {
+            borderColor: "#88b083",
+          },
+          "&.Mui-focused fieldset": {
+            borderColor: "#6b9466",
+          },
+        }
+    };
     
     
      // ZA PDF ITSELF 
@@ -439,9 +483,10 @@ const Recipes = () => {
                                         fileName={`${recipe.name}.pdf`}
                                         style={{ textDecoration: 'none' }}
                                     >
-                                        {({ blob, url, loading, error }) => 
-                                            loading ? "Loading..." : <button className="download-button">Download</button>
-                                        }
+                                        {/* {({ blob, url, loading, error }) => 
+                                            loading ? <button className="download-button">Download</button> : <button className="download-button">Download</button>
+                                        } */}
+                                        <button className="download-button">Download</button>
                                     </PDFDownloadLink>
                                     <button 
                                         className="recipe-delete-button" 
@@ -476,11 +521,13 @@ const Recipes = () => {
             {
                 selectedRecipes && 
                 <RecipeWindow 
-                    recipe={selectedRecipes} 
-                    onClose={() => setSelectedRecipes(null)} 
-                    onSave={(updatedRecipe) => {
-                    // Logic to save updatedRecipe to backend and update savedRecipes state
+                recipe={selectedRecipes} 
+                onClose={() => setSelectedRecipes(null)} 
+                onSave={(updatedRecipe) => {
+                    setSelectedRecipes(updatedRecipe);
+                    refreshSavedRecipes();
                  }}
+                 edit={true}
                 />
             }
             <div className="folders-section">
@@ -523,12 +570,24 @@ const Recipes = () => {
                 {isFolderCreationOpen && (
                     <div className="modal-shadow">
                          <div className="folder-creation-popup">
-                            <center><input 
-                                value={newFolderName} 
-                                onChange={e => setNewFolderName(e.target.value)} 
-                                className="folder-bar"
-                                placeholder="Folder Name" 
-                            /></center>
+                            <center>
+                                {/* <input 
+                                    value={newFolderName} 
+                                    onChange={e => setNewFolderName(e.target.value)} 
+                                    className="folder-bar"
+                                    placeholder="Folder Name" 
+                                /> */}
+                                <TextField
+                                    value={newFolderName}
+                                    onChange={e => setNewFolderName(e.target.value)}
+                                    className="folder-bar"
+                                    placeholder="Folder Name"
+                                    variant="outlined"
+                                    fullWidth
+                                    sx={textFieldStyles}
+                                />
+
+                            </center>
                             <center><button className="folder-select" onClick={createFolder}>Create Folder</button></center>
                             <center><button className="folder-cancel" onClick={closeFolderCreation}>Cancel</button></center>
                         </div>

@@ -18,6 +18,45 @@ export const getUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+
+
+
+export const editRecipe = async (req, res) => {
+  try {
+      const token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id;
+      
+      const updatedRecipe = {
+          id: req.body.id,
+          totalTime: req.body.totalTime,
+          name: req.body.name,
+          numberOfServings: req.body.numberOfServings,
+          ingredientLines: req.body.ingredientLines,
+          source: { recipeUrl: req.body.recipeUrl },
+          mainImage: req.body.mainImage,
+          instructions: req.body.instructions,
+      };
+
+      // Find the user and update the specific recipe in the user's recipes attribute
+      const updatedUser = await User.findOneAndUpdate(
+          { _id: userId, "recipes.id": updatedRecipe.id },
+          { "$set": { "recipes.$": updatedRecipe } },
+          { new: true }
+      ).select('-password');
+
+      if (!updatedUser) {
+          return res.status(400).json({ error: "Error updating the recipe or recipe not found" });
+      }
+
+      res.status(200).json({ message: `${updatedRecipe.name} saved successfully!` });
+  } catch (err) {
+      console.error("Error in editRecipe function:", err);
+      res.status(500).json({ error: err.message });
+  }
+};
+
 export const deleteRecipe = async (req, res) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
@@ -509,9 +548,53 @@ export const deleteShoppingList = async (req, res) => {
     }
   };
   
-  
-  
-  
+
+// Add missing ingredient to default shopping list
+export const addMissingIngredient = async (req, res) => {
+  try {
+    const { email, item, quantity, unit } = req.body;  // Assuming unit is also passed in req.body
+
+    // Find the user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Find the shopping list by title "All Missing Ingredients"
+    const shoppingList = user.shoppingLists.find(
+      (list) => list.title === "All Missing Ingredients"
+    );
+
+    if (!shoppingList) {
+      // If the specific list doesn't exist, we could optionally create one. 
+      // For now, we'll just return an error.
+      return res.status(404).json({ error: 'Shopping list not found' });
+    } else {
+      // Check if the item already exists in the list
+      const existingItem = shoppingList.items.find(
+        (listItem) => listItem.item === item
+      );
+
+      if (existingItem) {
+        // If the item exists, increment its quantity by the provided quantity.
+        existingItem.quantity += quantity;
+      } else {
+        // If the item doesn't exist, add it to the list.
+        shoppingList.items.push({ item, quantity, unit });
+      }
+    }
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Item added to the shopping list successfully' });
+  } catch (err) {
+    console.error('Error in addMissingIngredient function:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 
 // Add item to shopping list
@@ -777,4 +860,71 @@ export const deleteFolder = async (req, res) => {
       res.status(500).json({ error: err.message });
   }
 };
+
+
+export const savePost = async (req, res) => {
+  try {
+    console.log("hello");
+    const token = req.headers.authorization.split(" ")[1];
+      
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    const { name, image, caption, ingredients } = req.body;
+
+      // Create a new post object
+    const post = {
+        name,
+        image,
+        caption,
+        ingredients,
+    };
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $push: { posts: post } }, // Assuming the posts are stored as an array in the User model
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(400).json({ error: "Error saving the post." });
+    }
+
+    res.status(200).json({ message: "Post created successfully", post });
+  } catch (err) {
+      console.error("Error in savePost function:", err);
+      res.status(500).json({ error: err.message });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+    console.log("hi");
+    const postId = req.body.postId; // Get the post ID from the request body
+
+    // Use findOneAndUpdate to remove the post with the matching _id
+    
+    const updatedUser = await User.findOneAndUpdate(
+      userId, 
+      { $pull: { posts: { _id: postId } } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      // User or post not found
+      return res.status(404).json({ message: 'User or post not found' });
+    }
+
+    // Successfully deleted the post
+    return res.status(200).json({ message: 'Post deleted', user: updatedUser });
+  } catch (error) {
+    // Handle errors, e.g., database error or invalid request
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 

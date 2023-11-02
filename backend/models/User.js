@@ -269,6 +269,30 @@ const userSchema = new mongoose.Schema({
             }
         }],
     }],
+
+    posts: [{
+        id: {
+            type:String,
+            required: true,
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        image: {
+            type: String,
+            required: true,
+        },
+        caption: {
+            type: String, 
+            required:false,
+        },
+        ingredients: [{
+            type: String,
+            required: true,
+        }]
+
+    }],
     
     set2FA: {
         type: Boolean,

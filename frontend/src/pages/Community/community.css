@@ -3,69 +3,205 @@
 /* * {
     border: red 1px solid
 } */
-.community-container {
-    margin: 0 auto;
-    padding: 30px 0px;
-    display: flex;
-    justify-content: space-between;
+
+/* .community-container {
+    display:flex;
     flex-direction: row;
-    width: 100%;
-    height: calc(100% - 100px);
+    justify-content: flex-start;
+    align-items: flex-start;
+    border:1px solid red;
+} */
+
+.community-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch; 
+  height: calc(100vh - 100px - 5%);
+  /* margin-top: -8px;
+  margin-bottom: -8px; */
 }
 
-.suggested-recipes {
-    display: flex;
+.left-panel{
+    display:flex;
     flex-direction: column;
-    background-color: #FBF2CF;
-    width: 30vw;
-    height: 650px;
-    border-radius: 0 25px 25px 0;
-    box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
-    overflow-y: auto;
     align-items: center;
-    justify-content: flex-start; /* Align items to the top */
-    padding-top: 1%;
-    padding: 20px 10px; /* Reduced side padding */
-    overflow-x: hidden; /* Ensure no horizontal scrolling */
+
+    /* border:1px solid red; */
+    margin: 2%;
+    width: 30%;
+    min-height: 100px;
+    
 }
 
-.community-feed {
+.posted-title{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
     
-    width: 30vw;
-    padding-left: 1px;
-    padding-right: 1px;
-    margin: auto;
 }
 
-.create-post-button {
-    display: flex;
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 60px;
-    padding: 30px 60px; /* Increased horizontal padding for a rectangular shape */
-    border-radius: 5px; /* Mild rounded corners for the rectangle */
-    background-color: #ffffff;
-    color: #000000;
-    border: black 2px solid;
+.posted-title h4{
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+/* .create-post-btn {
+    background-color: #f07474;
+    border-radius: 50%;
+    width:50%;
+    min-width:130px;
+    min-height: 130px;
+    height:20%;
+    position: relative;
+    top:60%;
+    margin:5%;
+    right:20%;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    transition: 0.3s; /* Smooth transition for hover effects */
+} */
+
+.create-post-btn i {
+    font-size: 150%;
 }
 
-.close-friends {
-    display: flex;
-    flex-direction: column;
-    background-color: #FBF2CF;
-    justify-content: start;
-    width: 30vw;
-    height: 650px;
-    padding-top: 1%;
-    padding: 20px 10px;
-    border-radius: 25px 0 0 25px;
-    box-shadow: 0px 8px 4px 0px rgba(0, 0, 0, 0.25);
+
+/* .center-panel{
+    background-color: rgb(238, 235, 235);
+    border-radius: 50px;
+    width: 50%;
+    min-height:600px;
+    max-height: 1%;
+    border:1px red solid;
+    padding: 5%;
+    align-self: center;
+    margin-right:10%;
+    position: relative;
+    bottom:100%;
+    overflow: auto;
+} */
+
+.center-panel {
+  background-color: #FBF2CF;
+  /* border-radius: 50px; */
+  flex: 1;
+  padding: 3% 5% 3% 5%;
+  position: relative;
+  max-height: 100%; /* Adjust as needed */
+  overflow-y: scroll;
+  min-height: 100%;
+}
+
+.scroll-wrapper {
+  width: 50%;
+  margin-top: 30px;
+  margin-right: 2%;
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.recipe-grid {
+    max-height: 100%; /* Set the maximum height you desire */
+    overflow-y: auto; /* Add vertical scroll if content exceeds the container height */
+    border: 1px solid #ccc; /* Optional: Add a border for better styling */
+    padding-right: 10%; /* Optional: Add padding for spacing */
+    padding-left: 10%; /* Optional: Add padding for spacing */
+    padding-top: 3%;
+    text-align:center;
+    min-height: 250px;
+  }
+
+  .recipe-item{
+    padding: 10%;
+    background-color: rgb(255, 253, 161);
+    border-radius:10%;
+    margin-bottom: 10%;
+  }
+
+
+/* CSS */
+.button-33 {
+  background-color: #FBF2CF;
+  border-radius: 100px;
+  box-shadow: rgba(251, 242, 207, .35) 0 -25px 18px -14px inset,
+  rgba(251, 242, 207, .25) 0 1px 2px,
+  rgba(251, 242, 207, .25) 0 2px 4px,
+  rgba(251, 242, 207, .25) 0 4px 8px,
+  rgba(251, 242, 207, .25) 0 8px 16px,
+  rgba(251, 242, 207, .25) 0 16px 32px;
+  color: black;
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-33:hover {
+  box-shadow: rgba(251, 242, 207, .5) 0 -25px 18px -14px inset,
+              rgba(251, 242, 207, .4) 0 1px 2px,
+              rgba(251, 242, 207, .4) 0 2px 4px,
+              rgba(251, 242, 207, .4) 0 4px 8px,
+              rgba(251, 242, 207, .4) 0 8px 16px,
+              rgba(251, 242, 207, .4) 0 16px 32px;
+  transform: scale(1.05) rotate(-1deg);
+}
+
+.recipe-list {
+  list-style-type: none; /* This removes the bullet points */
+  padding-left: 0;      /* This removes the indentation/padding */
+}
+
+
+/* CSS */
+.button-44 {
+  background: #FA7070;
+  border-radius: 11px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-family: Mija,-apple-system,BlinkMacSystemFont,Roboto,"Roboto Slab","Droid Serif","Segoe UI",system-ui,Arial,sans-serif;
+  font-size: 1.15em;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 33.4929px;
+  padding: .8em 1em;
+  text-align: center;
+  text-decoration: none;
+  text-decoration-skip-ink: auto;
+  text-shadow: rgba(0, 0, 0, .3) 1px 1px 1px;
+  text-underline-offset: 1px;
+  transition: all .2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 100%;
+  word-break: break-word;
+  border: 0;
+}
+
+.button-44:active,
+.button-44:focus {
+  border-bottom-style: none;
+  border-color: #dadada;
+  box-shadow: rgba(0, 0, 0, .3) 0 3px 3px inset;
+  outline: 0;
+}
+
+.button-44:hover {
+  background-color: #e53935;
 }

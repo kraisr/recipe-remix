@@ -75,6 +75,8 @@
   .profile-field {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    overflow-wrap: break-word;
     /* margin-bottom: 5%; */
   }
   
@@ -143,4 +145,121 @@
     background-color: #f1f1f1
   }
 
+  .center-container {
+    display:flex;
+    flex-direction: column;
+    position:relative;
+    right:0%;
+    /* border: 1px red solid; */
+    width:60%;
+  }
 
+  .post-grid-container {
+    max-height: 90%; /* Set the desired height for the scrollable area */
+    overflow: auto;
+    position: relative;
+    bottom:8%;
+  }
+  
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    justify-content: center;
+  }
+  .post-title{
+    position: relative;
+    bottom:5%;
+  }
+  .post-title h4{
+    font-size: 32px;
+  }
+  
+  .post {
+    /* border: 1px solid #ccc; */
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .post img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius:10%;
+    object-fit: cover;
+  }
+
+  /* Adjusted CSS for the hover effect on the image */
+.post-image:hover {
+  opacity: 0.7; /* Dim the image */
+}
+
+/* The pseudo-element after should only appear when hovering over the image */
+.post-image:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; /* These dimensions should match the image */
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  transition: background-color 0.3s ease;
+  border-radius: 8px; /* Match the border-radius of the .post */
+  z-index: 1;
+}
+
+/* Only show the middle icon when hovering over the image */
+.post-image:hover + .middle-icon {
+  display: block;
+}
+
+.image-wrapper {
+  position: relative;
+  border-radius: 10%; /* Adjust if needed to match the .post border-radius */
+  overflow: hidden;
+  height: 200px;
+}
+
+.image-wrapper:hover .post-image {
+  opacity: 0.7; /* Dim the image on hover */
+}
+
+.image-wrapper:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  transition: background-color 0.3s ease;
+  z-index: 1;
+}
+
+.image-wrapper .middle-icon {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white; /* Adjust the icon color if needed */
+  z-index: 2;
+}
+
+.image-wrapper:hover .middle-icon {
+  display: block;
+}
+
+  
+
+  
+  
+  
+  
+  
+  
