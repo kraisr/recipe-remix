@@ -808,14 +808,14 @@ const Pantry = () => {
                                             .map((ingredient, index) => (
                                             <li key={index} style={{ color: pantryIngredients.some(pantryItem => pantryItem.ingredientName.trim().toLowerCase() === ingredient.name.trim().toLowerCase()) ? 'inherit' : 'red' }}>
                                                 {pantryIngredients.some(pantryItem => pantryItem.ingredientName.trim().toLowerCase() === ingredient.name.trim().toLowerCase()) ? (
-                                                ingredient.name
+                                                    ingredient.name
                                                 ) : (
                                                 <a href="#" className="ingredient-link" onClick={(e) => { 
                                                     e.preventDefault(); 
                                                     if (selectedIngredient === ingredient.name && showPrompt) {
-                                                    setShowPrompt(false);
+                                                        setShowPrompt(false);
                                                     } else {
-                                                    handleMissingIngredientClick(ingredient.name); 
+                                                        handleMissingIngredientClick(ingredient.name); 
                                                     } 
                                                 }}>
                                                     {ingredient.name}
