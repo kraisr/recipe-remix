@@ -2,6 +2,23 @@ import React, { useState, useEffect } from "react";
 import "./community.css";
 import CreatePost from '../../components/CreatePost/CreatePost.js';
 import Post from '../../components/Post/Post.js';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  components: {
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: '#000',
+          "&.Mui-focused": {
+            color: '#000',
+          }
+        },
+      },
+    },
+  },
+});
+
 
 const Community = () => {
     const [isPostWindowOpen, setIsPostWindowOpen] = useState(false);
@@ -71,7 +88,7 @@ const Community = () => {
                 <div className="posted-title">
                     <h4>My Posted Recipes</h4>
                 </div>
-                <hr />
+                {/* <hr /> */}
                 
                 <div className="recipe-grid">
                     {recipes.map((recipe, index) => (
@@ -105,10 +122,12 @@ const Community = () => {
             </div> */}
 
             {isPostWindowOpen && (
+              <ThemeProvider theme={theme}>
                 <CreatePost
                     isOpen={isPostWindowOpen}
                     onRequestClose={() => setIsPostWindowOpen(false)}
                 />
+              </ThemeProvider>
             )}
         </div>
     );

@@ -1,16 +1,19 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 .create-post-window {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    height: 90%;
-    width: 90%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    /* Add more styles as necessary */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 40%;
+  max-width: 600px;
+  height: auto;
+  max-height: 80%;
+  padding: 20px;
+  overflow-y: auto;
 }
 
 .close-container{
@@ -102,14 +105,15 @@
   }
 
  
-  .image-panel .image{
-    position: relative;
-    bottom:50%;
-    width: 70%;
-    height:90%;
+  .image-panel .image {
+    width: 100%; 
+    max-width: 200px;
+    height: 200px;
+    display: block;
+    margin: 0 auto;
     border-radius: 10%;
-    margin-top: 15%;
   }
+  
 
   .data-panel{
     position: relative;
