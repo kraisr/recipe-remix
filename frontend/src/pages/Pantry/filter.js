@@ -202,7 +202,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
       const matchedRecipes = data.data.recipeSearch.edges;
       console.log("matchedRecipes to be sent to setFilteredRecipes: ", matchedRecipes);
       //then i want to call setFilteredRecipieSuggestions(matchedRecipes) right here
-      setFilteredRecipeSuggestions={setFilteredRecipeSuggestions};
+      setFilteredRecipeSuggestions(matchedRecipes);
           // Your logic to send dietary tags based on filterCriteria
     } catch (error) {
       console.error('Error sending dietary tags:', error);
