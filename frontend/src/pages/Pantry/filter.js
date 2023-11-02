@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "./pantry.css";
 
-const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
+const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCriteria, onFilterChange }) => {
   const [userPreferences, setUserPreferences] = useState({
     lactoseIntolerance: false,
     glutenIntolerance: false,
@@ -182,7 +182,7 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
         };
       }
   
-      const dietaryTagsRequest = await fetch("http://localhost:8080/api/recipe-search/", { //contains results of filter
+      const response = await fetch("http://localhost:8080/api/recipe-search/", { //contains results of filter
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -191,13 +191,19 @@ const MyComponent = ({ ingredientNames, filterCriteria, onFilterChange }) => {
        
       });
       
-      if (!dietaryTagsRequest.ok) {
-          console.error(`Network response for dietaryTags was not ok. Status: ${dietaryTagsRequest.status}, Response: ${await dietaryTagsRequest.text()}`);
+      if (!response.ok) {
+          console.error(`Network response for dietaryTags was not ok. Status: ${response.status}, Response: ${await response.text()}`);
       } else {
           console.log("Dietary tags sent successfully.");
       }
-
-      // Your logic to send dietary tags based on filterCriteria
+      
+      const data = await response.json();
+      console.log('data: ', data);
+      const matchedRecipes = data.data.recipeSearch.edges;
+      console.log("matchedRecipes to be sent to setFilteredRecipes: ", matchedRecipes);
+      //then i want to call setFilteredRecipieSuggestions(matchedRecipes) right here
+      setFilteredRecipeSuggestions={setFilteredRecipeSuggestions};
+          // Your logic to send dietary tags based on filterCriteria
     } catch (error) {
       console.error('Error sending dietary tags:', error);
     }
