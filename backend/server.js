@@ -8,6 +8,8 @@ import suggesticRoutes from "./routes/suggesticRoutes.js";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/user.js";
 import { sendEmail } from "./controllers/sendEmail.js";
+import User from './models/User.js'; // Adjust the path as necessary
+import mongoose from 'mongoose';
 
 dotenv.config();
 // import { GraphQLClient } from "graphql-request";
@@ -71,6 +73,35 @@ app.use((err, req, res, next) => {
 app.get("/", (req, res) => {
   res.send({ message: "Hello World!" });
 });
+
+app.get('/posts/:postId', async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    // You need to find a User who has the post with the given postId in their posts array
+    console.log('postId: ', postId);
+
+    // const objectId = mongoose.Types.ObjectId(postId);
+    const user = await User.findOne({ 'posts._id': postId });
+    console.log('user: ', user);
+    if (!user) {
+      return res.status(404).send('Post not found.');
+    }
+
+    // Extract the specific post from the user's posts array
+    const post = user.posts.find(post => post._id.equals(postId));
+    // console.log('post: ', post);
+    if (!post) {
+      return res.status(404).send('Post not found in the user\'s posts.');
+    }
+
+    res.status(200).json(post);
+  } catch (error) {
+    console.error('Error finding the post:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 
 
 const sendDailyReminders = async () => {

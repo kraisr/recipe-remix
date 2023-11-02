@@ -193,6 +193,68 @@
     border-radius:10%;
     object-fit: cover;
   }
+
+  /* Adjusted CSS for the hover effect on the image */
+.post-image:hover {
+  opacity: 0.7; /* Dim the image */
+}
+
+/* The pseudo-element after should only appear when hovering over the image */
+.post-image:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; /* These dimensions should match the image */
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  transition: background-color 0.3s ease;
+  border-radius: 8px; /* Match the border-radius of the .post */
+  z-index: 1;
+}
+
+/* Only show the middle icon when hovering over the image */
+.post-image:hover + .middle-icon {
+  display: block;
+}
+
+.image-wrapper {
+  position: relative;
+  border-radius: 10%; /* Adjust if needed to match the .post border-radius */
+  overflow: hidden;
+  height: 200px;
+}
+
+.image-wrapper:hover .post-image {
+  opacity: 0.7; /* Dim the image on hover */
+}
+
+.image-wrapper:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  transition: background-color 0.3s ease;
+  z-index: 1;
+}
+
+.image-wrapper .middle-icon {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white; /* Adjust the icon color if needed */
+  z-index: 2;
+}
+
+.image-wrapper:hover .middle-icon {
+  display: block;
+}
+
   
 
   

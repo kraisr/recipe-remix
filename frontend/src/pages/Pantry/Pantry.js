@@ -588,6 +588,7 @@ const Pantry = () => {
 
 
     const handleSaveRecipes = async (recipe, event) => {
+        console.log(recipe);
         setCurrentlyModified(recipe.name);
         if (event) {
             event.stopPropagation();
