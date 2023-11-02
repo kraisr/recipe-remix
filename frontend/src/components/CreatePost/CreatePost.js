@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './createpost.css'; // Consider creating a separate CSS for styling
 import Avatar from "react-avatar-edit";
 import question from "../../images/question.png";
+import { Button, Box, TextField, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 
 
 //Components
@@ -18,6 +19,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   const [caption, setCaption] = useState("");
   const [selectedImage, setSelectedImage] = useState(question);
   const [isComponentOpen, setIsComponentOpen] = useState(isOpen);
+  const [currentStep, setCurrentStep] = useState(0);
 
   // Use useEffect to fetch user's recipes when the component mounts
   useEffect(() => {
@@ -163,76 +165,232 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
     }
   };
   
-  
+  // Increment current step to go to the next part of the form
+  const handleNextClick = () => {
+    setCurrentStep((prevStep) => prevStep + 1);
+  };
+
+  // Decrement current step to go back to the previous part of the form
+  const handleBackClick = () => {
+    setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
+  };
+
+  // Close the form and reset the steps
+  const handleClose = () => {
+    onRequestClose(); // Call the function passed as a prop to close the modal
+    setCurrentStep(0); // Reset the step back to the first one
+    // Optionally, reset any other states if needed
+  };
+
+  const textFieldStyles = {
+    bgcolor: "#ffffff",
+    // width: '88%',
+    "& label.Mui-focused": {
+      color: "#000",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#a1c298",
+      },
+      "&:hover fieldset": {
+        borderColor: "#88b083",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#6b9466",
+      },
+    }
+};
+
+  const dropdownStyles = {
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#a1c298",
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#88b083",
+    },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#6b9466",
+    },
+    "& .MuiInputLabel-root": { // This applies the color to the label in all states
+      color: '#000',
+    },
+    "& .Mui-focused .MuiInputLabel-root": { // This ensures the label is black when focused
+      color: "#000",
+    },
+    "& .MuiSelect-select": {
+      bgcolor: "#ffffff",
+      "&:focus": {
+        bgcolor: "#ffffff", // Maintain the background color on focus
+      },
+    },
+    width: '100%', // Use 100% width for full width or custom value
+    marginBottom: '20px', // Optional: add margin-bottom if needed
+  };
 
   
+  const renderButtons = () => {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+        <Button
+          variant="contained"
+          sx={{
+            bgcolor: '#FA7070',
+            '&:hover': {
+              bgcolor: '#e06363',
+            },
+          }}
+          onClick={handleClose}
+        >
+          Close
+        </Button>
+        <Box>
+          {currentStep > 0 && (
+            <Button
+              variant="outlined"
+              sx={{
+                color: '#FA7070',
+                borderColor: '#FA7070',
+                mr: '1rem',
+                '&:hover': {
+                  bgcolor: '#ffe5e5',
+                  borderColor: '#e06363',
+                },
+              }}
+              onClick={handleBackClick}
+            >
+              Back
+            </Button>
+          )}
+          {currentStep < 3 && (
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: '#A1C298',
+                '&:hover': {
+                  bgcolor: '#8da881',
+                },
+              }}
+              onClick={handleNextClick}
+            >
+              Next
+            </Button>
+          )}
+          {currentStep === 3 && (
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: '#A1C298',
+                '&:hover': {
+                  bgcolor: '#8da881',
+                },
+              }}
+              onClick={createPost}
+            >
+              Submit Post
+            </Button>
+          )}
+        </Box>
+      </Box>
+    );
+  };
+   
+
+
+  // Function to render the current step
+  const renderCurrentStep = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <div className="choose-recipe" style={{ fontSize: '1.5rem' }}>
+            <h4>Choose Recipe to Post: </h4>
+            <FormControl variant="outlined" fullWidth margin="normal">
+            <InputLabel id="recipe-select-label" sx={{ color: '#000' }}>Choose Recipe to Post</InputLabel>
+            <Select
+              labelId="recipe-select-label"
+              id="recipe-select"
+              value={recipeName}
+              onChange={handleRecipeSelection}
+              label="Choose Recipe to Post"
+              sx={dropdownStyles}
+              inputProps={{
+                classes: {
+                  notchedOutline: 'your-custom-outline-class' // You need to define this class in your CSS if you want custom styles
+                },
+              }}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {recipeNames.map((recipeName, index) => (
+                <MenuItem key={index} value={recipeName}>
+                  {recipeName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          </div>
+        );
+      case 1:
+        return (
+          <div className="image-panel">
+            {selectedRecipeIndex !== null ? (
+              <img src={selectedImage} alt="Recipe" className='image' />
+            ) : (
+              <div className="custom-image">
+                <img src={selectedImage} alt="Custom upload" />
+                <input type="file" onChange={handleImageChange} />
+              </div>
+            )}
+          </div>
+        );
+        case 2:
+          return (
+            <div>
+              <TextField
+                fullWidth
+                label="Recipe Name"
+                variant="outlined"
+                value={recipeName}
+                onChange={handleRecipeNameChange}
+                margin="normal"
+                sx={textFieldStyles}
+              />
+              <TextField
+                fullWidth
+                label="Ingredients"
+                variant="outlined"
+                multiline
+                rows={6}
+                value={recipeIngredient}
+                onChange={handleIngredientNameChange}
+                margin="normal"
+                sx={textFieldStyles}
+              />
+            </div>
+          );
+        case 3:
+          return (
+            <TextField
+              fullWidth
+              label="Description"
+              variant="outlined"
+              multiline
+              rows={6}
+              value={caption}
+              onChange={handleCaptionChange}
+              margin="normal"
+              sx={textFieldStyles}
+            />
+          );
+      default:
+        return <div>Unknown step</div>;
+    }
+  };
 
   return (
     <div className={`create-post-window ${isOpen ? 'open' : 'closed'}`}>
-      
-      <div className="top-panel">
-        <div className="text-options">
-          <div className="choose-recipe">
-            <h4>Choose Recipe to Post: </h4>
-
-            <select onChange={handleRecipeSelection}>
-              <option value="">Select a Recipe</option>
-              {recipeNames.map((recipeName, index) => (
-                <option key={index} value={recipeName}>
-                  {recipeName}
-                </option>
-              ))}
-            </select>
-
-          </div>
-          <h4>or</h4>
-          <h4>Create Post from Scratch</h4>
-        </div>
-        <div className="close-container" onClick={onRequestClose}>
-          <div className="leftright"></div>
-          <div className="rightleft"></div>
-        </div>
-      </div>
-
-      <div className="post-panel">
-        
-        <div className="image-panel">
-          {selectedRecipeIndex > -1 ? (
-            
-            <img src={selectedImage} alt="Recipe" className='image'/>
-          ) : (
-            <div className="custom-image">
-              <img src={selectedImage} />
-              <input type="file" onChange={handleImageChange} />
-            </div>
-            
-          )}
-        </div>
-        
-        <div className="data-panel">
-          <div class="input-data">
-            <input type="text" required value={recipeName} onChange={handleRecipeNameChange}/>
-            <div class="underline"></div>
-            <label for="">Recipe Name</label>
-          </div>
-
-          <div class="input-data recipe-ingredients">
-            <textarea type="text" required value={recipeIngredient} onChange={handleIngredientNameChange}/>
-            <div class="underline"></div>
-            {/* <label for="">Ingredients </label> */}
-          </div>
-
-          <div class="input-data caption">
-            <input type="text" required value={caption} onChange={handleCaptionChange}/>
-            <div class="underline"></div>
-            <label for="">Description </label>
-          </div>
-        </div>
-          
-
-        <button className='button-18' onClick={createPost}> Create Post </button>
-       
-      </div>
+      {renderCurrentStep()}
+      {renderButtons()}
     </div>
   );
 }
