@@ -11,6 +11,7 @@ import mixingBowl from "../../images/mixing_bowl.gif";
 import mixingBowlImg from "../../images/frame-1.png";
 import DeleteIcon from '@mui/icons-material/Delete';
 
+
 import {
     DndContext,
     closestCenter,
@@ -165,13 +166,15 @@ export async function sendDietaryTags (ingredientNames, mapDietaryTags, filterCr
 }; */
 
 // Pantry.js
-export const sendDietaryTags = async (filterCriteria) => {
+export const sendDietaryTags = async (ingredientNames, filterCriteria) => {
     try {
       // Use filterCriteria here to send dietary tags
+      console.log('list of ingredietentes', ingredientNames)
+      const ingredientsArray = ingredientNames;
       console.log('Sending dietary tags:', filterCriteria);
       const dietaryTags = mapDietaryTags(filterCriteria.dietFilter, filterCriteria.categoryFilter, filterCriteria.mealFilter);
       console.log('Sending dietary tags was successful! Here they are:', dietaryTags);
-
+      console.log('list of ingredietentes after mapping', ingredientNames)
       
       // Your logic to send dietary tags based on filterCriteria
     } catch (error) {
@@ -197,6 +200,8 @@ const Pantry = () => {
     const [draggedIngredientName, setDraggedIngredientName] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
     const [expandedRecipeIndex, setExpandedRecipeIndex] = useState(null);
+    let [ingredientNames, setIngredientNames] = useState([]);
+
 
     const toggleRecipeExpansion = (index) => {
         if (expandedRecipeIndex === index) {
@@ -497,8 +502,8 @@ const Pantry = () => {
                 setRecipeSuggestions([]);
                 return;
             }
-            const ingredientNames = selectedIngredients.map((ingredient) => ingredient.ingredientName);
-            
+            ingredientNames = selectedIngredients.map((ingredient) => ingredient.ingredientName);
+            setIngredientNames(ingredientNames);
             
             const response = await fetch("http://localhost:8080/api/search-recipes/", {
                 method: "POST",
@@ -542,8 +547,6 @@ const Pantry = () => {
             servingSize: '0',
             prepTime: '0',
         };
-
-            await sendDietaryTags(ingredientNames, mapDietaryTags, filterCriteria);
 
             if (animate) {
                 const success = new Audio(greatSound);
@@ -764,7 +767,7 @@ const Pantry = () => {
                     <div className="recipe-title">Matched Recipes</div>
                     <button id="toggleDropdown">Filter</button>
                     <div id="filterDropdown" className="dropdown-content">
-                        <MyComponent filterCriteria={filterCriteria} onFilterChange={handleFilterChange} />
+                        <MyComponent ingredientNames={ingredientNames} filterCriteria={filterCriteria} onFilterChange={handleFilterChange} />
                     </div>
                 </div>
                 <div className="recipe-search-panel">
