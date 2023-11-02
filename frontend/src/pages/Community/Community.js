@@ -1,21 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./community.css";
 import CreatePost from '../../components/CreatePost/CreatePost.js';
 
 const Community = () => {
     const [isPostWindowOpen, setIsPostWindowOpen] = useState(false);
     
-    // Mocked recipes data for the sake of example, replace with actual data source
-    const [recipes, setRecipes] = useState([
-        { id: '1', name: 'Recipe 1' },
-        { id: '2', name: 'Recipe 2' }
-    ]);
+    
+    const [recipes, setRecipes] = useState([]);
 
-    const handlePostSubmit = (selectedRecipe, caption) => {
-        // Logic for handling post submission
-        console.log("Posted recipe: ", selectedRecipe, " with caption: ", caption);
-        setIsPostWindowOpen(false); // Close the post window after submitting
+
+    const fetchUserPosts = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw Error('No token found');
+            }
+
+            const response = await fetch("http://localhost:8080/user/user", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log("data: ", data.posts);
+            if (Array.isArray(data.posts)) {
+                // Update the recipes state with the user's posts
+                const recipeNames = data.posts.map(post => post.name);
+                setRecipes(recipeNames);
+            } else {
+                console.error('Invalid data format:', data);
+            }
+        } catch (error) {
+            console.error('Error fetching user posts:', error);
+        }
     };
+
+    // Fetch user's posts when the component mounts
+    useEffect(() => {
+        fetchUserPosts();
+    }, []);
 
     return (
         <div className="community-container">
@@ -26,10 +56,14 @@ const Community = () => {
                 <hr />
                 
                 <div className="recipe-grid">
-
+                    {recipes.map((recipe, index) => (
+                        <div key={index} className="recipe-item button-33">
+                            {recipe}
+                        </div>
+                    ))}
                 </div>
 
-                <button className="create-post-btn" onClick={() => setIsPostWindowOpen(true)}>
+                <button className="create-post-btn button-44" onClick={() => setIsPostWindowOpen(true)}>
                     <i className="fas fa-plus"></i>
                 </button>
             </div>

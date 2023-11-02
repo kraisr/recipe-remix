@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './createpost.css'; // Consider creating a separate CSS for styling
 import Avatar from "react-avatar-edit";
+import question from "../../images/question.png";
 
 
 //Components
@@ -15,7 +16,8 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   const [recipeName, setRecipeName] = useState("");
   const [recipeIngredient, setRecipeIngredient] = useState("");
   const [caption, setCaption] = useState("");
-  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedImage, setSelectedImage] = useState(question);
+  const [isComponentOpen, setIsComponentOpen] = useState(isOpen);
 
   // Use useEffect to fetch user's recipes when the component mounts
   useEffect(() => {
@@ -147,11 +149,15 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   
       const data = await response.json();
       console.log("data ", data);
+
+      onRequestClose();
+      console.log(isComponentOpen);
   
       // Optionally, you can reset the form or perform other actions after a successful post creation
       // setRecipeName("");
       // setSelectedImage("");
       // setCaption("");
+      window.location.reload();
     } catch (error) {
       console.error('Error creating a post:', error);
     }
@@ -168,6 +174,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
         <div className="text-options">
           <div className="choose-recipe">
             <h4>Choose Recipe to Post: </h4>
+
             <select onChange={handleRecipeSelection}>
               <option value="">Select a Recipe</option>
               {recipeNames.map((recipeName, index) => (
@@ -176,6 +183,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
                 </option>
               ))}
             </select>
+
           </div>
           <h4>or</h4>
           <h4>Create Post from Scratch</h4>
