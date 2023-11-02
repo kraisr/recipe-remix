@@ -78,19 +78,19 @@ const userSchema = new mongoose.Schema({
     recipes: [{
         id: {
             type: String,
-            required: true,
+            required: false,
         },
         totalTime: {
             type: String,
-            required: true,
+            required: false,
         },
         name: {
             type: String,
-            required: true,
+            required: false,
         },
         numberOfServings: {
             type: Number,
-            required: true,
+            required: false,
         },
         ingredientLines: [String],
         source: {
@@ -101,7 +101,7 @@ const userSchema = new mongoose.Schema({
         },
         mainImage: {
             type: String,
-            required: true,
+            required: false,
         },
         instructions: [String],
     }],
@@ -121,11 +121,11 @@ const userSchema = new mongoose.Schema({
             },
             name: {
                 type: String,
-                required: true,
+                required: false,
             },
             numberOfServings: {
                 type: Number,
-                required: true,
+                required: false,
             },
             ingredientLines: [String],
             source: {
@@ -136,7 +136,7 @@ const userSchema = new mongoose.Schema({
             },
             mainImage: {
                 type: String,
-                required: true,
+                required: false,
             },
             instructions: [String],
         }],
@@ -254,12 +254,12 @@ const userSchema = new mongoose.Schema({
         },
         title: {
             type: String,
-            required: true,
+            required: false,
         },
         items: [{
             item: {
                 type: String,
-                required: true,
+                required: false,
             },
             quantity: {
                 type: Number,
@@ -273,15 +273,15 @@ const userSchema = new mongoose.Schema({
     posts: [{
         id: {
             type:String,
-            required: true,
+            required: false,
         },
         name: {
             type: String,
-            required: true
+            required: false
         },
         image: {
             type: String,
-            required: true,
+            required: false,
         },
         caption: {
             type: String, 
@@ -289,7 +289,7 @@ const userSchema = new mongoose.Schema({
         },
         ingredients: [{
             type: String,
-            required: true,
+            required: false,
         }]
 
     }],
