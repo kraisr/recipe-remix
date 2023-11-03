@@ -29,7 +29,7 @@ const Post = ({ postId }) => {
 
   return (
     post ? (  // Check if post is not null
-      <div className="recipe-content">
+      <div className="recipe-content2">
         <div className="name-container">
           <h1>{post.name}</h1>
         </div>

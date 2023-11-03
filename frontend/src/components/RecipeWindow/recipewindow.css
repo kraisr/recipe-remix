@@ -15,8 +15,10 @@
 .recipe-content {
     background-color: #FBF2CF;
     padding: 20px;
-    width: 70vw;
-    max-width: 70%;
+    padding-left: 5%;
+    padding-right: 5%;
+    width: 50vw;
+    max-width: 50%;
     max-height: 80vh;
     border-radius: 10px;
     overflow-y: auto;
