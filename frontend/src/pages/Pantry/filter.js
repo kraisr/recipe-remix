@@ -97,7 +97,8 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
           dairy: userPreferences.dairyFree,
           gluten: userPreferences.glutenIntolerance,
       }));
-            console.log('User Preferences:', userPreferences);
+
+       console.log('User Preferences:', userPreferences);
 
     } catch (error) {
       console.error('Error fetching user preferences:', error);
