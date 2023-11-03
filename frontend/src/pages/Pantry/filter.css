@@ -1,5 +1,5 @@
 /* Style the label next to the checkbox */
-label {
+.label2 {
   display: inline-flex;
   align-items: center;
   margin-left: 25%; /* Adjust the spacing between the label and checkbox */
