@@ -93,10 +93,11 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
       }));
 
       setCategoryFilter((prevState) => ({
-          nuts: data.preferences.nutAllergies,
-          dairy: data.preferences.dairyFree,
-          gluten: data.preferences.glutenIntolerance,
-        }));
+        nuts: data.preferences.nutAllergies,
+        dairy: data.preferences.dairyFree,
+        gluten: data.preferences.glutenIntolerance,
+      }));
+      
        //console.log('User Preferences:', userPreferences);
 
     } catch (error) {
@@ -517,10 +518,11 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
       )}
     </div>
 
-      <div className="filter-section">
-      <button onClick={() => updateFilterCriteriaAndApply(ingredientNames)}>Apply Filters</button>
-        <button className="filter-section" onClick={clearAllFilters}>Clear Filters</button>
-      </div>
+            <div className="filter-section">
+          <button className="apply-filters-button" onClick={() => updateFilterCriteriaAndApply(ingredientNames)}>Apply Filters</button>
+          <button className="clear-filters-button" onClick={clearAllFilters}>Clear Filters</button>
+        </div>
+
     </div>
   );
 }
