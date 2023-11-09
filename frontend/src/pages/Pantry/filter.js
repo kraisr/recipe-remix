@@ -355,7 +355,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={mealFilter.breakfast}
                 onChange={() => handleMealFilterChange('breakfast')}
               />
-              <label className='label2' htmlFor="breakfast">Breakfast</label>
+              <label className='filter-label' htmlFor="breakfast">Breakfast</label>
             </div>
             <div className="checkbox-label">
               <input
@@ -364,7 +364,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={mealFilter.lunch}
                 onChange={() => handleMealFilterChange('lunch')}
               />
-              <label className='label2' htmlFor="lunch">Lunch</label>
+              <label className='filter-label' htmlFor="lunch">Lunch</label>
             </div>
             <div className="checkbox-label">
               <input
@@ -373,7 +373,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={mealFilter.dinner}
                 onChange={() => handleMealFilterChange('dinner')}
               />
-              <label className='label2' htmlFor="dinner">Dinner</label>
+              <label className='filter-label' htmlFor="dinner">Dinner</label>
             </div>
             <div className="checkbox-label">
               <input
@@ -382,7 +382,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={mealFilter.snack}
                 onChange={() => handleMealFilterChange('snack')}
               />
-              <label className='label2' htmlFor="snack">Snack</label>
+              <label className='filter-label' htmlFor="snack">Snack</label>
             </div>
           </div>
         )}
@@ -399,7 +399,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={categoryFilter.nuts}
                 onChange={() => handleCategoryFilterChange('nuts')}
               />
-              <label className='label2' htmlFor="Nuts">Nuts</label>
+              <label className='filter-label' htmlFor="Nuts">Nuts</label>
             </div>
             <div className="checkbox-label">
               <input
@@ -408,7 +408,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={categoryFilter.dairy}
                 onChange={() => handleCategoryFilterChange('dairy')}
               />
-              <label className='label2' htmlFor="Dairy">Dairy</label>
+              <label className='filter-label' htmlFor="Dairy">Dairy</label>
             </div>
             <div className="checkbox-label">
               <input
@@ -417,7 +417,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={categoryFilter.gluten}
                 onChange={() => handleCategoryFilterChange('gluten')}
               />
-              <label className='label2' htmlFor="Gluten">Gluten</label>
+              <label className='filter-label' htmlFor="Gluten">Gluten</label>
             </div>
           </div>
         )}
@@ -434,7 +434,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={dietFilter.carb}
                 onChange={() => handleDietFilterChange('carb')}
               />
-              <label className='label2' htmlFor="Carb">Low-Carb</label>
+              <label className='filter-label' htmlFor="Carb">Low-Carb</label>
             </div>
             <div className="checkbox-label">
               <input
@@ -443,7 +443,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={dietFilter.keto}
                 onChange={() => handleDietFilterChange('keto')}
               />
-              <label className='label2' htmlFor="Keto">Keto</label>
+              <label className='filter-label' htmlFor="Keto">Keto</label>
             </div>
             <div className="checkbox-label">
               <input
@@ -452,7 +452,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={dietFilter.fat}
                 onChange={() => handleDietFilterChange('fat')}
               />
-              <label className='label2' htmlFor="Fat">Low-Fat</label>
+              <label className='filter-label' htmlFor="Fat">Low-Fat</label>
             </div>
             <div className="checkbox-label">
               <input
@@ -461,7 +461,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={dietFilter.sugar}
                 onChange={() => handleDietFilterChange('sugar')}
               />
-              <label className='label2' htmlFor="sugar">Low-Sugar</label>
+              <label className='filter-label' htmlFor="sugar">Low-Sugar</label>
             </div>
             <div className="checkbox-label">
               <input
@@ -470,7 +470,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={dietFilter.vegetarian}
                 onChange={() => handleDietFilterChange('vegetarian')}
               />
-              <label className='label2' htmlFor="vegetarian">Vegetarian</label>
+              <label className='filter-label' htmlFor="vegetarian">Vegetarian</label>
             </div>
             <div className="checkbox-label">
               <input
@@ -479,7 +479,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
                 checked={dietFilter.vegan}
                 onChange={() => handleDietFilterChange('vegan')}
               />
-              <label className='label2' htmlFor="vegan">Vegan</label>
+              <label className='filter-label' htmlFor="vegan">Vegan</label>
             </div>
           </div>
         )}
@@ -488,7 +488,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
       <div className="filter-section">
       <button onClick={toggleServingFilter}>Serving Size</button>
       {showServingFilter && (
-        <label className='label2'>
+        <label className='filter-label'>
           <input
             type="range"
             min="0"
@@ -505,7 +505,7 @@ const MyComponent = ({  setFilteredRecipeSuggestions, ingredientNames, filterCri
     <div className="filter-section">
       <button onClick={togglePrepTimeFilter}>Max Prep Time</button>
       {showPrepTimeFilter && (
-        <label className='label2'>
+        <label className='filter-label'>
           <input
             type="number" // Use type "number" for numeric input
             min="4"
