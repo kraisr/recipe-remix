@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./post.css";
-
+import StarRating from "../StarRating/StarRating";
 
 const Post = ({ postId }) => {
   console.log('post id in POST: ', postId);
@@ -53,6 +53,7 @@ const Post = ({ postId }) => {
             {post.caption}
           </div>
         </div>
+        <StarRating />
       </div>
     ) : null  // Return null if post is not set yet
   );
