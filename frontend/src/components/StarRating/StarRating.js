@@ -97,6 +97,9 @@ const StarRating = ({ postId }) => {
           </span>
         );
       })}
+      <div className="rating-preview">
+        {hoverRating ? `(${hoverRating})` : `(${currentRating})`}
+      </div>
     </div>
   );
 };
