@@ -23,14 +23,16 @@ const StarRating = ({ postId }) => {
         }
 
         const responseData = await response.json();
+        console.log('Rating fetched:', responseData);
         if (responseData.rating) {
-          setCurrentRating(responseData.rating);
+          setCurrentRating(responseData.rating || 0);
         }
       } catch (error) {
         console.error('Error fetching rating:', error);
       }
     };
 
+    setCurrentRating(0);
     if (postId) {
       fetchRating();
     }
