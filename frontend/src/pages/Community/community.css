@@ -293,3 +293,59 @@
 .button-44:hover {
   background-color: #e53935;
 }
+
+.search-input-container {
+  position: relative;
+  width: 90%;
+  margin: 1%;
+}
+
+.search-suggestions-container {
+  position: absolute;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  border-top: none;
+  background-color: white;
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search-suggestions-dropdown {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.search-suggestions-dropdown li {
+  list-style: none;
+  padding: 8px 16px;
+  margin: 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.search-suggestions-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.search-suggestions-dropdown li:hover {
+  background-color: #f9f9f9;
+}
+
+.search-suggestions-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-suggestions-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+
+.divider {
+  text-align: center;
+  padding: 8px;
+  color: #ccc;
+}
+

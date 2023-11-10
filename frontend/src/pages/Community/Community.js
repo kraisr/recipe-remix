@@ -3,7 +3,7 @@ import "./community.css";
 import CreatePost from '../../components/CreatePost/CreatePost.js';
 import Post from '../../components/Post/Post.js';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   components: {
@@ -30,6 +30,29 @@ const Community = () => {
     const [currentPostId, setCurrentPostId] = useState(null);
     const { postId } = useParams();
     const [searchTerm, setSearchTerm] = useState("");
+    const [searchResults, setSearchResults] = useState({ users: [], posts: [] });
+    const navigate = useNavigate();
+
+    const handleSearch = async (searchTerm) => {
+      setSearchTerm(searchTerm);
+    
+      if (searchTerm.trim() === '') {
+        setSearchResults({ users: [], posts: [] });
+        return;
+      }
+    
+      try {
+        const response = await fetch(`http://localhost:8080/user/search-community?term=${encodeURIComponent(searchTerm)}`);
+        if (!response.ok) {
+          throw new Error('Problem fetching search suggestions');
+        }
+        const results = await response.json();
+        console.log(results);
+        setSearchResults(results);
+      } catch (error) {
+        console.error('Error fetching search suggestions:', error);
+      }
+    };
 
     const fetchUserPosts = async () => {
         try {
@@ -111,13 +134,32 @@ const Community = () => {
 
             <div className="center-panel">
               <center>
+              <div className="search-input-container">
                 <input 
                     type="text" 
-                    placeholder="Search Posts..." 
+                    placeholder="Search Posts or Users..." 
                     value={searchTerm} 
-                    onChange={(e) => setSearchTerm(e.target.value)} 
+                    onChange={(e) => handleSearch(e.target.value)} 
                     className="search-input"
                 />
+                  <div className="search-suggestions-container">
+                  <ul className="search-suggestions-dropdown">
+                    {searchResults.users.map((user, index) => (
+                      <li key={`user-${index}`} className="suggestion-item" onClick={() => navigate(`/profile/${user.token}`)}>
+                        {user.firstName} {user.lastName} ({user.username})
+                      </li>
+                    ))}
+                    {searchResults.users.length > 0 && searchResults.posts.length > 0 && (
+                      <li className="divider">------ POSTS ------</li>
+                    )}
+                    {searchResults.posts.map((post, index) => (
+                      <li key={`post-${index}`} className="suggestion-item">
+                        {post.name} - {post.caption}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                </div>
               </center>
               <div className="center-button">
                 <button className="community-button">Ratings</button>
