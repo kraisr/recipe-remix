@@ -94,40 +94,77 @@ export const fetchPostsByUser = async (req, res) => {
 };
 
 
-
 export const addRatingToPost = async (req, res) => {
     try {
         const { postId, rating } = req.body;
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
 
-        if (!postId || rating === undefined) {
-            return res.status(400).json({ error: "Post ID and rating are required." });
-        }
-
-        const user = await User.findOne({ 'posts._id': postId });
-
-        if (!user) {
-            return res.status(404).send('Post not found.');
-        }
-
-        // Extract the specific post from the user's posts array
-        const post = user.posts.find(post => post._id.equals(postId));
-
+        // Check if the user has already rated the post
+        const post = await Post.findById(postId);
         if (!post) {
-            return res.status(404).send('Post not found in the user\'s posts.');
+            return res.status(404).json({ message: 'Post not found.' });
         }
 
-        console.log(post);
-        post.ratings.push(rating);
-        console.log(post);
+        // Check if the post already has a rating from this user
+        const existingRatingIndex = post.ratings.findIndex(r => r.user.equals(userId));
+        if (existingRatingIndex !== -1) {
+            // Update the existing rating
+            post.ratings[existingRatingIndex].value = rating;
+        } else {
+            // Add a new rating
+            post.ratings.push({ user: userId, value: rating });
+        }
 
-        const updatedPost = await post.save();
+        await post.save(); // Save the updated post
 
         res.status(200).json({ 
-            post: updatedPost,
-            averageRating: updatedPost.averageRating,
+            message: "Rating added successfully",
+            post, // The saved post with ratings
         });
 
     } catch (error) {
-        res.status(500).json({ error: "Failed to add rating to post." });
+        console.error('Error adding rating to post:', error);
+        res.status(500).json({ message: 'Failed to add rating to post.' });
     }
+};
+
+export const fetchUserRating = async (req, res) => {
+    try {
+        // Extract the postId from query parameters
+        const { postId } = req.body;
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        
+        // Find the post by ID
+        const post = await Post.findById(postId);
+
+        // Check if the post exists
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found.' });
+        }
+
+        // Find the user's rating from the post's ratings array
+        const userRating = post.ratings.find(rating => rating.user.toString() === userId);
+
+        // If the user hasn't rated the post, return an appropriate message
+        if (!userRating) {
+            return res.status(200).json({ rating: null });
+        }
+
+        // Return the user's rating
+        res.status(200).json({ rating: userRating.value });
+    } catch (error) {
+        // If the token is invalid or expired, return an unauthorized error
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+        }
+
+        // Log the error and return a server error response
+        console.error('Error fetching user rating:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+
 };

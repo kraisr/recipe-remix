@@ -21,13 +21,10 @@ const postSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  ratings: [
-    {
-      type: Number,
-      min: 0,
-      max: 5,
-    },
-  ],
+  ratings: [{
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    value: { type: Number, min: 0, max: 5 },
+  }],
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
@@ -35,12 +32,12 @@ const postSchema = mongoose.Schema({
 
 // Virtual field for average rating
 postSchema.virtual('averageRating').get(function() {
+  let average = 0;
   if (this.ratings.length > 0) {
-    const sum = this.ratings.reduce((acc, rating) => acc + rating, 0);
-    return parseFloat((sum / this.ratings.length).toFixed(2)); // Rounds to 2 decimal places
-  } else {
-    return 0; // Default to 0 if no ratings
+    const sum = this.ratings.map(rating => rating.value).reduce((acc, value) => acc + value, 0);
+    average = sum / this.ratings.length;
   }
+  return average.toFixed(2);
 });
 
 const Post = mongoose.model('Post', postSchema);

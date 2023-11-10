@@ -50,7 +50,7 @@ const Community = () => {
             }
 
             const data = await response.json();
-            console.log("data: ", data);
+            // console.log("data: ", data);
             if (Array.isArray(data)) {
                 // Update the recipes state with the user's posts
                 const recipeNames = data.map(post => post.name);
@@ -63,11 +63,6 @@ const Community = () => {
             console.error('Error fetching user posts:', error);
         }
     };
-
-    const test = () => {
-        console.log("recipes: ", recipes);
-        console.log("posts: ", posts);
-    }
 
     const handlePostClick = (postId) => {
       // Find the recipe object
@@ -109,8 +104,6 @@ const Community = () => {
                     <i className="fas fa-plus"></i>
                 </button>
             </div>
-            
-            {/* <button onClick={test}>Create Post</button> */}
 
             <div className="scroll-wrapper">
               <div className="center-panel">
