@@ -40,5 +40,8 @@ postSchema.virtual('averageRating').get(function() {
   return average.toFixed(2);
 });
 
+// Index creation for the Post schema
+postSchema.index({ name: 'text', caption: 'text' });
+
 const Post = mongoose.model('Post', postSchema);
 export default Post;

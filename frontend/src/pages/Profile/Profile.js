@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom"
 import "./profile.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../state";
 import { v4 as uuidv4 } from 'uuid'; // Import the uuid library
@@ -29,6 +29,7 @@ const Profile = () => {
   const [logoutModal, setLogoutModal] = useState(false);
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
+  const { userId } = useParams();
 
   const handlePostClick = (postId) => {
     navigate(`/community/${postId}`);
@@ -76,9 +77,9 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    const fetchName = async () => {
+    const fetchName = async (userId) => {
       try {
-        const token = localStorage.getItem('token');
+        const token = userId || localStorage.getItem('token');
         if (!token) {
           throw new Error('No token found');
         }
@@ -103,13 +104,13 @@ const Profile = () => {
       }
     };
 
-    fetchName();
-  }, []);
+    fetchName(userId);
+  }, [userId]);
 
   useEffect(() => {
-    const fetchUserPosts = async () => {
+    const fetchUserPosts = async (userId) => {
       try {
-        const token = localStorage.getItem('token');
+        const token = userId || localStorage.getItem('token');
         if (!token) {
           throw Error('No token found');
         }
@@ -139,14 +140,13 @@ const Profile = () => {
       }
     };
 
-    fetchUserPosts();
-  }, []);
+    fetchUserPosts(userId);
+  }, [userId]);
 
   const handlePostDeletion = async (postId) => {
     try {
 
-      console.log(postId);
-      const token = localStorage.getItem('token');
+      const token = userId || localStorage.getItem('token');
       if (!token) {
         throw new Error('No token found');
       }

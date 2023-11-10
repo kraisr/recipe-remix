@@ -4,11 +4,12 @@ import User from '../models/User.js';
 export const getUser = async (req, res) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
+        console.log(token);
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
-
+        console.log(userId);
         const user = await User.findById(userId).select('-password');
-
+        console.log(user);
         if (!user) {
             return res.status(400).json({ error: "User does not exist" });
         }
@@ -18,9 +19,6 @@ export const getUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
-
-
-
 
 export const editRecipe = async (req, res) => {
   try {

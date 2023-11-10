@@ -10,6 +10,8 @@ import { sendEmail, updateReminder } from "../controllers/sendEmail.js";import {
 import { saveRecipes, getRecipes, addMissingIngredient } from "../controllers/user.js";
 import { createFolder, getFolders, addRecipeToFolder, deleteFolder, removeRecipeFromFolder } from "../controllers/user.js"
 
+import { searchCommunity } from "../controllers/search.js";
+
 const router = express.Router();
 
 /* GET USER DATA */
@@ -71,5 +73,9 @@ router.get("/get-folders", getFolders);
 router.post("/add-recipe-to-folder", addRecipeToFolder);
 router.post("/delete-folder", deleteFolder);
 router.post("/remove-recipe-from-folder", removeRecipeFromFolder);
+
+
+/* COMMUNITY SEARCH */
+router.get("/search-community", searchCommunity);
 
 export default router;
