@@ -23,10 +23,7 @@ const theme = createTheme({
 
 const Community = () => {
     const [isPostWindowOpen, setIsPostWindowOpen] = useState(false);
-    const [recipes, setRecipes] = useState([]);
     const [posts, setPosts] = useState([]);
-    const [clickedRecipe, setClickedRecipe] = useState('');
-    const [currentPost, setCurrentPost] = useState(null);
     const [currentPostId, setCurrentPostId] = useState(null);
     const { postId } = useParams();
     const [searchTerm, setSearchTerm] = useState("");
@@ -77,8 +74,6 @@ const Community = () => {
             // console.log("data: ", data);
             if (Array.isArray(data)) {
                 // Update the recipes state with the user's posts
-                const recipeNames = data.map(post => post.name);
-                setRecipes(recipeNames);
                 setPosts(data);
             } else {
                 console.error('Invalid data format:', data);
