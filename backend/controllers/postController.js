@@ -83,18 +83,16 @@ export const fetchPostsByUser = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
     
-        const posts = await Post.find({ user: userId }).populate('user', 'firstName lastName username'); // Populate user details as needed
-
-        if (!posts.length) {
-            return res.status(404).json({ message: 'No posts found for the user.' });
-        }
-
+        const posts = await Post.find({ user: userId })
+                                .sort({ createdAt: -1 })
+                                .populate('user', 'firstName lastName username');
         res.status(200).json(posts);
     } catch (error) {
         console.error('Error finding posts for the user:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
 
 
 export const addRatingToPost = async (req, res) => {
