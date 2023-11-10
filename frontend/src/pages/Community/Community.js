@@ -29,6 +29,7 @@ const Community = () => {
     const [currentPost, setCurrentPost] = useState(null);
     const [currentPostId, setCurrentPostId] = useState(null);
     const { postId } = useParams();
+    const [searchTerm, setSearchTerm] = useState("");
 
     const fetchUserPosts = async () => {
         try {
@@ -88,8 +89,12 @@ const Community = () => {
     return (
         <div className="community-container">
             <div className="left-panel">
+                <button className="create-post-btn button-44" onClick={() => setIsPostWindowOpen(true)}>
+                    <i className="fas fa-plus"></i>
+                </button>
+
                 <div className="posted-title">
-                    <h4>My Posted Recipes</h4>
+                    <h5>My Posted Recipes</h5>
                 </div>
                 {/* <hr /> */}
                 
@@ -104,16 +109,50 @@ const Community = () => {
                     </ul>
                   ))}
                 </div>
-
-                <button className="create-post-btn button-44" onClick={() => setIsPostWindowOpen(true)}>
-                    <i className="fas fa-plus"></i>
-                </button>
+                <div className="posted-title">
+                    <h5>Categories</h5>
+                </div>
             </div>
             
             {/* <button onClick={test}>Create Post</button> */}
 
+            <div className="center-panel">
+              <center>
+                <input 
+                    type="text" 
+                    placeholder="Search Posts..." 
+                    value={searchTerm} 
+                    onChange={(e) => setSearchTerm(e.target.value)} 
+                    className="search-input"
+                />
+              </center>
+              <div className="center-button">
+                <button className="community-button">Ratings</button>
+                <button className="community-button">Recentness</button>
+              </div>
+
+              <div className="post-grid">
+                  {posts.map((post) => (
+                    <ul className="post-list" key={post._id}>
+                      <li>
+                        <div className="post-item" onClick={() => handlePostClick(post._id)}>
+                            <h4>{post.name}</h4>
+                            <div className="author"> 
+                              <p>User: </p> 
+                            </div>
+                            <div className="time">
+                              <p>Posted at: </p>
+                            </div>
+                        </div>
+                      </li>
+                    </ul>
+                  ))}
+              </div>
+
+            </div>
+
             <div className="scroll-wrapper">
-              <div className="center-panel">
+              <div className="right-panel">
                 {currentPostId && (
                   <Post postId={currentPostId} />
                 )}
