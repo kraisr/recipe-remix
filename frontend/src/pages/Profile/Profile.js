@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom"
 import "./profile.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../state";
 import { v4 as uuidv4 } from 'uuid'; // Import the uuid library
@@ -29,6 +29,7 @@ const Profile = () => {
   const [logoutModal, setLogoutModal] = useState(false);
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
+  const { userId } = useParams();
 
   const handlePostClick = (postId) => {
     navigate(`/community/${postId}`);
@@ -76,9 +77,9 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    const fetchName = async () => {
+    const fetchName = async (userId) => {
       try {
-        const token = localStorage.getItem('token');
+        const token = userId || localStorage.getItem('token');
         if (!token) {
           throw new Error('No token found');
         }
@@ -103,23 +104,23 @@ const Profile = () => {
       }
     };
 
-    fetchName();
-  }, []);
+    fetchName(userId);
+  }, [userId]);
 
   useEffect(() => {
-    const fetchUserPosts = async () => {
+    const fetchUserPosts = async (userId) => {
       try {
-        const token = localStorage.getItem('token');
+        const token = userId || localStorage.getItem('token');
         if (!token) {
           throw Error('No token found');
         }
 
-        const response = await fetch("http://localhost:8080/user/user", {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
+        const response = await fetch("http://localhost:8080/posts/fetch-user-posts", {
           method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+          },
         });
 
         if (!response.ok) {
@@ -127,11 +128,11 @@ const Profile = () => {
         }
 
         const data = await response.json();
-        if (data && data.posts && Array.isArray(data.posts)) {
+        if (data && Array.isArray(data)) {
           // Check if data.posts is an array before setting the state
-          setPosts(data.posts);
+          setPosts(data);
         } else {
-          console.error('Invalid posts data received:', data.posts);
+          console.error('Invalid posts data received:', data);
         }
 
       } catch (error) {
@@ -139,14 +140,13 @@ const Profile = () => {
       }
     };
 
-    fetchUserPosts();
-  }, []);
+    fetchUserPosts(userId);
+  }, [userId]);
 
   const handlePostDeletion = async (postId) => {
     try {
 
-      console.log(postId);
-      const token = localStorage.getItem('token');
+      const token = userId || localStorage.getItem('token');
       if (!token) {
         throw new Error('No token found');
       }
@@ -185,7 +185,7 @@ const Profile = () => {
 
         <div className="user-profile-card">
           <div className="card-options" onClick={toggleDropdown} ref={dropdownRef}>
-            <i className="fas fa-ellipsis-h"></i>
+            {!userId && (<i className="fas fa-ellipsis-h"></i>)}
             {dropdownOpen && (
               <div className="card-dropdown-menu">
                 <Link to="/settings" className="card-dropdown-item">Settings</Link>
@@ -222,7 +222,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="edit-profile" onClick={toggleModal}>
-            <h3>Edit Profile</h3>
+            {!userId && (<h3>Edit Profile</h3>)}
           </div>
           {editModal && (
             <EditProfile
@@ -235,7 +235,7 @@ const Profile = () => {
       </div>
       <div className="center-container">
       <div className="post-title">
-        <h4>My Posts</h4>
+        {!userId ? (<h4>My Posts</h4>) : (<h4>Posts</h4>)}
       </div>
       <div className="post-grid-container">
         <div className="post-grid">

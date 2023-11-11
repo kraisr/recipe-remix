@@ -15,9 +15,10 @@
 .community-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: stretch; 
   height: calc(100vh - 100px - 5%);
+  width: 100%;
   /* margin-top: -8px;
   margin-bottom: -8px; */
 }
@@ -28,16 +29,23 @@
     align-items: center;
 
     /* border:1px solid red; */
-    margin: 2%;
-    width: 30%;
+    padding: 1%;
+    width: 250px;
     min-height: 100px;
+    border-right: 1px solid #A1C298;
+    height: 100%;
+    /* border: 1px solid red; */
     
+}
+
+.left-panel center {
+  width: 100%;
 }
 
 .posted-title{
     display: flex;
     align-items: center;
-    
+    align-self: flex-start;
 }
 
 .posted-title h4{
@@ -65,6 +73,16 @@
     font-size: 150%;
 }
 
+.divide-line {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-bottom: 1px solid #A1C298;
+  width: 112%;
+  height: 30px;
+  margin-left: -1%;
+  margin-right: -1%;
+}
+
 
 /* .center-panel{
     background-color: rgb(238, 235, 235);
@@ -74,7 +92,7 @@
     max-height: 1%;
     border:1px red solid;
     padding: 5%;
-    align-self: center;
+    align-selftsel: center;
     margin-right:10%;
     position: relative;
     bottom:100%;
@@ -82,10 +100,103 @@
 } */
 
 .center-panel {
+  /* border: 1px solid red; */
+  width: 30%;
+  max-height: 100%;
+  /* min-height: 100%; */
+  margin: 1%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.center-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 60%;
+  margin-left: 20%;
+}
+.community-button {
+  background-color: #A1C298;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 10px;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+.community-button:hover {
+  background-color: #4CAF50;
+    font-weight: bold;
+}
+
+.c-post-grid {
+  max-height: 85%; /* Set the maximum height you desire */
+  overflow-y: auto; /* Add vertical scroll if content exceeds the container height */
+  /* border: 1px solid #ccc; Optional: Add a border for better styling */
+  padding-right: 10%; /* Optional: Add padding for spacing */
+  padding-left: 10%; /* Optional: Add padding for spacing */
+  padding-top: 3%;
+  text-align:center;
+  min-height: 250px;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.post-list {
+  list-style-type: none; /* This removes the bullet points */
+  padding-left: 0;      /* This removes the indentation/padding */
+  /* margin: 0; */
+}
+
+
+
+.post-item {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  background-color: #FBF2CF;
+  border-radius: 5px;
+  cursor: pointer;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+.subtitle {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.author {
+  align-self: flex-start;
+  align-items: flex-start;
+  margin-left: 3%;
+  margin-bottom: 5px;
+  font-size: 10px;
+  padding: 0;
+}
+.time {
+  align-self: flex-start;
+  align-items: flex-start;
+  margin-left: 3%;
+  margin-bottom: 5px;
+  font-size: 10px;
+  padding: 0;
+}
+
+.right-panel {
   background-color: #FBF2CF;
   /* border-radius: 50px; */
   flex: 1;
-  padding: 3% 5% 3% 5%;
+  padding: 2% 4% 2% 4%;
   position: relative;
   max-height: 100%; /* Adjust as needed */
   overflow-y: scroll;
@@ -94,10 +205,11 @@
 
 .scroll-wrapper {
   width: 50%;
-  margin-top: 30px;
-  margin-right: 2%;
+  margin-top: 1%;
+  margin-right: 1%;
   border-radius: 30px;
   overflow: hidden;
+  /* border: 1px solid red; */
 }
 
 .layout-container {
@@ -107,14 +219,15 @@
 }
 
 .recipe-grid {
-    max-height: 100%; /* Set the maximum height you desire */
+    max-height: 30%; /* Set the maximum height you desire */
     overflow-y: auto; /* Add vertical scroll if content exceeds the container height */
-    border: 1px solid #ccc; /* Optional: Add a border for better styling */
+    /* border: 1px solid #ccc; Optional: Add a border for better styling */
     padding-right: 10%; /* Optional: Add padding for spacing */
     padding-left: 10%; /* Optional: Add padding for spacing */
     padding-top: 3%;
     text-align:center;
     min-height: 250px;
+    justify-content: flex-start;
   }
 
   .recipe-item{
@@ -192,6 +305,7 @@
   width: 100%;
   word-break: break-word;
   border: 0;
+  align-self: flex-start;
 }
 
 .button-44:active,
@@ -205,3 +319,59 @@
 .button-44:hover {
   background-color: #e53935;
 }
+
+.search-input-container {
+  position: relative;
+  width: 90%;
+  margin: 1%;
+}
+
+.search-suggestions-container {
+  position: absolute;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* border: 1px solid #ddd; */
+  border-top: none;
+  background-color: white;
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search-suggestions-dropdown {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.search-suggestions-dropdown li {
+  list-style: none;
+  padding: 8px 16px;
+  margin: 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.search-suggestions-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.search-suggestions-dropdown li:hover {
+  background-color: #f9f9f9;
+}
+
+.search-suggestions-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-suggestions-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+
+.divider {
+  text-align: center;
+  padding: 8px;
+  color: #ccc;
+}
+

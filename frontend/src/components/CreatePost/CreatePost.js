@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './createpost.css'; // Consider creating a separate CSS for styling
-import Avatar from "react-avatar-edit";
 import question from "../../images/question.png";
 import { Button, Box, TextField, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 
-
-//Components
-import UploadProfile from "../EditProfile/UploadProfile";
 
 function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
 
@@ -18,7 +14,6 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   const [recipeIngredient, setRecipeIngredient] = useState("");
   const [caption, setCaption] = useState("");
   const [selectedImage, setSelectedImage] = useState(question);
-  const [isComponentOpen, setIsComponentOpen] = useState(isOpen);
   const [currentStep, setCurrentStep] = useState(0);
 
   // Use useEffect to fetch user's recipes when the component mounts
@@ -136,7 +131,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   
       console.log("post: ", post);
   
-      const response = await fetch("http://localhost:8080/user/save-post", {
+      const response = await fetch("http://localhost:8080/posts/create-post", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,7 +148,6 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
       console.log("data ", data);
 
       onRequestClose();
-      console.log(isComponentOpen);
   
       // Optionally, you can reset the form or perform other actions after a successful post creation
       // setRecipeName("");
