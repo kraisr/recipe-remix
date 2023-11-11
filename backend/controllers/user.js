@@ -6,9 +6,9 @@ export const getUser = async (req, res) => {
         const token = req.headers.authorization.split(" ")[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
-
+    
         const user = await User.findById(userId).select('-password');
-
+    
         if (!user) {
             return res.status(400).json({ error: "User does not exist" });
         }
@@ -18,9 +18,6 @@ export const getUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
-
-
-
 
 export const editRecipe = async (req, res) => {
   try {
@@ -860,71 +857,3 @@ export const deleteFolder = async (req, res) => {
       res.status(500).json({ error: err.message });
   }
 };
-
-
-export const savePost = async (req, res) => {
-  try {
-    console.log("hello");
-    const token = req.headers.authorization.split(" ")[1];
-      
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
-
-    const { name, image, caption, ingredients } = req.body;
-
-      // Create a new post object
-    const post = {
-        name,
-        image,
-        caption,
-        ingredients,
-    };
-
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $push: { posts: post } }, // Assuming the posts are stored as an array in the User model
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(400).json({ error: "Error saving the post." });
-    }
-
-    res.status(200).json({ message: "Post created successfully", post });
-  } catch (err) {
-      console.error("Error in savePost function:", err);
-      res.status(500).json({ error: err.message });
-  }
-};
-
-export const deletePost = async (req, res) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
-    console.log("hi");
-    const postId = req.body.postId; // Get the post ID from the request body
-
-    // Use findOneAndUpdate to remove the post with the matching _id
-    
-    const updatedUser = await User.findOneAndUpdate(
-      userId, 
-      { $pull: { posts: { _id: postId } } },
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      // User or post not found
-      return res.status(404).json({ message: 'User or post not found' });
-    }
-
-    // Successfully deleted the post
-    return res.status(200).json({ message: 'Post deleted', user: updatedUser });
-  } catch (error) {
-    // Handle errors, e.g., database error or invalid request
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
-
-

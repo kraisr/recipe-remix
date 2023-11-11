@@ -3,7 +3,7 @@ import "./community.css";
 import CreatePost from '../../components/CreatePost/CreatePost.js';
 import Post from '../../components/Post/Post.js';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   components: {
@@ -23,12 +23,33 @@ const theme = createTheme({
 
 const Community = () => {
     const [isPostWindowOpen, setIsPostWindowOpen] = useState(false);
-    const [recipes, setRecipes] = useState([]);
     const [posts, setPosts] = useState([]);
-    const [clickedRecipe, setClickedRecipe] = useState('');
-    const [currentPost, setCurrentPost] = useState(null);
     const [currentPostId, setCurrentPostId] = useState(null);
     const { postId } = useParams();
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchResults, setSearchResults] = useState({ users: [], posts: [] });
+    const navigate = useNavigate();
+
+    const handleSearch = async (searchTerm) => {
+      setSearchTerm(searchTerm);
+    
+      if (searchTerm.trim() === '') {
+        setSearchResults({ users: [], posts: [] });
+        return;
+      }
+    
+      try {
+        const response = await fetch(`http://localhost:8080/user/search-community?term=${encodeURIComponent(searchTerm)}`);
+        if (!response.ok) {
+          throw new Error('Problem fetching search suggestions');
+        }
+        const results = await response.json();
+        console.log(results);
+        setSearchResults(results);
+      } catch (error) {
+        console.error('Error fetching search suggestions:', error);
+      }
+    };
 
     const fetchUserPosts = async () => {
         try {
@@ -37,7 +58,7 @@ const Community = () => {
                 throw Error('No token found');
             }
 
-            const response = await fetch("http://localhost:8080/user/user", {
+            const response = await fetch("http://localhost:8080/posts/fetch-user-posts", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -50,12 +71,10 @@ const Community = () => {
             }
 
             const data = await response.json();
-            console.log("data: ", data.posts);
-            if (Array.isArray(data.posts)) {
+            // console.log("data: ", data);
+            if (Array.isArray(data)) {
                 // Update the recipes state with the user's posts
-                const recipeNames = data.posts.map(post => post.name);
-                setRecipes(recipeNames);
-                setPosts(data.posts);
+                setPosts(data);
             } else {
                 console.error('Invalid data format:', data);
             }
@@ -63,11 +82,6 @@ const Community = () => {
             console.error('Error fetching user posts:', error);
         }
     };
-
-    const test = () => {
-        console.log("recipes: ", recipes);
-        console.log("posts: ", posts);
-    }
 
     const handlePostClick = (postId) => {
       // Find the recipe object
@@ -88,8 +102,14 @@ const Community = () => {
     return (
         <div className="community-container">
             <div className="left-panel">
+                <center>
+                    <button className="create-post-btn button-44" onClick={() => setIsPostWindowOpen(true)}>
+                      <i className="fas fa-plus"></i>
+                    </button>
+                </center>
+
                 <div className="posted-title">
-                    <h4>My Posted Recipes</h4>
+                    <h5>My Posted Recipes</h5>
                 </div>
                 {/* <hr /> */}
                 
@@ -105,15 +125,72 @@ const Community = () => {
                   ))}
                 </div>
 
-                <button className="create-post-btn button-44" onClick={() => setIsPostWindowOpen(true)}>
-                    <i className="fas fa-plus"></i>
-                </button>
+                <div className="divide-line"></div>
+                
+                <div className="posted-title">
+                    <h5>Categories</h5>
+                </div>
             </div>
-            
-            {/* <button onClick={test}>Create Post</button> */}
+
+            <div className="center-panel">
+              <center>
+              <div className="search-input-container">
+                <input 
+                    type="text" 
+                    placeholder="Search Posts or Users..." 
+                    value={searchTerm} 
+                    onChange={(e) => handleSearch(e.target.value)} 
+                    className="search-input"
+                />
+                  <div className="search-suggestions-container">
+                  <ul className="search-suggestions-dropdown">
+                    {searchResults.users.map((user, index) => (
+                      <li key={`user-${index}`} className="suggestion-item" onClick={() => navigate(`/profile/${user.token}`)}>
+                        {user.firstName} {user.lastName} ({user.username})
+                      </li>
+                    ))}
+                    {searchResults.users.length > 0 && searchResults.posts.length > 0 && (
+                      <li className="divider">------ POSTS ------</li>
+                    )}
+                    {searchResults.posts.map((post, index) => (
+                      <li key={`post-${index}`} className="suggestion-item">
+                        {post.name} - {post.caption}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                </div>
+              </center>
+              <div className="center-button">
+                <button className="community-button">Ratings</button>
+                <button className="community-button">Recentness</button>
+              </div>
+
+              <div className="c-post-grid">
+                  {posts.map((post) => (
+                    <ul className="post-list" key={post._id}>
+                      <li>
+                        <div className="post-item" onClick={() => handlePostClick(post._id)}>
+                            <h4>{post.name}</h4>
+                            <div className="subtitle">
+                              <div className="author"> 
+                                <p>User: </p> 
+                              </div>
+                              <div className="time">
+                                <p>Posted at: </p>
+                              </div>
+                            </div>
+                            
+                        </div>
+                      </li>
+                    </ul>
+                  ))}
+              </div>
+
+            </div>
 
             <div className="scroll-wrapper">
-              <div className="center-panel">
+              <div className="right-panel">
                 {currentPostId && (
                   <Post postId={currentPostId} />
                 )}

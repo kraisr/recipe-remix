@@ -40,6 +40,7 @@ function App() {
           <Route path="/community" element={isLoggedIn ? <Community /> : <Navigate to="/" />} />
           <Route path="/community/:postId" element={isLoggedIn ? <Community /> : <Navigate to="/" />} />
           <Route path="/profile" element={isLoggedIn ? <Profile /> : <Navigate to="/" />} />
+          <Route path="/profile/:userId" element={isLoggedIn ? <Profile /> : <Navigate to="/" />} />
           <Route path="/settings" element={isLoggedIn ? <Settings /> : <Navigate to="/" />} />
           <Route path="/preferences" element={isLoggedIn ? <Preferences /> : <Navigate to="/" />} />
           <Route path="/shoppingList" element={isLoggedIn ? <ShoppingList /> : <Navigate to="/" />} />

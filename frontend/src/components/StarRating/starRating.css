@@ -1,0 +1,11 @@
+.star-rating {
+  font-size: 1.6rem;
+  cursor: pointer;
+  display: flex;
+  padding-bottom: 3%;
+  justify-content: flex-end;  
+}
+
+.star {
+  color: grey;
+}

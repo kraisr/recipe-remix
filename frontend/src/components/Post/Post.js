@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./post.css";
-
+import StarRating from "../StarRating/StarRating";
 
 const Post = ({ postId }) => {
-  console.log('post id in POST: ', postId);
   const [post, setPost] = useState(null);
 
   useEffect(() => {
-    console.log('postId:', postId);
     async function fetchPostData() {
       try {
         const response = await fetch(`http://localhost:8080/posts/${postId}`);
@@ -16,7 +14,6 @@ const Post = ({ postId }) => {
         }
         const data = await response.json();
         setPost(data);
-        console.log('data32: ', data);
       } catch (error) {
         console.error('Error fetching post:', error);
       }
@@ -53,8 +50,9 @@ const Post = ({ postId }) => {
             {post.caption}
           </div>
         </div>
+        <StarRating postId={postId} />
       </div>
-    ) : null  // Return null if post is not set yet
+    ) : null
   );
 };
 
