@@ -120,6 +120,121 @@
     margin: 0; /* Add some margin for spacing */
 }
 
+.landing-bottom-container {
+    display: flex;
+    overflow: hidden;
+    justify-content: flex-start;
+  }
+  
+  /* Add styles for the LandingImage component */
+  .landing-bottom-container > div {
+    margin-right: 10px;
+    border-radius: 10%;
+  }
+  
+  /* Ensure images wrap around */
+  .landing-bottom-container {
+    white-space: nowrap;
+  }
+  
+  /* Adjust image size for better display */
+  .landing-bottom-container img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Hide the default drag preview image */
+  .landing-bottom-container div[style*="cursor: grab"] {
+    cursor: grab;
+    cursor: -webkit-grab;
+  }
+
+
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap");
+/* * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+} */
+/* .about-us {
+    margin-top:20%;
+    margin-bottom: 20%;
+    background-color: #C6EBC5;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  padding: 90px 0;
+ 
+} */
+.pic {
+  height: auto;
+  width: 400px;
+  border-radius: 12px;
+}
+.about {
+   height: 90vh;
+  width: 100vw;
+  max-width: 85%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #C6EBC5;
+}
+.text {
+  width: 540px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.text h2 {
+  color: #333;
+  font-size: 90px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.text h5 {
+  color: #333;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  text-align: center;
+}
+span {
+  color: #4070f4;
+}
+.text p {
+  color: #333;
+  font-size: 18px;
+  line-height: 25px;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.data {
+  margin-top: 30px;
+}
+.hire {
+  font-size: 18px;
+  background: #4070f4;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  transition: 0.5s;
+}
+.hire:hover {
+  background: #000;
+}
+
+
+
+
+  
+
 @media (min-width: 768px) {
     
     .landing-container {
@@ -146,6 +261,11 @@
         margin-right: 20%;
     }
 
+    .nav-contact{
+        position: relative;
+        left:50%;
+    }
+
     .nav-content {
         display: flex;
         justify-content: space-between;
@@ -160,7 +280,8 @@
     .nav-content .landing-nav-button {
         flex-direction: row; /* Makes buttons display side-by-side on larger screens */
         gap: 20px; /* Provides a gap between the buttons */
-        padding-left: 275%;
+        position: relative;
+        left: 160%;
         width: 100%;
         height: auto;
     }
