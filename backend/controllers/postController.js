@@ -29,39 +29,44 @@ export const savePost = async (req, res) => {
     }
 };
   
-  export const deletePost = async (req, res) => {
+export const deletePostsByUser = async (req, res) => {
     try {
-      const token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userId = decoded.id;
-      console.log("hi");
-      const postId = req.body.postId; // Get the post ID from the request body
+
+      console.log("delete post");
+
+      const { postId } = req.body;
+      console.log(postId);
+
+      // Fetch and log all posts
+      const allPosts = await Post.find({});
+      allPosts.forEach(post => {
+        console.log(`Post Name: ${post.name}, Post ID: ${post._id}`);
+      });
   
-      // Use findOneAndUpdate to remove the post with the matching _id
-      
-      const updatedUser = await User.findOneAndUpdate(
-        userId, 
-        { $pull: { posts: { _id: postId } } },
-        { new: true }
-      );
-  
-      if (!updatedUser) {
-        // User or post not found
-        return res.status(404).json({ message: 'User or post not found' });
+      // Find the post by ID to delete
+      const postToDelete = await Post.findById(postId);
+      if (!postToDelete) {
+        return res.status(404).json({ error: "Post not found" });
       }
   
-      // Successfully deleted the post
-      return res.status(200).json({ message: 'Post deleted', user: updatedUser });
-    } catch (error) {
-      // Handle errors, e.g., database error or invalid request
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
+      // Optionally, log the specific post details (for debugging)
+      console.log(`Deleting Post: ${postToDelete.name}, ID: ${postToDelete._id}`);
+  
+      // Delete the specific post
+      await Post.findByIdAndRemove(postId);
+  
+      res.status(200).json({ message: "Post deleted successfully" });
+    } catch (err) {
+      console.error("Error in deletePost function:", err);
+      res.status(500).json({ error: err.message });
     }
   };
+  
 
 
 export const fetchPostById = async (req, res) => {
     try {
+        
         const { postId } = req.params;
 
         const post = await Post.findById(postId).populate('user', 'firstName lastName username');
@@ -79,6 +84,11 @@ export const fetchPostById = async (req, res) => {
 
 export const fetchPostsByUser = async (req, res) => {
     try {
+        // const allPosts = await Post.find({});
+        // allPosts.forEach(post => {
+        //   console.log(`Post Name: ${post.name}, Post ID: ${post._id}`);
+        // });
+        
         const token = req.headers.authorization.split(" ")[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
@@ -166,5 +176,4 @@ export const fetchUserRating = async (req, res) => {
         console.error('Error fetching user rating:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
-
 };

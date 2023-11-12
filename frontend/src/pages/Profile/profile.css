@@ -255,6 +255,36 @@
   display: block;
 }
 
+/* profile.css */
+.delete-confirmation-button {
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+  margin: 20px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.delete-confirmation-button.cancel {
+  background-color: #fff;
+  color: #3c4043;
+}
+
+.delete-confirmation-button.delete {
+  background-color: #FA7070;
+  color: #ffffff;
+}
+
+.delete-confirmation-button:hover {
+  box-shadow: rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px;
+}
+
+.delete-confirmation-button:active {
+  box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
+}
+
   
 
   
