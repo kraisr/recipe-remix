@@ -17,7 +17,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const availableCategories = ["Italian", "Mexican", "Japanese", "Party Food", "Vegan"];
-
+  const [difficulty, setDifficulty] = useState('');
 
   // Use useEffect to fetch user's recipes when the component mounts
   useEffect(() => {
@@ -88,7 +88,10 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
     }
   };
   
-  
+  const handleDifficultyChange = (event) => {
+    setDifficulty(event.target.value);
+  };
+
 
   const handleRecipeNameChange = (event) => {
     // Update the recipe name as the user types
@@ -136,6 +139,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
         image: selectedImage,
         caption: caption,
         ingredients: recipeIngredient,
+        difficulty: difficulty,
       };
   
       console.log("post: ", post);
@@ -384,7 +388,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
           );
         case 3:
           return (
-            <TextField
+            <><TextField
               fullWidth
               label="Description"
               variant="outlined"
@@ -393,8 +397,21 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
               value={caption}
               onChange={handleCaptionChange}
               margin="normal"
-              sx={textFieldStyles}
-            />
+              sx={textFieldStyles} /><FormControl fullWidth margin="normal" sx={dropdownStyles}>
+                <InputLabel id="difficulty-select-label">Difficulty Level</InputLabel>
+                <Select
+                  labelId="difficulty-select-label"
+                  id="difficulty-select"
+                  value={difficulty}
+                  onChange={handleDifficultyChange}
+                  label="Difficulty Level"
+                >
+                  <MenuItem value="beginner" className="menu-item-beginner">Beginner Friendly</MenuItem>
+                  <MenuItem value="intermediate" className="menu-item-intermediate">Intermediate Cook</MenuItem>
+                  <MenuItem value="master" className="menu-item-master">Master Chef</MenuItem>
+
+                </Select>
+              </FormControl></>
           );
       default:
         return <div>Unknown step</div>;
