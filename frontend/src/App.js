@@ -13,7 +13,7 @@ import Profile from "./pages/Profile/Profile";
 import Preferences from "./pages/Preferences/Preferences";
 import ShoppingList from './pages/ShoppingList/ShoppingList'; 
 import Settings from "./pages/Settings/Settings";
-
+import Messages from "./pages/Messages/Messages";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
@@ -40,7 +40,11 @@ function App() {
           <Route path="/community" element={isLoggedIn ? <Community /> : <Navigate to="/" />} />
           <Route path="/community/:postId" element={isLoggedIn ? <Community /> : <Navigate to="/" />} />
           <Route path="/profile" element={isLoggedIn ? <Profile /> : <Navigate to="/" />} />
+
           <Route path="/profile/:userId" element={isLoggedIn ? <Profile /> : <Navigate to="/" />} />
+
+          <Route path="/messages" element={isLoggedIn ? <Messages /> : <Navigate to="/" />} />
+
           <Route path="/settings" element={isLoggedIn ? <Settings /> : <Navigate to="/" />} />
           <Route path="/preferences" element={isLoggedIn ? <Preferences /> : <Navigate to="/" />} />
           <Route path="/shoppingList" element={isLoggedIn ? <ShoppingList /> : <Navigate to="/" />} />
