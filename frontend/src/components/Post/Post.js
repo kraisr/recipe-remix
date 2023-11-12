@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./post.css";
 import StarRating from "../StarRating/StarRating";
+import { FacebookShareButton, TwitterShareButton, WhatsappShareButton, FacebookIcon, TwitterIcon, WhatsappIcon, EmailShareButton, EmailIcon, LinkedinShareButton, LinkedinIcon, PinterestShareButton, PinterestIcon } from "react-share";
 
 const Post = ({ postId }) => {
   const [post, setPost] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
     async function fetchPostData() {
@@ -23,6 +25,35 @@ const Post = ({ postId }) => {
       fetchPostData();
     }
   }, [postId]);
+
+    // Function to handle share modal toggle
+    const toggleShareModal = () => {
+      setShowShareModal(!showShareModal);
+    };
+  
+    // Function to render share modal
+    const renderShareModal = () => {
+      if (!post) return null;
+      const url = `http://localhost:3000/community/${postId}`;
+  
+      const header = post.name + "\n\nINGREDIENTS\n";
+      const content = header + post.ingredients.join("\n") + `\n\nPreview dish at: ${post.image}\n\nView on Recipe Remix at: ${url}`;
+      const twitter = header + post.ingredients.join(", ").substring(0, 50) + `...\n\nPreview dish at: ${post.image}\n\nView entire recipe at:`;
+  
+      return (
+        <div className="share-modal">
+          <TwitterShareButton title={twitter} url={url} via="RecipeRemix">
+            <TwitterIcon size={32} round />  
+          </TwitterShareButton> 
+          <EmailShareButton subject={post.name} body={content}>
+            <EmailIcon size={32} round />
+          </EmailShareButton>
+          <PinterestShareButton media={post.image} description={content} url={url}>
+            <PinterestIcon size={32} round />
+          </PinterestShareButton>
+        </div>
+      );
+    };
 
   return (
     post ? (  // Check if post is not null
@@ -50,6 +81,8 @@ const Post = ({ postId }) => {
             {post.caption}
           </div>
         </div>
+        <button onClick={toggleShareModal} className="share-button">Share</button>
+        {showShareModal && renderShareModal()}
         <StarRating postId={postId} />
       </div>
     ) : null
