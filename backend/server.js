@@ -11,6 +11,7 @@ import userRoutes from "./routes/user.js";
 import { sendEmail } from "./controllers/sendEmail.js";
 import User from './models/User.js';
 import mongoose from 'mongoose';
+import messageRoutes from "./routes/messagesRoutes.js";
 
 dotenv.config();
 // import { GraphQLClient } from "graphql-request";
@@ -53,7 +54,12 @@ app.use("/auth", authRoutes);
 
 app.use("/user", userRoutes);
 
+
 app.use("/posts", postRoutes);
+
+app.use("/message", messageRoutes);
+
+
 
 // app.use("/pref", prefRoutes);
 
@@ -62,7 +68,6 @@ app.use("/posts", postRoutes);
 
 /* SUGGESTIC API */
 app.use("/api", suggesticRoutes);
-
 
 
 
