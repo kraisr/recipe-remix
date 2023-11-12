@@ -15,6 +15,24 @@
   padding: 20px;
   overflow-y: auto;
 }
+.category-selection {
+  display: flex;
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+.category-bubble {
+  padding: 5px 10px;
+  border-radius: 15px;
+  background-color: #e0e0e0;
+  margin-right: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.category-bubble.selected {
+  background-color: #A1C298; /* Highlight color for selected categories */
+}
 
 .close-container{
     position: relative;
@@ -208,6 +226,11 @@
 .recipe-ingredients{
   position: relative;
 
+}
+.image-label {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333; /* Or any color that fits your design */
 }
 
 .recipe-ingredients textarea {

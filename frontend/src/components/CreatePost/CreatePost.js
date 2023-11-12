@@ -15,6 +15,9 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   const [caption, setCaption] = useState("");
   const [selectedImage, setSelectedImage] = useState(question);
   const [currentStep, setCurrentStep] = useState(0);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const availableCategories = ["Italian", "Mexican", "Japanese", "Party Food", "Vegan"];
+
 
   // Use useEffect to fetch user's recipes when the component mounts
   useEffect(() => {
@@ -55,6 +58,12 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
     }
   };
 
+  const toggleCategory = (category) => {
+    setSelectedCategories(prev => 
+      prev.includes(category) ? prev.filter(cat => cat !== category) : [...prev, category]
+    );
+  };
+  
   const handleRecipeSelection = (event) => {
     const selectedRecipeName = event.target.value;
     const index = recipeNames.indexOf(selectedRecipeName);
@@ -327,6 +336,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
       case 1:
         return (
           <div className="image-panel">
+            <div className="image-label">Selected Image:</div>
             {selectedRecipeIndex !== null ? (
               <img src={selectedImage} alt="Recipe" className='image' />
             ) : (
@@ -335,6 +345,16 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
                 <input type="file" onChange={handleImageChange} />
               </div>
             )}
+             <div className="category-selection">
+              {availableCategories.map((category, index) => (
+                <div 
+                  key={index} 
+                  className={`category-bubble ${selectedCategories.includes(category) ? 'selected' : ''}`} 
+                  onClick={() => toggleCategory(category)}>
+                  {category}
+                </div>
+              ))}
+            </div>
           </div>
         );
         case 2:
