@@ -23,7 +23,9 @@ export const getConversations = async (req, res) => {
 
         const conversations = await Conversation.find({
             participants: { $in: [userId] }
-        }).populate('participants', 'name');
+        })
+        .populate('participants', 'name image _id') // include image and _id here
+        .populate('lastMessage'); // populate last message
 
         res.status(200).json(conversations);
     } catch (err) {

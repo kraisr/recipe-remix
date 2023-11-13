@@ -22,6 +22,7 @@ const Messages = () => {
 
 
     useEffect(() => {
+        
         fetchConversations();
         fetchAllUsers(); // Fetch all users for new conversation 
     }, []);
@@ -94,6 +95,19 @@ const Messages = () => {
         fetchMessages(conversation._id);
     };
 
+    
+    const getOtherParticipant = (participants) => {
+        // Debugging
+        console.log('Current userId:', userId);
+        console.log('Participants:', participants);
+      
+        // Find the participant who is not the current user
+        const other = participants.find(p => p._id !== userId);
+        console.log('Other participant:', other);
+        return other;
+      };
+      
+      
 
     const handleStartConversation = async () => {
         try {
@@ -106,13 +120,14 @@ const Messages = () => {
             },
             body: JSON.stringify({ otherUserEmail: selectedUserForConversation })
           });
-    
+      
           if (!response.ok) throw new Error('Network response was not ok');
           const newConversation = await response.json();
+          setConversations(prevConversations => [...prevConversations, newConversation]); // Add the new conversation to the list
           setSelectedConversation(newConversation); // Set the new conversation as selected
-          fetchConversations(); // Refresh conversation list
-          setShowStartConversationModal(false); // Hide the start conversation modal
-          setMessages([]); // Clear previous messages if any
+          setShowStartConversationModal(false); // Close the modal
+          fetchMessages(newConversation._id); // Fetch messages for the new conversation
+          setSelectedUserForConversation(''); // Reset the selected user for conversation
         } catch (error) {
           console.error("Error starting new conversation:", error);
         }
@@ -146,16 +161,15 @@ const Messages = () => {
         }
     };
 
-    const filteredConversations = conversations.filter(conversation =>
-        conversation.participants.some(participant =>
-            participant.name && participant.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+  
     
 
     const handleCloseModal = () => {
         setShowStartConversationModal(false);
         setSelectedUserForConversation('');
     };
+
+    
 
 
     return (
@@ -184,12 +198,32 @@ const Messages = () => {
                         <button onClick={handleCloseModal}>Close</button>
                     </div>
                 )}
-                {filteredConversations.map(conversation => (
-                    <div key={conversation._id}>
-                        Conversation with {conversation.participants.map(p => p.name).join(', ')}
-                    </div>
-                ))}
-
+                 {conversations.map((conversation) => {
+                     const otherParticipant = getOtherParticipant(conversation.participants);
+                     const lastMessage = conversation.lastMessage?.content || "No messages yet";
+                     const lastMessageTime = conversation.lastMessage 
+                         ? new Date(conversation.lastMessage.createdAt).toLocaleTimeString() 
+                         : '';
+                     const isActive = selectedConversation?._id === conversation._id ? 'active' : '';
+                     return (
+                        <div
+                            key={conversation._id}
+                            className={`conversation-item ${isActive}`}
+                            onClick={() => handleSelectConversation(conversation)}
+                        >
+                            <img src={otherParticipant?.image || 'default-profile.png'} alt={otherParticipant?.name || 'Unknown'} className="profile-pic" />
+                            <div className="conversation-info">
+                                <p className="participant-name">{otherParticipant?.name || 'Unknown'}</p>
+                                <p className="last-message">{lastMessage}</p>
+                            </div>
+                            {lastMessageTime && (
+                                <span className="timestamp">
+                                    {lastMessageTime}
+                                </span>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
             <div className="chat-window">
                 {selectedConversation ? (
