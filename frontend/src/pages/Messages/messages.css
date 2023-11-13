@@ -92,7 +92,8 @@
   
   .sent {
     align-self: flex-end;
-    background-color: #DCF8C6; /* Example color for sent messages */
+    background-color: rgb(123, 182, 90)
+
   }
   
   .received {
@@ -108,12 +109,11 @@
     margin-right: 10px;
   }
   
-  .message-bubble {
+  /* .message-bubble {
     display: flex;
     align-items: center;
-    /* Other existing styles */
   }
-  
+   */
   .message-bubble.sent {
     justify-content: flex-end;
   }

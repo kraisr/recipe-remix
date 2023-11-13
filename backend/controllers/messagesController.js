@@ -56,16 +56,26 @@ export const sendMessage = async (req, res) => {
         const newMessage = new Message({
             conversation: req.body.conversationId,
             sender: senderId,
-            content: req.body.content, // changed from 'text' to 'content'
+            content: req.body.content,
             createdAt: new Date()
         });
 
-        await newMessage.save();
-        res.status(201).json(newMessage);
+        // Save the new message
+        const savedMessage = await newMessage.save();
+
+        // Update the conversation's last message
+        await Conversation.findByIdAndUpdate(
+            req.body.conversationId,
+            { lastMessage: savedMessage._id },
+            { new: true }
+        );
+
+        res.status(201).json(savedMessage);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+
 
 export const startConversation = async (req, res) => {
     try {
