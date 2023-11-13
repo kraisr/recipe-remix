@@ -77,4 +77,53 @@
     cursor: pointer;
 }
 
-/* Add more styles as needed */
+.message-list {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  
+  .message-bubble {
+    /* existing styles */
+    margin-bottom: 10px;
+    word-wrap: break-word;
+  }
+  
+  .sent {
+    align-self: flex-end;
+    background-color: #DCF8C6; /* Example color for sent messages */
+  }
+  
+  .received {
+    align-self: flex-start;
+    background-color: #ECECEC; /* Example color for received messages */
+  }
+  
+  .profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .message-bubble {
+    display: flex;
+    align-items: center;
+    /* Other existing styles */
+  }
+  
+  .message-bubble.sent {
+    justify-content: flex-end;
+  }
+  
+  .profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  /* If the message is sent by the current user, you might want to hide the profile picture */
+  .message-bubble.sent .profile-pic {
+    display: none;
+  }
+  

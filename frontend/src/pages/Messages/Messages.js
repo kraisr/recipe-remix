@@ -12,6 +12,14 @@ const Messages = () => {
     const [showStartConversationModal, setShowStartConversationModal] = useState(false);
     const [selectedUserForConversation, setSelectedUserForConversation] = useState('');
 
+    const token = localStorage.getItem('token');
+    let userId = '';
+    if (token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace('-', '+').replace('_', '/');
+        userId = JSON.parse(window.atob(base64)).id;
+    }
+
 
     useEffect(() => {
         fetchConversations();
@@ -89,24 +97,26 @@ const Messages = () => {
 
     const handleStartConversation = async () => {
         try {
-            const token = localStorage.getItem('token');
-            if (!token) throw new Error('No token found');
-
-            const response = await fetch('http://localhost:8080/message/conversations/start', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({ otherUserEmail: selectedUserForConversation })
-            });
-
-            if (!response.ok) throw new Error('Network response was not ok');
-            fetchConversations(); // Refresh conversation list
+          if (!token) throw new Error('No token found');
+          const response = await fetch('http://localhost:8080/message/conversations/start', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ otherUserEmail: selectedUserForConversation })
+          });
+    
+          if (!response.ok) throw new Error('Network response was not ok');
+          const newConversation = await response.json();
+          setSelectedConversation(newConversation); // Set the new conversation as selected
+          fetchConversations(); // Refresh conversation list
+          setShowStartConversationModal(false); // Hide the start conversation modal
+          setMessages([]); // Clear previous messages if any
         } catch (error) {
-            console.error("Error starting new conversation:", error);
+          console.error("Error starting new conversation:", error);
         }
-    };
+      };
 
 
     const handleSendMessage = async (e) => {
@@ -137,9 +147,10 @@ const Messages = () => {
     };
 
     const filteredConversations = conversations.filter(conversation =>
-        conversation.participants.some(participant => 
-            participant.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        conversation.participants.some(participant =>
+            participant.name && participant.name.toLowerCase().includes(searchTerm.toLowerCase()))
     );
+    
 
     const handleCloseModal = () => {
         setShowStartConversationModal(false);
@@ -153,14 +164,15 @@ const Messages = () => {
                 <input
                     type="text"
                     placeholder="Search..."
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => setSearchTerm(e.target.value || '')}
+
                 />
                 <button onClick={() => setShowStartConversationModal(true)}>Start New Conversation</button>
                 {showStartConversationModal && (
                     <div className="start-conversation-modal">
                         <select
                             value={selectedUserForConversation}
-                            onChange={(e) => setSelectedUserForConversation(e.target.value)}
+                            onChange={(e) => setSelectedUserForConversation(e.target.value || '')}
                         >
                             <option value="">Select a User</option>
                             {allUsers.map(user => (
@@ -180,10 +192,34 @@ const Messages = () => {
 
             </div>
             <div className="chat-window">
-                {}
+                {selectedConversation ? (
+                    <>
+                    <div className="message-list">
+                        {messages.map(message => (
+                            <div key={message._id} className={`message-bubble ${message.sender._id === userId ? 'sent' : 'received'}`}>
+                                <img src={message.sender.image} alt={message.sender.username} className="profile-pic" />
+                                {message.content}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="message-input-container">
+              <input
+                type="text"
+                placeholder="Type a message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+              />
+              <button onClick={handleSendMessage}>Send</button>
             </div>
-        </div>
-    );
-};
+          </>    
+                ) : (
+                    <div className="start-message-prompt">
+                      Select a conversation to start messaging!
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          };
 
 export default Messages;

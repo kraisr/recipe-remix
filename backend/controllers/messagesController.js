@@ -35,13 +35,15 @@ export const getMessages = async (req, res) => {
     try {
         const conversationId = req.params.conversationId;
         
-        const messages = await Message.find({ conversation: conversationId });
+        const messages = await Message.find({ conversation: conversationId })
+                                     .populate('sender', 'username image'); // Populating sender's username and image
 
         res.status(200).json(messages);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+
 
 export const sendMessage = async (req, res) => {
     try {
@@ -85,7 +87,7 @@ export const startConversation = async (req, res) => {
         if (!conversation) {
             // Create a new conversation
             conversation = new Conversation({
-                participants: [userId, otherUserId]
+                participants: [userId, otherUser._id]
             });
             await conversation.save();
         }
