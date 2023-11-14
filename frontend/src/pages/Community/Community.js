@@ -146,6 +146,13 @@ const Community = () => {
     console.log("selected cuisines: ", selectedCuisines);
   };
 
+  const shouldDisplayPost = (post) => {
+    if (selectedCuisines.length === 0) {
+      return true; // Display all posts if no cuisines are selected
+    }
+    // Check if the post contains any of the selected cuisines
+    return post.tags.some(tag => selectedCuisines.includes(tag));
+  };
 
   return (
       <div className="community-container">
@@ -226,7 +233,7 @@ const Community = () => {
             </div>
 
             <div className="c-post-grid">
-                {posts.map((post) => (
+                {posts.filter(shouldDisplayPost).map((post) => (
                   <ul className="post-list" key={post._id}>
                     <li>
                       <div className="post-item" onClick={() => handlePostClick(post._id)}>
