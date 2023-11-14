@@ -33,9 +33,11 @@ const Profile = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   const { userId } = useParams();
-
   const [userStats, setUserStats] = useState([]);
   const [isProfilePrivate, setIsProfilePrivate] = useState(false);
+  const [activeTab, setActiveTab] = useState('posts');
+  const [savedPosts, setSavedPosts] = useState([]);
+
 
   const handlePostClick = (postId) => {
     navigate(`/community/${postId}`);
@@ -119,6 +121,7 @@ const Profile = () => {
         const data = await response.json();
         applyChanges(data);
         setUserEmail(data.email);
+        setSavedPosts(data.savedPosts);
         if (userId) {
           setIsProfilePrivate(data.profilePrivate);
         }
@@ -222,14 +225,55 @@ const Profile = () => {
       </div>
       <div className="center-container">
         <div className="post-title">
-          {!userId ? (<h4>My Posts</h4>) : (<h4>Posts</h4>)}
+          {!userId ? 
+            (
+              <div className="tab-container">
+                <div 
+                  className={`tab ${activeTab === 'posts' ? 'active' : ''}`} 
+                  onClick={() => setActiveTab('posts')}
+                >
+                  Posts
+                </div>
+                <div 
+                  className={`tab ${activeTab === 'saved' ? 'active' : ''}`} 
+                  onClick={() => setActiveTab('saved')}
+                >
+                  Saved
+                </div>
+              </div>
+            )
+
+            : (<h4>Posts</h4>)
+          }
         </div>
         <div className="post-grid-container">
           {isProfilePrivate ? (
             <PrivateProfile />
-          ) : (
+          ) : activeTab === 'posts' ? (
             <div className="post-grid">
               {posts.map((post, index) => (
+                <div className="post" key={post._id}>
+                  <div className="image-wrapper" onClick={() => handlePostClick(post._id)}>
+                    <img className="post-image" src={post.image} alt={`Post ${index}`} />
+                    <div className="middle-icon">
+                      <div className="rating-comments">
+                        <div className="rating">
+                          <StarIcon style={{ color: 'yellow' }} />
+                          <span style={{ color: 'white' }}>{post.averageRating}</span>
+                        </div>
+                        <div className="comments">
+                          <CommentIcon style={{ color: 'white' }} />
+                          <span style={{ color: 'white' }}>{post.commentCount}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="post-grid">
+              {savedPosts.map((post, index) => (
                 <div className="post" key={post._id}>
                   <div className="image-wrapper" onClick={() => handlePostClick(post._id)}>
                     <img className="post-image" src={post.image} alt={`Post ${index}`} />

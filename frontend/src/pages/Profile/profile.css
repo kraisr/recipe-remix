@@ -368,3 +368,27 @@
   text-decoration: none;
 }
 
+.tab-container {
+  display: flex;
+  border-bottom: 1px solid #a4a0a0;
+  justify-content: center;
+  gap: 20px;
+}
+
+.tab {
+  cursor: pointer;
+  padding: 10px;
+  position: relative;
+}
+
+.tab.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  border-top: 2px solid #FA7070;
+  height: 2px;
+}
+
