@@ -52,14 +52,14 @@ const Community = () => {
       }
     };
 
-    const fetchUserPosts = async () => {
+    const fetchAllPosts = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
                 throw Error('No token found');
             }
 
-            const response = await fetch("http://localhost:8080/posts/fetch-user-posts", {
+            const response = await fetch("http://localhost:8080/posts/fetch-all-posts", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -97,7 +97,7 @@ const Community = () => {
 
     // Fetch user's posts when the component mounts
     useEffect(() => {
-        fetchUserPosts();
+        fetchAllPosts();
     }, []);
 
     return (
@@ -182,10 +182,10 @@ const Community = () => {
                             <h4>{post.name}</h4>
                             <div className="subtitle">
                               <div className="author"> 
-                                <p>User: </p> 
+                                <p>{post.user.firstName} {post.user.lastName}</p> 
                               </div>
                               <div className="time">
-                                <p>Posted at: </p>
+                                <p>{post.timeAgo}</p>
                               </div>
                             </div>
                             
@@ -204,10 +204,6 @@ const Community = () => {
                 )}
               </div>
             </div>
-
-            {/* <div className="right-panel">
-
-            </div> */}
 
             {isPostWindowOpen && (
               <ThemeProvider theme={theme}>

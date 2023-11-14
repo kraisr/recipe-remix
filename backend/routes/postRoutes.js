@@ -5,7 +5,8 @@ import {
   fetchPostById, 
   fetchPostsByUser, 
   fetchUserRating, 
-  deletePostsByUser
+  deletePostsByUser,
+  fetchAllPosts
 } from '../controllers/postController.js';
 
 const router = express.Router();
@@ -13,6 +14,8 @@ const router = express.Router();
 router.post('/create-post', savePost);
 
 router.post('/add-rating', addRatingToPost);
+
+router.get('/fetch-all-posts', fetchAllPosts);
 
 router.get('/fetch-user-posts', fetchPostsByUser);
 
