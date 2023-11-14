@@ -20,7 +20,7 @@
   cursor: pointer;
 }
 .share-button {
-  margin-top: 1%;
+  margin-top: 3%;
   background: none;
   border: none;
 }
@@ -46,15 +46,17 @@
   font-weight: bold;
 }
 
-/* .time-container {
-  display: flex;
-  justify-content: center;
-  
-} */
+.bookmark-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
 
-/* .ingredientLines-container {
+.bookmark-button:hover {
+  color: #f50057; /* Change the color to your preference */
+}
 
-} */
+
 .editButtons {
   opacity: 0;               
   transition: opacity 0.3s;  

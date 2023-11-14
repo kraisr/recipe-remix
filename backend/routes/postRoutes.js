@@ -6,7 +6,10 @@ import {
   fetchPostsByUser, 
   fetchUserRating, 
   deletePostsByUser,
-  fetchAllPosts
+  fetchAllPosts,
+  bookmarkPost,
+  removeBookmark,
+  isBookmarked
 } from '../controllers/postController.js';
 
 const router = express.Router();
@@ -24,5 +27,11 @@ router.post('/delete-user-posts', deletePostsByUser);
 router.get('/:postId', fetchPostById);
 
 router.post('/fetch-user-rating', fetchUserRating);
+
+router.post('/bookmark-post', bookmarkPost);
+
+router.post('/remove-bookmark', removeBookmark);
+
+router.post('/is-bookmarked', isBookmarked);
 
 export default router;

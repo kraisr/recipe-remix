@@ -200,3 +200,67 @@ export const fetchUserRating = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
+export const bookmarkPost = async (req, res) => {
+    try {
+        const { postId } = req.body;
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        
+        // Find the post by ID
+        const post = await Post.findById(postId);
+
+        // Check if the post exists
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found.' });
+        }
+
+        await User.findByIdAndUpdate(userId, { $addToSet: { savedPosts: post } });
+        res.status(200).send('Post saved successfully');
+    } catch (error) {
+        console.error('Error bookmarking post:', error);
+        res.status(500).json({ message: 'Failed to bookmark post.' });
+    }
+};
+
+export const removeBookmark = async (req, res) => {
+    try {
+        const { postId } = req.body;
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        
+        // Find the post by ID
+        const post = await Post.findById(postId);
+
+        // Check if the post exists
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found.' });
+        }
+
+        await User.findByIdAndUpdate(userId, { $pull: { savedPosts: { _id: postId } } });
+        res.status(200).send('Post removed from saved posts successfully');
+    } catch (error) {
+        console.error('Error removing bookmark from post:', error);
+        res.status(500).json({ message: 'Failed to remove bookmark from post.' });
+    }
+};
+
+export const isBookmarked = async (req, res) => {
+    try {
+        const { postId } = req.body;
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        
+        const user = await User.findById(userId);
+        const isBookmarked = user.savedPosts.some(post => post._id.toString() === postId);
+
+        res.status(200).json({ isBookmarked });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+
+};

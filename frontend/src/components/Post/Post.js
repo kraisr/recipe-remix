@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from "react";
 import "./post.css";
 import StarRating from "../StarRating/StarRating";
-import { FacebookShareButton, TwitterShareButton, WhatsappShareButton, FacebookIcon, TwitterIcon, WhatsappIcon, EmailShareButton, EmailIcon, LinkedinShareButton, LinkedinIcon, PinterestShareButton, PinterestIcon } from "react-share";
+import { 
+  TwitterShareButton, 
+  TwitterIcon, 
+  EmailShareButton, 
+  EmailIcon, 
+  PinterestShareButton, 
+  PinterestIcon 
+} from "react-share";
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 const Post = ({ postId }) => {
   const [post, setPost] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
+    setIsBookmarked(false);
     async function fetchPostData() {
       try {
         const response = await fetch(`http://localhost:8080/posts/${postId}`);
@@ -24,36 +35,111 @@ const Post = ({ postId }) => {
     if (postId) {
       fetchPostData();
     }
+    checkIfBookmarked();
   }, [postId]);
 
-    // Function to handle share modal toggle
-    const toggleShareModal = () => {
-      setShowShareModal(!showShareModal);
-    };
+  const checkIfBookmarked = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw Error('No token found');
+      }
+      const response = await fetch(`http://localhost:8080/posts/is-bookmarked`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ postId: postId })
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      console.log(data);
+      setIsBookmarked(data.isBookmarked);
+    } catch (error) {
+      console.error('Error fetching post:', error);
+    }
+  };
+
+  const handleBookmark = async () => {
+    setIsBookmarked(!isBookmarked);
+    // Make a request to your backend to bookmark or unbookmark the post
+    if (isBookmarked) {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw Error('No token found');
+        }
+        const response = await fetch(`http://localhost:8080/posts/remove-bookmark`, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ postId: postId })
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log(response);
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      }
+
+    } else {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw Error('No token found');
+        }
+        const response = await fetch(`http://localhost:8080/posts/bookmark-post`, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ postId: postId })
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log(response);
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      }
+    }
+  };
+
+  // Function to handle share modal toggle
+  const toggleShareModal = () => {
+    setShowShareModal(!showShareModal);
+  };
   
-    // Function to render share modal
-    const renderShareModal = () => {
-      if (!post) return null;
-      const url = `http://localhost:3000/community/${postId}`;
-  
-      const header = post.name + "\n\nINGREDIENTS\n";
-      const content = header + post.ingredients.join("\n") + `\n\nPreview dish at: ${post.image}\n\nView on Recipe Remix at: ${url}`;
-      const twitter = header + post.ingredients.join(", ").substring(0, 50) + `...\n\nPreview dish at: ${post.image}\n\nView entire recipe at:`;
-  
-      return (
-        <div className="share-modal">
-          <TwitterShareButton title={twitter} url={url} via="RecipeRemix">
-            <TwitterIcon size={32} round />  
-          </TwitterShareButton> 
-          <EmailShareButton subject={post.name} body={content}>
-            <EmailIcon size={32} round />
-          </EmailShareButton>
-          <PinterestShareButton media={post.image} description={content} url={url}>
-            <PinterestIcon size={32} round />
-          </PinterestShareButton>
-        </div>
-      );
-    };
+  // Function to render share modal
+  const renderShareModal = () => {
+    if (!post) return null;
+    const url = `http://localhost:3000/community/${postId}`;
+
+    const header = post.name + "\n\nINGREDIENTS\n";
+    const content = header + post.ingredients.join("\n") + `\n\nPreview dish at: ${post.image}\n\nView on Recipe Remix at: ${url}`;
+    const twitter = header + post.ingredients.join(", ").substring(0, 50) + `...\n\nPreview dish at: ${post.image}\n\nView entire recipe at:`;
+
+    return (
+      <div className="share-modal">
+        <TwitterShareButton title={twitter} url={url} via="RecipeRemix">
+          <TwitterIcon size={32} round />  
+        </TwitterShareButton> 
+        <EmailShareButton subject={post.name} body={content}>
+          <EmailIcon size={32} round />
+        </EmailShareButton>
+        <PinterestShareButton media={post.image} description={content} url={url}>
+          <PinterestIcon size={32} round />
+        </PinterestShareButton>
+      </div>
+    );
+  };
 
   return (
     post ? (  // Check if post is not null
@@ -81,6 +167,10 @@ const Post = ({ postId }) => {
             {post.caption}
           </div>
         </div>
+
+        <button onClick={handleBookmark} className="bookmark-button">
+          {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+        </button>
        
         <button onClick={toggleShareModal} className="share-button">
           <center>
