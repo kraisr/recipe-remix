@@ -20,15 +20,25 @@
   cursor: pointer;
 }
 .share-button {
-  margin-top: 3%;
   background: none;
   border: none;
+  cursor: pointer;
+}
+
+.share-button:hover .share-icon {
+  fill: #f50057;
 }
 
 .share-modal {
-  width: 20%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.share-modal button {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
 }
 
 .name-container {
@@ -53,7 +63,7 @@
 }
 
 .bookmark-button:hover {
-  color: #f50057; /* Change the color to your preference */
+  color: #f50057;
 }
 
 
@@ -105,4 +115,12 @@
   display: inline-block;
 }
 
+.bottom-container {
+  display: flex;
+  align-items: center;
+  height: 35px;
+  margin-top: 20px;
+  justify-content: flex-start;
+  gap: 10px;
+}
 
