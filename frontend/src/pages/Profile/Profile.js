@@ -36,6 +36,8 @@ const Profile = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
 
+  const [userStats, setUserStats] = useState([]);
+
   const handlePostClick = (postId) => {
     navigate(`/community/${postId}`);
   };
@@ -221,11 +223,12 @@ const Profile = () => {
         }
 
         const data = await response.json();
-        if (data && Array.isArray(data)) {
+        if (data.posts && Array.isArray(data.posts)) {
           // Check if data.posts is an array before setting the state
-          setPosts(data);
+          setPosts(data.posts);
+          setUserStats(data);
         } else {
-          console.error('Invalid posts data received:', data);
+          console.error('Invalid posts data received:', data.posts);
         }
 
       } catch (error) {
@@ -297,15 +300,15 @@ const Profile = () => {
             <h2 className="user-name">{name}</h2>
             <div className="user-statistics">
               <div className="stat-item">
-                <span className="stat-value">10</span>
+                <span className="stat-value">{userStats.totalPosts}</span>
                 <span className="stat-label">Posts</span>
               </div>
               <div className="stat-item">
-                <span className="stat-value">4.4</span>
+                <span className="stat-value">{userStats.averageRatingAcrossAllPosts}</span>
                 <span className="stat-label">Rating</span>
               </div>
               <div className="stat-item">
-                <span className="stat-value">100k</span>
+                <span className="stat-value">{userStats.totalRatingsCount}</span>
                 <span className="stat-label">Ratings</span>
               </div>
             </div>

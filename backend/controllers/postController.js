@@ -96,11 +96,6 @@ export const fetchAllPosts = async (req, res) => {
 
 export const fetchPostsByUser = async (req, res) => {
     try {
-        // const allPosts = await Post.find({});
-        // allPosts.forEach(post => {
-        //   console.log(`Post Name: ${post.name}, Post ID: ${post._id}`);
-        // });
-        
         const token = req.headers.authorization.split(" ")[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
@@ -108,12 +103,28 @@ export const fetchPostsByUser = async (req, res) => {
         const posts = await Post.find({ user: userId })
                                 .sort({ createdAt: -1 })
                                 .populate('user', 'firstName lastName username');
-        res.status(200).json(posts);
+        
+        // Calculate additional fields
+        const totalPosts = posts.length;
+        const totalRatingsCount = posts.reduce((acc, post) => acc + post.ratings.length, 0);
+        let sumOfAllRatings = 0;
+        posts.forEach(post => {
+            sumOfAllRatings += post.ratings.reduce((acc, rating) => acc + rating.value, 0);
+        });
+        const averageRatingAcrossAllPosts = totalRatingsCount ? (sumOfAllRatings / totalRatingsCount).toFixed(2) : 0;
+
+        res.status(200).json({
+            posts,
+            totalPosts,
+            averageRatingAcrossAllPosts,
+            totalRatingsCount
+        });
     } catch (error) {
         console.error('Error finding posts for the user:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
 
 
 export const addRatingToPost = async (req, res) => {
