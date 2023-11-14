@@ -100,5 +100,8 @@ postSchema.virtual('commentCount').get(function() {
 // Index creation for the Post schema
 postSchema.index({ name: 'text', caption: 'text' });
 
+export { postSchema };
+
 const Post = mongoose.model('Post', postSchema);
+
 export default Post;
