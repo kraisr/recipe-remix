@@ -40,6 +40,17 @@ const Profile = () => {
     navigate(`/community/${postId}`);
   };
 
+  function formatLink(url) {
+    if (!url) {
+      return '#';
+    }
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    } else {
+      return `http://${url}`;
+    }
+  }
+
   const handleLogoutClick = () => {
     // Logout logic
     dispatch(setLogout());
@@ -272,51 +283,35 @@ const Profile = () => {
         />
       )}
       <div className="left-container">
-        <div className="user-profile-header">
-          {!name ? (
-            <h2>User's Profile</h2>
-          ) : (
-            <h2>{name}'s Profile</h2>
-          )}
-        </div>
-
         <div className="user-profile-card">
-          <div className="card-options" onClick={toggleDropdown} ref={dropdownRef}>
-            {!userId && (<i className="fas fa-ellipsis-h"></i>)}
-            {dropdownOpen && (
-              <div className="card-dropdown-menu">
-                <Link to="/settings" className="card-dropdown-item">Settings</Link>
-                <Link to="/preferences" className="card-dropdown-item">Preferences</Link>
-                <Link to="/help" className="card-dropdown-item">Help</Link>
-                <Link className="card-dropdown-item" onClick={toggleLogoutModal}>Logout</Link>
-              </div>
-            )}
-          </div>
-          {logoutModal && <Logout closeModal={toggleLogoutModal} isOpen={logoutModal} />}
-
-          <div className={`${!image ? "profile-picture" : " uploaded-pfp"}`} onClick={toggleModal}>
+          <div className="profile-picture">
+          
             {image ? (
               <img src={image} alt="Profile Picture" />
             ) : (
               <i className="fa-solid fa-user"></i>
             )}
-          </div>
 
+          </div>
           <div className="profile-info">
-            <div className="profile-field">
-              <span className="field-label">Name</span>
-              <span className="field-value">{name}</span>
+            <h2 className="user-name">{name}</h2>
+            <div className="user-statistics">
+              <div className="stat-item">
+                <span className="stat-value">10</span>
+                <span className="stat-label">Posts</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-value">4.4</span>
+                <span className="stat-label">Rating</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-value">100k</span>
+                <span className="stat-label">Ratings</span>
+              </div>
             </div>
-            <hr className="field-divider" />
-            <div className="profile-field">
-              <span className="field-label">Bio</span>
-              <span className="field-value">{bio}</span>
-            </div>
-            <hr className="field-divider" />
-            <div className="profile-field">
-              <span className="field-label">Link</span>
-              <span className="field-value">{link}</span>
-            </div>
+            <p className="user-bio">{bio}</p>
+            <a href={formatLink(link)} className="user-link" target="_blank" rel="noopener noreferrer">{link}</a>
+            
           </div>
           <div className="edit-profile" onClick={toggleModal}>
             {!userId && (<h3>Edit Profile</h3>)}
