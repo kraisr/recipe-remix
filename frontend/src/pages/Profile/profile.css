@@ -379,6 +379,11 @@
   cursor: pointer;
   padding: 10px;
   position: relative;
+  font-size: 1.3rem;
+}
+
+.tab.active {
+  font-weight: bold;
 }
 
 .tab.active::before {
