@@ -25,6 +25,14 @@ const postSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     value: { type: Number, min: 0, max: 5 },
   }],
+  difficulty: {
+    type: String,
+    required: false,
+  },
+  tags: [{
+    type: String,
+    required: false,
+  }],
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true },

@@ -29,6 +29,7 @@ const Community = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState({ users: [], posts: [] });
     const navigate = useNavigate();
+    const cuisines = ["Italian", "Mexican", "Japanese", "Mediterranean", "Indian", "Party Food"];
 
     const handleSearch = async (searchTerm) => {
       setSearchTerm(searchTerm);
@@ -129,6 +130,13 @@ const Community = () => {
                 
                 <div className="posted-title">
                     <h5>Categories</h5>
+                </div>
+                <div className="categories-grid">
+                    {cuisines.map((cuisine, index) => (
+                        <div key={index} className="category-item">
+                            {cuisine}
+                        </div>
+                    ))}
                 </div>
             </div>
 

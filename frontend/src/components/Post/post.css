@@ -19,6 +19,17 @@
   border: none;
   cursor: pointer;
 }
+.share-button {
+  margin-top: 1%;
+  background: none;
+  border: none;
+}
+
+.share-modal {
+  width: 20%;
+  display: flex;
+  justify-content: space-between;
+}
 
 .name-container {
   display: flex;

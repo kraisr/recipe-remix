@@ -18,6 +18,7 @@ const router = express.Router();
 router.get("/user", getUser);
 router.post("/user", updateUser);
 
+
 /* FORGOT PASSWORD */
 router.post("/requestResetPassword", requestResetPassword);
 router.post("/resetPassword", resetPassword);
