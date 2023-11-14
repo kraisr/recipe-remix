@@ -407,9 +407,9 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
                   onChange={handleDifficultyChange}
                   label="Difficulty Level"
                 >
-                  <MenuItem value="beginner" className="menu-item-beginner">Beginner Friendly</MenuItem>
-                  <MenuItem value="intermediate" className="menu-item-intermediate">Intermediate Cook</MenuItem>
-                  <MenuItem value="master" className="menu-item-master">Master Chef</MenuItem>
+                  <MenuItem value="Beginner Friendly" className="menu-item-beginner">Beginner Friendly</MenuItem>
+                  <MenuItem value="Intermediate Cook" className="menu-item-intermediate">Intermediate Cook</MenuItem>
+                  <MenuItem value="Master Chef" className="menu-item-master">Master Chef</MenuItem>
 
                 </Select>
               </FormControl></>

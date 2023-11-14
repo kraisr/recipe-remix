@@ -141,6 +141,29 @@ const Post = ({ postId }) => {
     );
   };
 
+  const RecipeDifficulty = ({ difficultyLevel }) => {
+    let color;
+    switch(difficultyLevel) {
+        case "Beginner Friendly":
+            color = "green";
+            break;
+        case "Intermediate Cook":
+            color = "orange";
+            break;
+        case "Master Chef":
+            color = "red";
+            break;
+        default:
+            color = "black"; // Default color
+    }
+
+    return (
+        <span style={{ color: color }}>
+          {difficultyLevel}
+        </span>
+    );
+  };
+
   return (
     post ? (  // Check if post is not null
       <div className="recipe-content2">
@@ -150,6 +173,10 @@ const Post = ({ postId }) => {
   
         <div className="image-container">
           <img src={post.image} alt={post.name} className="recipe-image" />
+        </div>
+
+        <div className="difficulty-container">
+          <RecipeDifficulty difficultyLevel={post.difficulty} />
         </div>
 
         <div className="ingredientLines-container">
