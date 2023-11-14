@@ -138,12 +138,10 @@
 }
 
 .post-grid-container {
-  max-height: 90%; /* Set the desired height for the scrollable area */
+  max-height: 80%;
+  min-height: 80%;
   overflow: auto;
-  position: relative;
-  bottom:8%;
 }
-
 
 .post-grid {
   display: grid;
@@ -153,10 +151,14 @@
 }
 .post-title{
   position: relative;
-  bottom:5%;
+  /* bottom:5%; */
+  height: 10%;
 }
+
 .post-title h4{
   font-size: 32px;
+  margin-bottom: 0;
+  margin-top: 1%;
 }
 
 .post {
