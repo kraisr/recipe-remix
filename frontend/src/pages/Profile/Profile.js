@@ -352,7 +352,7 @@ const Profile = () => {
                     </div>
                     <div className="comments">
                       <CommentIcon style={{ color: 'white' }} />
-                      <span style={{color: 'white'}}>10</span>
+                      <span style={{color: 'white'}}>{post.commentCount}</span>
                     </div>
                   </div>
                 </div>

@@ -1,5 +1,21 @@
 import mongoose from 'mongoose';
 
+const commentSchema = mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  text: String,
+  createdAt: { type: Date, default: Date.now }
+});
+
+function commentCount(count) {
+  if (count < 1000) {
+    return count.toString();
+  } else if (count < 1000000) {
+    return (count / 1000).toFixed(count % 1000 === 0 ? 0 : 1) + 'k';
+  } else {
+    return (count / 1000000).toFixed(count % 1000000 === 0 ? 0 : 1) + 'm';
+  }
+}
+
 const postSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -33,6 +49,8 @@ const postSchema = mongoose.Schema({
     type: String,
     required: false,
   }],
+  comments: [commentSchema],
+
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
@@ -73,6 +91,10 @@ postSchema.virtual('timeAgo').get(function() {
   } else {
     return `${years}y`;
   }
+});
+
+postSchema.virtual('commentCount').get(function() {
+  return commentCount(this.comments.length);
 });
 
 // Index creation for the Post schema
