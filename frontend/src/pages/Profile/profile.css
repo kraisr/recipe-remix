@@ -285,11 +285,15 @@
   box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
 }
 
-  
+.rating, .comments {
+  display: flex;
+  align-items: center; /* This ensures vertical alignment */
+  justify-content: center; /* Centers the items horizontally */
+  gap: 5px; /* Adjusts space between the icon and text */
+}
 
-  
-  
-  
-  
-  
-  
+.rating span, .comments span {
+  display: flex;
+  align-items: center; /* Align text vertically with the icon */
+}
+
