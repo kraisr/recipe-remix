@@ -23,6 +23,28 @@
   margin-bottom: -8px; */
 }
 
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjust minmax values based on your preference */
+  gap: 10px;
+  padding: 10px;
+}
+
+.category-item {
+  background-color: #FBF2CF;
+  border-radius: 10px;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.category-item:hover {
+  background-color: #A1C298; /* Change color on hover */
+  transform: scale(1.05) rotate(-1deg);
+
+}
+
 .left-panel{
     display:flex;
     flex-direction: column;

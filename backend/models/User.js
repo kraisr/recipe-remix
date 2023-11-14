@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema({
         min: 2,
         // Add more configuration for password requirements
     },
+    profilePrivate: {
+        type: Boolean,
+        default: false,
+    },
     createdAt: {
         type: Date,
         default: Date.now,
