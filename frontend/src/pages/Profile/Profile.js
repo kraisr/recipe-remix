@@ -5,9 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../state";
 import { v4 as uuidv4 } from 'uuid'; // Import the uuid library
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import StarIcon from '@material-ui/icons/Star';
+import CommentIcon from '@material-ui/icons/Comment';
+
 
 //components
 import EditProfile from "../../components/EditProfile/EditProfile";
@@ -335,32 +335,31 @@ const Profile = () => {
           {!userId ? (<h4>My Posts</h4>) : (<h4>Posts</h4>)}
         </div>
         <div className="post-grid-container">
-          <div className="post-grid">
-            {posts.map((post, index) => (
-              <div className="post">
-                <div className="image-wrapper" onClick={() => handlePostClick(post._id)}>
-                  <img
-                    className="post-image"
-                    src={post.image}
-                    alt={`Post ${index}`}
-                  />
-                  <div className="middle-icon">
-                    <VisibilityIcon style={{ fontSize: 40, color: 'white' }} />
-                    <EditIcon style={{ fontSize: 30, color: 'white' }} onClick={(e) => { e.stopPropagation(); handleEditPost(post._id); }} />
-                    <DeleteIcon
-                      style={{ fontSize: 30, color: 'white' }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeletePost(post._id, post.name);
-                      }}
-                    />
+        <div className="post-grid">
+          {posts.map((post, index) => (
+            <div className="post">
+              <div className="image-wrapper" onClick={() => handlePostClick(post._id)}>
+                <img
+                  className="post-image"
+                  src={post.image}
+                  alt={`Post ${index}`}
+                />
+                <div className="middle-icon">
+                  <div className="rating-comments">
+                    <div className="rating">
+                      <StarIcon style={{ color: 'yellow' }} />
+                      <span style={{color: 'white'}}>{post.averageRating}</span>
+                    </div>
+                    <div className="comments">
+                      <CommentIcon style={{ color: 'white' }} />
+                      <span style={{color: 'white'}}>10</span>
+                    </div>
                   </div>
-
                 </div>
               </div>
-
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
 
         </div>
       </div>
