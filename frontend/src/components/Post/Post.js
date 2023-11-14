@@ -158,7 +158,7 @@ const Post = ({ postId }) => {
     }
 
     return (
-        <span style={{ color: color }}>
+        <span className="diffculty-span" style={{ color: color }}>
           {difficultyLevel}
         </span>
     );
@@ -176,11 +176,17 @@ const Post = ({ postId }) => {
         </div>
 
         <div className="difficulty-container">
-          <span className="window-title">Difficulty:</span> <RecipeDifficulty difficultyLevel={post.difficulty} />
+          <span className="window-title">Difficulty:</span>
+          <RecipeDifficulty difficultyLevel={post.difficulty} />
         </div>
 
         <div className="tags-container">
-          
+          <span className="window-title">Tags:</span> 
+          {post.tags.map((category, index) => (
+            <div key={index} className="tag-bubble">
+              {category}
+            </div>
+          ))}
         </div>
 
         <div className="ingredientLines-container">

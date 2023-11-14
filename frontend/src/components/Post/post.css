@@ -76,3 +76,33 @@
 .source-container:hover .editButtons {
   opacity: 1;
 }
+
+.difficulty-container {
+  display: flex;
+  align-items: center;
+}
+
+.diffculty-span {
+  margin-left: 10px;
+}
+
+.tags-container {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.tag-bubble {
+  padding: 5px 10px;
+  border-radius: 15px;
+  background-color: #e0e0e0;
+  text-align: center;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+
