@@ -82,6 +82,18 @@ export const fetchPostById = async (req, res) => {
     }
 };
 
+export const fetchAllPosts = async (req, res) => {
+    try {
+        const allPosts = await Post.find({})
+                                    .sort({ createdAt: -1 })
+                                    .populate('user', 'firstName lastName username');
+        res.status(200).json(allPosts);
+    } catch (error) {
+        console.error('Error finding all posts:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 export const fetchPostsByUser = async (req, res) => {
     try {
         // const allPosts = await Post.find({});
