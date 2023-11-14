@@ -47,9 +47,12 @@
 }
 
 .category-item:hover {
-  background-color: #A1C298; /* Change color on hover */
+  background-color: #A1C298;
   transform: scale(1.05) rotate(-1deg);
+}
 
+.category-item.active {
+  background-color: #A1C298;
 }
 
 .left-panel{
