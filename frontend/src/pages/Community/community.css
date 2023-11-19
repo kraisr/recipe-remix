@@ -17,25 +17,54 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: stretch; 
-  height: calc(100vh - 100px - 5%);
+  height: calc(100vh - 100px - 6%);
   width: 100%;
   /* margin-top: -8px;
   margin-bottom: -8px; */
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjust minmax values based on your preference */
+  gap: 10px;
+  padding: 10px;
+  max-height: 30%;
+  overflow-y: auto;
+  padding-right: 10%;
+  padding-left: 10%;
+  text-align:center;
+  min-height: 250px;
+  justify-content: flex-start;
+}
+
+.category-item {
+  background-color: #FBF2CF;
+  border-radius: 10px;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.category-item:hover {
+  background-color: #A1C298;
+  transform: scale(1.05) rotate(-1deg);
+}
+
+.category-item.active {
+  background-color: #A1C298;
 }
 
 .left-panel{
     display:flex;
     flex-direction: column;
     align-items: center;
-
-    /* border:1px solid red; */
     padding: 1%;
+    padding-bottom: 0.5%;
     width: 250px;
     min-height: 100px;
     border-right: 1px solid #A1C298;
     height: 100%;
-    /* border: 1px solid red; */
-    
 }
 
 .left-panel center {
@@ -180,15 +209,15 @@
   align-items: flex-start;
   margin-left: 3%;
   margin-bottom: 5px;
-  font-size: 10px;
+  font-size: 0.9rem;
   padding: 0;
 }
 .time {
   align-self: flex-start;
   align-items: flex-start;
-  margin-left: 3%;
   margin-bottom: 5px;
-  font-size: 10px;
+  margin-right: 3%;
+  font-size: 0.9rem;
   padding: 0;
 }
 
@@ -224,7 +253,7 @@
     /* border: 1px solid #ccc; Optional: Add a border for better styling */
     padding-right: 10%; /* Optional: Add padding for spacing */
     padding-left: 10%; /* Optional: Add padding for spacing */
-    padding-top: 3%;
+    /* padding-top: 3%; */
     text-align:center;
     min-height: 250px;
     justify-content: flex-start;

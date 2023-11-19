@@ -5,9 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../state";
 import { v4 as uuidv4 } from 'uuid'; // Import the uuid library
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import StarIcon from '@material-ui/icons/Star';
+import CommentIcon from '@material-ui/icons/Comment';
+import PrivateProfile from "./PrivateProfile";
 
 //components
 import EditProfile from "../../components/EditProfile/EditProfile";
@@ -33,12 +33,26 @@ const Profile = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   const { userId } = useParams();
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [postToDelete, setPostToDelete] = useState(null);
+  const [userStats, setUserStats] = useState([]);
+  const [isProfilePrivate, setIsProfilePrivate] = useState(false);
+  const [activeTab, setActiveTab] = useState('posts');
+  const [savedPosts, setSavedPosts] = useState([]);
+
 
   const handlePostClick = (postId) => {
     navigate(`/community/${postId}`);
   };
+
+  function formatLink(url) {
+    if (!url) {
+      return '#';
+    }
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    } else {
+      return `http://${url}`;
+    }
+  }
 
   const handleLogoutClick = () => {
     // Logout logic
@@ -50,82 +64,6 @@ const Profile = () => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setDropdownOpen(false);
     }
-  };
-
-  const handleEditPost = (postId) => {
-    // Logic to edit the post
-  };
-
-  const handleDeletePost = (postId, postName) => {
-    setPostToDelete({ id: postId, name: postName });
-    setShowDeleteDialog(true);
-  };
-
-  const DeleteConfirmationModal = ({ onClose, onConfirm, postName, postId }) => (
-    <div style={{
-      position: 'fixed',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000,
-      borderRadius: '30px',
-      opacity: 1,
-    }}>
-      <div style={{
-        backgroundColor: 'rgb(222, 237, 250)',
-        padding: '3%',
-        borderRadius: '30px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        minWidth: '20%',
-        minHeight: '30%',
-      }}>
-        <h3 style={{ padding: '30px' }}>Are you sure you want to delete "{postName}"?</h3>
-        <div style={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}>
-          <div style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}>
-            <button
-              className="delete-confirmation-button cancel"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <button
-              className="delete-confirmation-button delete"
-              onClick={() => onConfirm(postId)}
-            >
-              Delete
-            </button>
-          </div>        </div>
-      </div>
-    </div>
-  );
-
-
-  const DeleteConfirmationDialog = () => (
-    <div style={{ /* Your styles for the dialog */ }}>
-      <p>Are you sure you want to delete "{postToDelete?.name}"?</p>
-      <button onClick={() => confirmDelete()}>Yes</button>
-      <button onClick={() => setShowDeleteDialog(false)}>No</button>
-    </div>
-  );
-
-  const confirmDelete = (postId) => {
-    handlePostDeletion(postId);
-    setShowDeleteDialog(false);
-    setPostToDelete(null);
   };
 
   useEffect(() => {
@@ -159,6 +97,9 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchName = async (userId) => {
+      setIsProfilePrivate(false);
+      setPosts([]);
+      setUserStats([]);
       try {
         const token = userId || localStorage.getItem('token');
         if (!token) {
@@ -180,6 +121,11 @@ const Profile = () => {
         const data = await response.json();
         applyChanges(data);
         setUserEmail(data.email);
+        setSavedPosts(data.savedPosts);
+        console.log("saved: ", data.savedPosts);
+        if (userId) {
+          setIsProfilePrivate(data.profilePrivate);
+        }
 
       } catch (error) {
         console.error('Error fetching user name:', error);
@@ -210,11 +156,13 @@ const Profile = () => {
         }
 
         const data = await response.json();
-        if (data && Array.isArray(data)) {
+        if (data.posts && Array.isArray(data.posts)) {
           // Check if data.posts is an array before setting the state
-          setPosts(data);
+          setPosts(data.posts);
+          setUserStats(data);
+          console.log("posts: ", data.posts);
         } else {
-          console.error('Invalid posts data received:', data);
+          console.error('Invalid posts data received:', data.posts);
         }
 
       } catch (error) {
@@ -225,98 +173,45 @@ const Profile = () => {
     fetchUserPosts(userId);
   }, [userId]);
 
-  const handlePostDeletion = async (postId) => {
-
-    const requestBody = {
-      postId: postId,
-    };
-
-    console.log('Sending:', requestBody);
-
-    try {
-      const token = userId || localStorage.getItem('token');
-      if (!token) {
-        throw Error('No token found');
-      }
-      const requestBody = {
-        postId: postId,
-      };
-      const response = await fetch(`http://localhost:8080/posts/delete-user-posts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(requestBody),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-  
-      setPosts(posts.filter((post) => post._id !== postId));
-      console.log("new posts: ", posts);
-    } catch (error) {
-      console.error('Error deleting post:', error);
-    }
-  };
-
   return (
     <div className="container">
-      {showDeleteDialog && (
-        <DeleteConfirmationModal
-          onClose={() => setShowDeleteDialog(false)}
-          onConfirm={confirmDelete}
-          postName={postToDelete?.name}
-          postId={postToDelete?.id}
-        />
-      )}
       <div className="left-container">
-        <div className="user-profile-header">
-          {!name ? (
-            <h2>User's Profile</h2>
-          ) : (
-            <h2>{name}'s Profile</h2>
-          )}
-        </div>
-
         <div className="user-profile-card">
-          <div className="card-options" onClick={toggleDropdown} ref={dropdownRef}>
-            {!userId && (<i className="fas fa-ellipsis-h"></i>)}
-            {dropdownOpen && (
-              <div className="card-dropdown-menu">
-                <Link to="/settings" className="card-dropdown-item">Settings</Link>
-                <Link to="/preferences" className="card-dropdown-item">Preferences</Link>
-                <Link to="/help" className="card-dropdown-item">Help</Link>
-                <Link className="card-dropdown-item" onClick={toggleLogoutModal}>Logout</Link>
-              </div>
-            )}
-          </div>
-          {logoutModal && <Logout closeModal={toggleLogoutModal} isOpen={logoutModal} />}
-
-          <div className={`${!image ? "profile-picture" : " uploaded-pfp"}`} onClick={toggleModal}>
+          <div className="profile-picture">
+          
             {image ? (
               <img src={image} alt="Profile Picture" />
             ) : (
               <i className="fa-solid fa-user"></i>
             )}
-          </div>
 
+          </div>
           <div className="profile-info">
-            <div className="profile-field">
-              <span className="field-label">Name</span>
-              <span className="field-value">{name}</span>
+            <h2 className="user-name">{name}</h2>
+            <div className="user-statistics">
+              <div className="stat-item">
+                <span className="stat-value">
+                  {isProfilePrivate ? "-" : userStats.totalPosts}
+                </span>
+                <span className="stat-label">Posts</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-value">
+                  {isProfilePrivate ? "-" : userStats.averageRatingAcrossAllPosts}
+                </span>
+                <span className="stat-label">Rating</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-value">
+                  {isProfilePrivate ? "-" : userStats.totalRatingsCount}
+                </span>
+                <span className="stat-label">Ratings</span>
+              </div>
             </div>
-            <hr className="field-divider" />
-            <div className="profile-field">
-              <span className="field-label">Bio</span>
-              <span className="field-value">{bio}</span>
-            </div>
-            <hr className="field-divider" />
-            <div className="profile-field">
-              <span className="field-label">Link</span>
-              <span className="field-value">{link}</span>
-            </div>
+
+            <p className="user-bio">{bio}</p>
+            <a href={formatLink(link)} className="user-link" target="_blank" rel="noopener noreferrer">{link}</a>
+            
           </div>
           <div className="edit-profile" onClick={toggleModal}>
             {!userId && (<h3>Edit Profile</h3>)}
@@ -332,36 +227,75 @@ const Profile = () => {
       </div>
       <div className="center-container">
         <div className="post-title">
-          {!userId ? (<h4>My Posts</h4>) : (<h4>Posts</h4>)}
-        </div>
-        <div className="post-grid-container">
-          <div className="post-grid">
-            {posts.map((post, index) => (
-              <div className="post">
-                <div className="image-wrapper" onClick={() => handlePostClick(post._id)}>
-                  <img
-                    className="post-image"
-                    src={post.image}
-                    alt={`Post ${index}`}
-                  />
-                  <div className="middle-icon">
-                    <VisibilityIcon style={{ fontSize: 40, color: 'white' }} />
-                    <EditIcon style={{ fontSize: 30, color: 'white' }} onClick={(e) => { e.stopPropagation(); handleEditPost(post._id); }} />
-                    <DeleteIcon
-                      style={{ fontSize: 30, color: 'white' }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeletePost(post._id, post.name);
-                      }}
-                    />
-                  </div>
-
+          {!userId ? 
+            (
+              <div className="tab-container">
+                <div 
+                  className={`tab ${activeTab === 'posts' ? 'active' : ''}`} 
+                  onClick={() => setActiveTab('posts')}
+                >
+                  Posts
+                </div>
+                <div 
+                  className={`tab ${activeTab === 'saved' ? 'active' : ''}`} 
+                  onClick={() => setActiveTab('saved')}
+                >
+                  Saved
                 </div>
               </div>
+            )
 
-            ))}
-          </div>
-
+            : (<h4>Posts</h4>)
+          }
+        </div>
+        <div className="post-grid-container">
+          {isProfilePrivate ? (
+            <PrivateProfile />
+          ) : activeTab === 'posts' ? (
+            <div className="post-grid">
+              {posts.map((post, index) => (
+                <div className="post" key={post._id}>
+                  <div className="image-wrapper" onClick={() => handlePostClick(post._id)}>
+                    <img className="post-image" src={post.image} alt={`Post ${index}`} />
+                    <div className="middle-icon">
+                      <div className="rating-comments">
+                        <div className="rating">
+                          <StarIcon style={{ color: 'yellow' }} />
+                          <span style={{ color: 'white' }}>{post.averageRating}</span>
+                        </div>
+                        <div className="comments">
+                          <CommentIcon style={{ color: 'white' }} />
+                          <span style={{ color: 'white' }}>{post.commentCount}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="post-grid">
+              {savedPosts.map((post, index) => (
+                <div className="post" key={post._id}>
+                  <div className="image-wrapper" onClick={() => handlePostClick(post._id)}>
+                    <img className="post-image" src={post.image} alt={`Post ${index}`} />
+                    <div className="middle-icon">
+                      <div className="rating-comments">
+                        <div className="rating">
+                          <StarIcon style={{ color: 'yellow' }} />
+                          <span style={{ color: 'white' }}>{post.averageRating}</span>
+                        </div>
+                        <div className="comments">
+                          <CommentIcon style={{ color: 'white' }} />
+                          <span style={{ color: 'white' }}>{post.commentCount}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <div className="right-container"></div>

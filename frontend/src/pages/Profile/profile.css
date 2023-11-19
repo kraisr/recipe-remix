@@ -4,195 +4,180 @@
 .container{
     display:flex;
     justify-content: space-between;
-    padding-bottom: 100px;
 }
 
 .user-profile-header{
     margin:10px 10px 20px 20px;
 }
 
-.user-profile-card {
-  padding-top: 20px;
-  background-color: #FBF2CF;
-  margin: 20px;
-  max-width: 50vw; /* Adjusted to be a relative width */
-  width: 30vw;
-  min-width: 300px;
-  height: 80%;
-  max-height: 800px; /* Adjusted to auto so it can shrink in height */
-  border-radius: 10%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-}
-
 
 .profile-picture {
-  position: relative;
-  top: 0%;
-  padding: 5%; /* Adjusted padding to be relative to the container */
-  border-radius: 50%; /* Use a percentage for border-radius to maintain a circular shape */
+  margin-top: 50px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #C6EBC5;
-  max-width: 150%; /* Adjusted to be a relative max-width */
-  margin-bottom: 10%; /* Adjusted margin to be relative */
+}
+
+.profile-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 
 .profile-picture i {
-  
-  font-size: 5vh;
-  font-size: 5vw;  /* Adjusted font-size to be relative to the viewport width */
-  padding:20px;
+  font-size: 4rem;
+  color: #333;
 }
+
 
 .uploaded-pfp img{
   width: 13vw;
-  height:  20vh;  /* Adjusted font-size to be relative to the viewport width */
+  height:  20vh;
   padding:20px;
-} 
+}
+
 .pfp-container{
-  border:1px solid red;
-  width:50%;
-  height:50%;
+  border: 1px solid red;
+  width: 50%;
+  height: 50%;
 }
 
 .profile-info {
+  flex-grow: 1; /* Allows the section to grow and fill available space */
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
   padding: 15px;
-  position: relative;
-  top: -30px;
-  right: 0; /* Adjusted right positioning */
-  margin-right: 30%;
-  margin-left:30%;
-  width: 40%; /* Adjusted width to take full space */
-  /* border:red solid 1px; */
+  text-align: center;
 }
 
-  
-  .profile-field {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    overflow-wrap: break-word;
-    /* margin-bottom: 5%; */
-  }
-  
-  .field-label {
-    font-weight: bold;
-    font-size: 14px;
-    margin-bottom: 5px;
-  }
-  
-  .field-value {
-    font-size: 16px;
-  }
-  
-  .field-divider {
-    border: 0.5px solid #ccc;
-    width: 100%;
-    margin: 10px 0;
-  }
-  
-  .edit-profile {
-    margin-bottom:20%;
-  }
-  
-  .edit-profile h3 {
-    font-size: 18px;
-    color: #3897f0;
-    cursor: pointer;
-  }
-  
-  .edit-profile h3:hover {
-    text-decoration: underline;
-  }
-  
-  .card-options {
-    position: relative; /* Changed from absolute to relative */
-    left:30%;
-    cursor: pointer;
-  }
-  
-  .card-options i {
-    font-size: 1.5rem;
-    padding: 20%;
-  }
-  
-  .card-dropdown-menu {
-    position: absolute;
-    top: 70%;
-    /* height:30px; */
-    left:-190%;
-    display:block;
-    background-color: #f9f9f9;
-    padding:0;
-    /* transform: translateX(200%); */
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-  }
-  
-  .card-dropdown-item {
-    color: black;
-    padding:5px 10px 5px 10px; 
-    text-decoration: none;
-    display: block;
-  }
-  
-  .card-dropdown-item:hover {
-    background-color: #f1f1f1
-  }
 
-  .center-container {
-    display:flex;
-    flex-direction: column;
-    position:relative;
-    right:0%;
-    /* border: 1px red solid; */
-    width:60%;
-  }
 
-  .post-grid-container {
-    max-height: 90%; /* Set the desired height for the scrollable area */
-    overflow: auto;
-    position: relative;
-    bottom:8%;
-  }
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-wrap: break-word;
+  /* margin-bottom: 5%; */
+}
   
+.field-label {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+  
+.field-value {
+  font-size: 16px;
+}
 
-  .post-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-    justify-content: center;
-  }
-  .post-title{
-    position: relative;
-    bottom:5%;
-  }
-  .post-title h4{
-    font-size: 32px;
-  }
-  
-  .post {
-    /* border: 1px solid #ccc; */
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    height: 200px;
-    overflow: hidden;
-  }
-  
-  .post img {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius:10%;
-    object-fit: cover;
-  }
+.field-divider {
+  border: 0.5px solid #ccc;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.edit-profile h3 {
+  font-size: 18px;
+  color: #3897f0;
+  cursor: pointer;
+}
+
+.edit-profile h3:hover {
+  text-decoration: underline;
+}
+
+.card-options {
+  position: relative; /* Changed from absolute to relative */
+  left:30%;
+  cursor: pointer;
+}
+
+.card-options i {
+  font-size: 1.5rem;
+  padding: 20%;
+}
+
+.card-dropdown-menu {
+  position: absolute;
+  top: 70%;
+  left:-190%;
+  display:block;
+  background-color: #f9f9f9;
+  padding:0;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.card-dropdown-item {
+  color: black;
+  padding:5px 10px 5px 10px; 
+  text-decoration: none;
+  display: block;
+}
+
+.card-dropdown-item:hover {
+  background-color: #f1f1f1
+}
+
+.center-container {
+  display:flex;
+  flex-direction: column;
+  position:relative;
+  right:0%;
+  /* border: 1px red solid; */
+  width:60%;
+}
+
+.post-grid-container {
+  max-height: 80%;
+  min-height: 80%;
+  overflow: auto;
+}
+
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  justify-content: center;
+}
+.post-title{
+  position: relative;
+  /* bottom:5%; */
+  height: 10%;
+}
+
+.post-title h4{
+  font-size: 32px;
+  margin-bottom: 0;
+  margin-top: 1%;
+}
+
+.post {
+  /* border: 1px solid #ccc; */
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 200px;
+  overflow: hidden;
+}
+
+.post img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius:10%;
+  object-fit: cover;
+}
 
   /* Adjusted CSS for the hover effect on the image */
 .post-image:hover {
@@ -285,11 +270,131 @@
   box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
 }
 
-  
+.rating, .comments {
+  display: flex;
+  align-items: center; /* This ensures vertical alignment */
+  justify-content: center; /* Centers the items horizontally */
+  gap: 5px; /* Adjusts space between the icon and text */
+}
 
+.rating span, .comments span {
+  display: flex;
+  align-items: center; /* Align text vertically with the icon */
+}
+
+.user-profile-card {
+  background-color: #FBF2CF;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  min-width: 400px;
+  height: 80%;
+  max-height: 800px;
   
-  
-  
-  
-  
-  
+  justify-content: space-between;
+}
+
+.user-name {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.user-bio {
+  font-size: 16px;
+  margin: 5px 0;
+  max-height: 80px;
+  overflow: hidden;
+  width: 80%;
+}
+
+.user-link {
+  color: #3897f0;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.user-statistics {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  margin: 0 10px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #555;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #777;
+}
+
+.edit-profile {
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.edit-profile h3 {
+  background-color: #f2f2f2;
+  color: #333;
+  font-size: 18px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border: 1px solid #ccc;
+  text-align: center;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.edit-profile h3:hover {
+  background-color: #e0e0e0;
+  text-decoration: none;
+}
+
+.tab-container {
+  display: flex;
+  border-bottom: 1px solid #a4a0a0;
+  justify-content: center;
+  gap: 20px;
+}
+
+.tab {
+  cursor: pointer;
+  padding: 10px;
+  position: relative;
+  font-size: 1.3rem;
+}
+
+.tab.active {
+  font-weight: bold;
+}
+
+.tab.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  border-top: 2px solid #FA7070;
+  height: 2px;
+}
+

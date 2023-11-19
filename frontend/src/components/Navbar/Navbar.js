@@ -155,7 +155,7 @@ const Navbar = () => {
                                 </Link>
 
                                 <Link to="/../messages" className="sub-menu-link" onClick={toggleMenu}>
-                                    <i className="fa-solid fa-user"></i>
+                                    <i class="fa-solid fa-envelope"></i>
                                     <p>Messages</p>
                                     <span>{'>'}</span>
                                 </Link>

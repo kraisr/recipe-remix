@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import Post from '../models/Post.js';
 
 export const getUser = async (req, res) => {
     try {
@@ -379,28 +380,29 @@ export const retreiveDietaryTags = async (req, res) =>  {
 
 }
 
-
-
 export const deleteAccount = async (req, res) => {
     try {
         const { email } = req.body;
-        // console.log("email is ", email);
 
-        // Find and delete user
-        // const result = await User.deleteOne({ email });
-        const result = await User.deleteOne("x");       // [MODIFY] For presentation purposes
-
-        // Check if deletion was successful
-        if (result.deletedCount > 0) {
-            res.status(200).json({ message: 'User account deleted successfully.' });
-        } else {
-            res.status(400).json({ error: 'No account found with the provided email address.' });
+        // Find user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ error: 'No account found with the provided email address.' });
         }
+
+        // Delete all posts by the user
+        await Post.deleteMany({ user: user._id });
+
+        // Delete user
+        await User.deleteOne({ email });
+
+        res.status(200).json({ message: 'User account and associated posts deleted successfully.' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'User information retrieval failed' });
+        res.status(500).json({ error: 'Error occurred during account deletion' });
     }
 }
+
 
 export const createShoppingList = async (req, res) => {
   try {
