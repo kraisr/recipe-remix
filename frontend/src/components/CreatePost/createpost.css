@@ -15,6 +15,60 @@
   padding: 20px;
   overflow-y: auto;
 }
+.category-selection {
+  display: flex;
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+.category-bubble {
+  padding: 5px 10px;
+  border-radius: 15px;
+  background-color: #e0e0e0;
+  margin-right: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.category-bubble.selected {
+  background-color: #A1C298; /* Highlight color for selected categories */
+}
+/* For unselected menu items */
+.menu-item-beginner:hover {
+  background-color: rgba(144, 238, 144, 0.5) !important; /* Pastel green */
+}
+
+.menu-item-intermediate:hover {
+  background-color: rgba(255, 255, 0, 0.5) !important; /* Pastel yellow */
+}
+
+.menu-item-master:hover {
+  background-color: rgba(255, 69, 0, 0.5) !important; /* Pastel red */
+}
+
+/* For the selected menu item */
+.menu-item-selected {
+  font-weight: bold; /* Make the text bold for selected items */
+}
+
+/* Specific background color for selected items - add these if you have a way to toggle the class based on the selected state */
+.menu-item-beginner.menu-item-selected,
+.menu-item-beginner.Mui-selected {
+  color: green !important;
+  background-color: rgba(144, 238, 144, 0.5) !important;
+}
+
+.menu-item-intermediate.menu-item-selected,
+.menu-item-intermediate.Mui-selected {
+  color: orange !important;
+  background-color: rgba(255, 255, 0, 0.5) !important;
+}
+
+.menu-item-master.menu-item-selected,
+.menu-item-master.Mui-selected {
+  color: red !important;
+  background-color: rgba(255, 69, 0, 0.5) !important;
+}
 
 .close-container{
     position: relative;
@@ -210,6 +264,12 @@
 
 }
 
+.image-label {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333; /* Or any color that fits your design */
+}
+
 .recipe-ingredients textarea {
   display: block;
   width: 80%;
@@ -225,6 +285,44 @@
   font-family: 'Poppins', sans-serif;
   margin-bottom: 10%;
 }
+
+/* For unselected menu items */
+.menu-item-beginner:hover {
+  background-color: rgba(144, 238, 144, 0.5) !important; /* Pastel green */
+}
+
+.menu-item-intermediate:hover {
+  background-color: rgba(255, 255, 0, 0.5) !important; /* Pastel yellow */
+}
+
+.menu-item-master:hover {
+  background-color: rgba(255, 69, 0, 0.5) !important; /* Pastel red */
+}
+
+/* For the selected menu item */
+.menu-item-selected {
+  font-weight: bold; /* Make the text bold for selected items */
+}
+
+/* Specific background color for selected items - add these if you have a way to toggle the class based on the selected state */
+.menu-item-beginner.menu-item-selected,
+.menu-item-beginner.Mui-selected {
+  color: green !important;
+  background-color: rgba(144, 238, 144, 0.5) !important;
+}
+
+.menu-item-intermediate.menu-item-selected,
+.menu-item-intermediate.Mui-selected {
+  color: orange !important;
+  background-color: rgba(255, 255, 0, 0.5) !important;
+}
+
+.menu-item-master.menu-item-selected,
+.menu-item-master.Mui-selected {
+  color: red !important;
+  background-color: rgba(255, 69, 0, 0.5) !important;
+}
+
 
 .caption{
   position: relative;

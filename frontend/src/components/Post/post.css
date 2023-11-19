@@ -19,6 +19,27 @@
   border: none;
   cursor: pointer;
 }
+.share-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.share-button:hover .share-icon {
+  fill: #f50057;
+}
+
+.share-modal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.share-modal button {
+  display: flex;
+  align-items: center;
+}
 
 .name-container {
   display: flex;
@@ -35,15 +56,17 @@
   font-weight: bold;
 }
 
-/* .time-container {
-  display: flex;
-  justify-content: center;
-  
-} */
+.bookmark-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
 
-/* .ingredientLines-container {
+.bookmark-button:hover {
+  color: #f50057;
+}
 
-} */
+
 .editButtons {
   opacity: 0;               
   transition: opacity 0.3s;  
@@ -62,4 +85,80 @@
 .instructions-container:hover .editButtons,
 .source-container:hover .editButtons {
   opacity: 1;
+}
+
+.difficulty-container {
+  display: flex;
+  align-items: center;
+}
+
+.diffculty-span {
+  margin-left: 10px;
+}
+
+.tags-container {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.tag-bubble {
+  padding: 5px 10px;
+  border-radius: 15px;
+  background-color: #e0e0e0;
+  text-align: center;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+.bottom-container {
+  display: flex;
+  align-items: center;
+  height: 35px;
+  margin-top: 20px;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.post-owner-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10; /* Ensure it's above other elements */
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%; /* Adjust this value so the menu drops down right below the button */
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1000; /* Ensure it's above other elements */
+  /* Additional styles to adjust the dropdown menu positioning */
+}
+
+/* Show the dropdown menu on click */
+.post-owner-menu .dropdown-menu {
+  display: block;
+}
+
+/* Style the dropdown items */
+.dropdown-menu-item {
+  padding: 10px;
+  cursor: pointer;
+  /* Additional styles remain the same */
+}
+
+.dropdown-menu-item:hover {
+  background-color: #f1f1f1;
 }

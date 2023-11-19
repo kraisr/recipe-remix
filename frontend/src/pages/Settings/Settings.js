@@ -20,6 +20,7 @@ const Settings = () => {
     const [mode, setMode] = useState(false); // Initially set to dark mode (false)
     const [deleteMessage, setDeleteMessage] = useState("");
     const [animationState, setAnimationState] = useState("");
+    const [profilePrivateState, setProfilePrivateState] = useState("");
     const dispatch = useDispatch();
     const Navigate = useNavigate();
 
@@ -95,6 +96,8 @@ const Settings = () => {
                 setFAState(data.set2FA);
 
                 setAnimationState(data.animate);
+
+                setProfilePrivateState(data.profilePrivate);
 
                 console.log("email is ", data.email);
                 console.log("data.reminderSetting.email is ", data.reminderSetting.email);
@@ -187,7 +190,7 @@ const Settings = () => {
             console.error("Error updating reminder:", error);
         }
     };
-    
+
     //handle 2FA changes
     const toggle2FA = async () => {
         try {
@@ -206,7 +209,7 @@ const Settings = () => {
                 // bio: newBio,
                 // ...
             };
-    
+
             //GET user data from backend
             const response = await fetch("http://localhost:8080/user/user", {
                 method: "POST",
@@ -226,7 +229,7 @@ const Settings = () => {
             setFAState(updatedFAState);
             console.log('updating 2FA state was a success');
             console.log('2FA status is: ', updatedFAState);
-            
+
 
         } catch (error) {
             console.error('Error updating 2FA status', error);
@@ -244,9 +247,9 @@ const Settings = () => {
 
             const userUpdateData = {
                 animate: updatedAnimateState,
-                
+
             };
-    
+
             //GET user data from backend
             const response = await fetch("http://localhost:8080/user/user", {
                 method: "POST",
@@ -268,7 +271,7 @@ const Settings = () => {
             setAnimationState(updatedAnimateState);
             console.log('updating animation state was a success');
             console.log('animation status is: ', updatedAnimateState);
-            
+
 
         } catch (error) {
             console.error('Error updating 2FA status', error);
@@ -402,16 +405,16 @@ const Settings = () => {
             const deleteResponse = await fetch(
                 "http://localhost:8080/user/delete-account",
                 {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({email: userEmail}),
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email: userEmail }),
                 }
             );
             console.log(deleteResponse);
             const deleteSuccess = await deleteResponse.json();
-      
+
             if (deleteSuccess && deleteResponse.ok) {
                 localStorage.removeItem("token");
                 localStorage.removeItem("email");
@@ -427,7 +430,47 @@ const Settings = () => {
             }
         }
     };
-    
+
+    const toggleProfilePrivate = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const updateProfilePrivateState = !profilePrivateState;
+
+            const userUpdateData = {
+                profilePrivate: updateProfilePrivateState,
+
+            };
+
+            const response = await fetch("http://localhost:8080/user/user", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(userUpdateData),
+            });
+
+            if (!response.ok) {
+                throw new Error('updating profilePrivate failed');
+            }
+
+            const data = await response.json();
+            console.log('data: ', data);
+            console.log('new profilePrivate is', data.profilePrivate);
+
+            setProfilePrivateState(!profilePrivateState);
+            console.log('updating profilePrivate state was a success');
+            console.log('profilePrivate status is: ', updateProfilePrivateState);
+
+
+        } catch (error) {
+            console.error('Error updating profilePrivate status', error);
+        }
+    };
 
     const modeClass = mode ? "light-mode" : "dark-mode"; // Check if mode is true (light mode)
 
@@ -509,6 +552,10 @@ const Settings = () => {
                                 control={<Switch checked={animationState} onChange={toggleAnimation} />}
                                 label="Toggle Remix Animation"
                             />
+                            <FormControlLabel
+                                control={<Switch checked={profilePrivateState} onChange={toggleProfilePrivate} />}
+                                label="Set Profile Private"
+                            />
 
                             {reminder && (
                                 <TextField
@@ -527,7 +574,7 @@ const Settings = () => {
                                 />
                             )}
 
-                           {reminder && (
+                            {reminder && (
                                 <FormControl fullWidth variant="outlined" margin="normal" sx={textFieldStyles}>
                                     <InputLabel>Everyday at</InputLabel>
                                     <Field

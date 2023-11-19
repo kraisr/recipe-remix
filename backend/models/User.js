@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { postSchema } from './Post.js';
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -283,6 +284,8 @@ const userSchema = new mongoose.Schema({
         type: Boolean, 
         default: true,
     },
+
+    savedPosts: [postSchema],
 });
 
 
