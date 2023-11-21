@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./post.css";
 import StarRating from "../StarRating/StarRating";
+import CommentSection from "../CommentSection/CommentSection";
 import { 
   TwitterShareButton, 
   TwitterIcon, 
@@ -16,6 +17,8 @@ const Post = ({ postId }) => {
   const [post, setPost] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [showCommentInput, setShowCommentInput] = useState(false);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     setIsBookmarked(false);
@@ -141,6 +144,64 @@ const Post = ({ postId }) => {
     );
   };
 
+  //comments 
+  const handleCommentClick = () => {
+    setShowCommentInput(true);
+  };
+
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
+  };
+
+  // const handleCommentSubmit = () => {
+  //   // You can handle the comment submission logic here
+  //   console.log("Submitted comment:", comment);
+  //   createPost();
+  //   // Reset the input and hide it
+  //   setComment("");
+  //   setShowCommentInput(false);
+  // };
+
+  const handleCommentSubmit = async () => {
+    try {
+      // Get the current time
+      const currentTime = new Date();
+  
+      // Create the comment object
+      const commentData = {
+        postId: postId,
+        text: comment,
+        createdAt: currentTime.toISOString(), // Convert to ISO string for consistency
+      };
+  
+      // Make the POST request
+      const response = await fetch("http://localhost:8080/posts/add-comment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(commentData)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const responseData = await response.json();
+      console.log("Comment added successfully:", responseData);
+  
+      // Optionally, you can update the local state or trigger a re-fetch of the post data
+      // based on your application's requirements.
+  
+      // Reset the input and hide it
+      setComment("");
+      setShowCommentInput(false);
+    } catch (error) {
+      console.error('Error adding comment to post:', error);
+    }
+  };
+
   const RecipeDifficulty = ({ difficultyLevel }) => {
     let color;
     switch(difficultyLevel) {
@@ -220,6 +281,29 @@ const Post = ({ postId }) => {
           {showShareModal && renderShareModal()} 
         </div>
         <StarRating postId={postId} />
+        <h1 style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleCommentClick}>
+          Comment
+        </h1>
+        {showCommentInput && (
+          <div>
+            <form action="/form/submit" method="POST">
+              <textarea 
+              class="comment"
+              value={comment}
+              onChange={handleCommentChange}>
+
+              </textarea>
+              <br/>
+            </form>
+            
+
+            <div style={{ position:'relative', left:'75%' }} className="submit-cancel">
+              <button onClick={handleCommentSubmit}>Cancel </button>
+              <button onClick={handleCommentSubmit}>Submit</button>
+            </div>
+          </div>
+        )}
+        <CommentSection />
       </div>
     ) : null
   );

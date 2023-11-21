@@ -273,3 +273,41 @@ export const isBookmarked = async (req, res) => {
     }
 
 };
+
+// Add the following function to handle adding a comment to a post
+export const addCommentToPost = async (req, res) => {
+    try {
+        const { postId, text, createdAt } = req.body;
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // Check if the post exists
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found.' });
+        }
+
+        // Create a new comment object
+        const newComment = {
+            user: userId,
+            text: text,
+            createdAt: createdAt
+        };
+
+        // Add the new comment to the post's comments array
+        post.comments.push(newComment);
+        console.log("new:", newComment);
+        // Save the updated post
+        await post.save();
+
+        res.status(201).json({ message: 'Comment added successfully', post });
+
+    } catch (error) {
+        console.error('Error adding comment to post:', error);
+        res.status(500).json({ message: 'Failed to add comment to post.' });
+    }
+};
+
+
+

@@ -9,7 +9,8 @@ import {
   fetchAllPosts,
   bookmarkPost,
   removeBookmark,
-  isBookmarked
+  isBookmarked,
+  addCommentToPost,
 } from '../controllers/postController.js';
 
 const router = express.Router();
@@ -33,5 +34,7 @@ router.post('/bookmark-post', bookmarkPost);
 router.post('/remove-bookmark', removeBookmark);
 
 router.post('/is-bookmarked', isBookmarked);
+
+router.post('/add-comment', addCommentToPost);
 
 export default router;
