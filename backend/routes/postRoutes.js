@@ -11,6 +11,8 @@ import {
   removeBookmark,
   isBookmarked,
   addCommentToPost,
+  fetchAllComments,
+  deleteComment,
 } from '../controllers/postController.js';
 
 const router = express.Router();
@@ -36,5 +38,9 @@ router.post('/remove-bookmark', removeBookmark);
 router.post('/is-bookmarked', isBookmarked);
 
 router.post('/add-comment', addCommentToPost);
+
+router.get('/fetch-all-comments', fetchAllComments);
+
+router.post('/delete-comment', deleteComment);
 
 export default router;

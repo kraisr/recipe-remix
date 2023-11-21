@@ -19,9 +19,14 @@ const Post = ({ postId }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showCommentInput, setShowCommentInput] = useState(false);
   const [comment, setComment] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     setIsBookmarked(false);
+
+    // Fetch current user when component mounts
+    getCurrentUser();
+
     async function fetchPostData() {
       try {
         const response = await fetch(`http://localhost:8080/posts/${postId}`);
@@ -33,13 +38,40 @@ const Post = ({ postId }) => {
       } catch (error) {
         console.error('Error fetching post:', error);
       }
-    };
+    }
 
     if (postId) {
       fetchPostData();
     }
     checkIfBookmarked();
   }, [postId]);
+
+  const getCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw Error('No token found');
+      }
+      const response = await fetch("http://localhost:8080/user/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log("data: ", data);
+      setCurrentUser(data.username);
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+    }
+    console.log("current user: ", currentUser);
+  };
 
   const checkIfBookmarked = async () => {
     try {
@@ -153,14 +185,7 @@ const Post = ({ postId }) => {
     setComment(event.target.value);
   };
 
-  // const handleCommentSubmit = () => {
-  //   // You can handle the comment submission logic here
-  //   console.log("Submitted comment:", comment);
-  //   createPost();
-  //   // Reset the input and hide it
-  //   setComment("");
-  //   setShowCommentInput(false);
-  // };
+
 
   const handleCommentSubmit = async () => {
     try {
@@ -168,8 +193,11 @@ const Post = ({ postId }) => {
       const currentTime = new Date();
   
       // Create the comment object
+
+      console.log("comments: ", currentUser);
       const commentData = {
         postId: postId,
+        username: currentUser,
         text: comment,
         createdAt: currentTime.toISOString(), // Convert to ISO string for consistency
       };
@@ -191,12 +219,9 @@ const Post = ({ postId }) => {
       const responseData = await response.json();
       console.log("Comment added successfully:", responseData);
   
-      // Optionally, you can update the local state or trigger a re-fetch of the post data
-      // based on your application's requirements.
-  
-      // Reset the input and hide it
       setComment("");
       setShowCommentInput(false);
+      window.location.reload();
     } catch (error) {
       console.error('Error adding comment to post:', error);
     }
@@ -303,7 +328,7 @@ const Post = ({ postId }) => {
             </div>
           </div>
         )}
-        <CommentSection />
+        <CommentSection postId={postId}  currentUserId={currentUser} />
       </div>
     ) : null
   );

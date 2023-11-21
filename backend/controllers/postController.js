@@ -277,7 +277,7 @@ export const isBookmarked = async (req, res) => {
 // Add the following function to handle adding a comment to a post
 export const addCommentToPost = async (req, res) => {
     try {
-        const { postId, text, createdAt } = req.body;
+        const { postId, username, text, createdAt } = req.body;
         const token = req.headers.authorization.split(" ")[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
@@ -291,6 +291,7 @@ export const addCommentToPost = async (req, res) => {
         // Create a new comment object
         const newComment = {
             user: userId,
+            username: username,
             text: text,
             createdAt: createdAt
         };
@@ -309,5 +310,53 @@ export const addCommentToPost = async (req, res) => {
     }
 };
 
+
+export const fetchAllComments = async (req, res) => {
+    try {
+        
+        const { postId } = req.params; // Assuming postId is in the URL parameters
+
+        // Find the post by ID and populate the comments from the user collection
+        const post = await Post.findById(postId).populate('comments.user', 'firstName lastName username').exec();
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found.' });
+        }
+
+        const comments = post.comments;
+        
+
+        res.status(200).json({ comments });
+    } catch (error) {
+        console.error('Error fetching comments for the post:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+export const deleteComment = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        const postId = req.body.postId;
+        const commentId = req.body.commentId;
+
+        const updatedPost = await Post.findByIdAndUpdate(
+            postId,
+            { $pull: { comments: { _id: commentId } } },
+            { new: true }
+        ).select('-password');
+
+        if (!updatedPost) {
+            return res.status(400).json({ error: "Error updating comments" });
+        }
+
+        res.status(200).json({ message: "Comment deleted successfully" });
+    } catch (err) {
+        console.error("Error in deleteComment function:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
 
 
