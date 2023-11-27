@@ -12,6 +12,7 @@ import {
 } from "react-share";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import EditPost from '../EditPost/EditPost';
 
 const Post = ({ postId, isOwner, onDelete }) => {
   const [post, setPost] = useState(null);
@@ -22,6 +23,8 @@ const Post = ({ postId, isOwner, onDelete }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [posts, setPosts] = useState([]);
   const { userId } = useParams();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingPostData, setEditingPostData] = useState(null);
 
   const dropdownRef = useRef(null);
 
@@ -45,16 +48,20 @@ const Post = ({ postId, isOwner, onDelete }) => {
 
   // These are the handlers for the menu items
   const handleEditClick = () => {
-    // Add your edit logic here
-    setShowDropdown(false); // hide the menu
+    setIsEditing(true);
+    setEditingPostData({
+      ...post, // Spread all current post properties
+      postId: postId, // Ensure postId is included
+    });
+    setShowDropdown(false);
   };
-  
+
   const handleDeleteClick = () => {
     setShowDropdown(false); // hide the dropdown menu
     setPostToDelete(post); // store the post to delete
     setShowDeleteDialog(true); // show the delete confirmation dialog
   };
-  
+
   // Function to render the dropdown menu
   const renderDropdownMenu = () => (
     <div ref={dropdownRef} className="dropdown-menu">
@@ -103,11 +110,11 @@ const Post = ({ postId, isOwner, onDelete }) => {
         },
         body: JSON.stringify(requestBody),
       });
-  
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+
       setPosts(posts.filter((post) => post._id !== postId));
       console.log("new posts: ", posts);
       onDelete(postId); // Call the deletion callback
@@ -168,7 +175,14 @@ const Post = ({ postId, isOwner, onDelete }) => {
       </div>
     </div>
   );
-  
+
+  const handleSubmitEdit = async (editedPostData) => {
+    // Logic to update the post in your backend
+    // After successful update:
+    setIsEditing(false);
+    // Optionally, refresh the list of posts or update the state
+  };
+
   useEffect(() => {
     setIsBookmarked(false);
     async function fetchPostData() {
@@ -319,6 +333,15 @@ const Post = ({ postId, isOwner, onDelete }) => {
   return (
     post ? (  // Check if post is not null
       <div className="recipe-content2">
+{isEditing && (
+  <EditPost
+    isOpen={isEditing}
+    onRequestClose={() => setIsEditing(false)}
+    postToEdit={editingPostData}
+    onSubmit={handleSubmitEdit}
+  />
+)}
+
         {/* Dropdown menu for post owners */}
         {isOwner && (
           <div className="post-owner-menu">
@@ -329,13 +352,13 @@ const Post = ({ postId, isOwner, onDelete }) => {
 
         {/* Delete Confirmation Dialog */}
         {showDeleteDialog && (
-      <DeleteConfirmationModal
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={confirmDelete}
-        postName={postToDelete?.name}
-        postId={postToDelete?.id}
-      />
-    )}
+          <DeleteConfirmationModal
+            onClose={() => setShowDeleteDialog(false)}
+            onConfirm={confirmDelete}
+            postName={postToDelete?.name}
+            postId={postToDelete?.id}
+          />
+        )}
 
         <div className="name-container">
           <h1>{post.name}</h1>
