@@ -97,15 +97,11 @@ const Messages = () => {
 
     
     const getOtherParticipant = (participants) => {
-        // Debugging
-        console.log('Current userId:', userId);
-        console.log('Participants:', participants);
-      
-        // Find the participant who is not the current user
-        const other = participants.find(p => p._id !== userId);
+        const other = participants.find(p => p._id.toString() !== userId.toString());
         console.log('Other participant:', other);
-        return other;
+        return other || {};
       };
+      
       
       
 
@@ -154,6 +150,8 @@ const Messages = () => {
             });
 
             if (!response.ok) throw new Error('Network response was not ok');
+            const sentMessage = await response.json();
+
             setNewMessage('');
             fetchMessages(selectedConversation._id);
         } catch (error) {
@@ -199,28 +197,18 @@ const Messages = () => {
                     </div>
                 )}
                  {conversations.map((conversation) => {
-                     const otherParticipant = getOtherParticipant(conversation.participants);
-                     const lastMessage = conversation.lastMessage?.content || "No messages yet";
-                     const lastMessageTime = conversation.lastMessage 
-                         ? new Date(conversation.lastMessage.createdAt).toLocaleTimeString() 
-                         : '';
-                     const isActive = selectedConversation?._id === conversation._id ? 'active' : '';
+                    const otherParticipant = getOtherParticipant(conversation.participants);
+                    const lastMessageContent = conversation.lastMessage ? conversation.lastMessage.content : "No messages yet";
+                    const participantName = otherParticipant.username || 'Unknown';
+                    const isActive = selectedConversation?._id === conversation._id ? 'active' : '';
                      return (
-                        <div
-                            key={conversation._id}
-                            className={`conversation-item ${isActive}`}
-                            onClick={() => handleSelectConversation(conversation)}
-                        >
-                            <img src={otherParticipant?.image || 'default-profile.png'} alt={otherParticipant?.name || 'Unknown'} className="profile-pic" />
-                            <div className="conversation-info">
-                                <p className="participant-name">{otherParticipant?.name || 'Unknown'}</p>
-                                <p className="last-message">{lastMessage}</p>
+                        <div key={conversation._id} className={`conversation-item ${isActive}`} onClick={() => handleSelectConversation(conversation)}>
+                        <img src={otherParticipant.image || 'default-profile.png'} alt={participantName} className="profile-pic" />
+                        <div className="conversation-info">
+                          <p className="participant-name">{participantName}</p>
+                          <p className="last-message">{lastMessageContent}</p>
                             </div>
-                            {lastMessageTime && (
-                                <span className="timestamp">
-                                    {lastMessageTime}
-                                </span>
-                            )}
+                       
                         </div>
                     );
                 })}
