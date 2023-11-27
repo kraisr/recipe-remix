@@ -1,6 +1,7 @@
 import express from 'express';
 import {  
   savePost, 
+  editPost,
   addRatingToPost, 
   fetchPostById, 
   fetchPostsByUser, 
@@ -15,6 +16,8 @@ import {
 const router = express.Router();
 
 router.post('/create-post', savePost);
+
+router.post('/edit-post', editPost);
 
 router.post('/add-rating', addRatingToPost);
 

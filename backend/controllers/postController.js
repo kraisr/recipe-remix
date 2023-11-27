@@ -30,6 +30,43 @@ export const savePost = async (req, res) => {
         res.status(500).json({ error: "Failed to create post: " + err.message });
     }
 };
+
+export const editPost = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        const { postId, name, image, caption, ingredients, difficulty, tags } = req.body;
+        console.log("Post ID:", postId);
+        console.log("Name:", name);
+        console.log("Image URL:", image);
+        console.log("Caption:", caption);
+        console.log("Ingredients:", ingredients);
+        console.log("Difficulty:", difficulty);
+        console.log("Tags:", tags);
+        // Find the post by ID and ensure the user owns the post
+        const post = await Post.findOne({ _id: postId, user: userId });
+        if (!post) {
+            return res.status(404).json({ error: "Post not found or user not authorized to edit this post" });
+        }
+
+        // Update the post with new data
+        post.name = name;
+        post.image = image;
+        post.caption = caption;
+        post.ingredients = ingredients || [];
+        post.difficulty = difficulty;
+        post.tags = tags;
+
+        // Save the updated post to the database
+        const updatedPost = await post.save();
+
+        res.status(200).json({ message: "Post updated successfully", post: updatedPost });
+    } catch (err) {
+        console.error("Error in editPost function:", err);
+        res.status(500).json({ error: "Failed to update post: " + err.message });
+    }
+};
   
 export const deletePostsByUser = async (req, res) => {
     try {
