@@ -18,6 +18,19 @@ import image4 from "../../images/recipe4.jpg";
 import image5 from "../../images/recipe5.jpg";
 import image6 from "../../images/recipe6.jpg";
 import image7 from "../../images/recipe7.jpg";
+import tacos from "../../images/tacos.avif";
+import salad from "../../images/salad.avif";
+import pasta from "../../images/pasta.avif";
+import dumplings from "../../images/dumpies.jpeg";
+import fruit from "../../images/fruit.jpeg";
+import mac from "../../images/mac.jpeg";
+import rigatoni from "../../images/rigatoni.jpeg";
+import steak from "../../images/steak.jpeg";
+import lobster from "../../images/lobster.jpeg";
+import fries from "../../images/fries.jpeg";
+import bowl from "../../images/bowl.jpeg";
+import soup from "../../images/soup.webp";
+import smoothie from "../../images/smoothie.jpeg";
 
 import aboutImage from "../../images/about-image.jpg";
 
@@ -80,7 +93,7 @@ const responsive = {
     return (
       <div className="landing-container">
         <div className="landing-nav" ref={navRef} >
-          <h2>Recipe Remix</h2>
+          <h1>Recipe Remix</h1>
           <div
             className="hamburger-menu"
             onClick={() => setMenuOpen(!isMenuOpen)}
@@ -92,7 +105,7 @@ const responsive = {
               className="close-menu"
               onClick={() => setMenuOpen(false)}
             >
-              ×
+              
             </span>
 
             <h2 onClick={openAboutHandler} style={{ cursor: "pointer" }} className="nav-about">
@@ -137,7 +150,7 @@ const responsive = {
             ssr={true}
             infinite={true}
             autoPlay={true} 
-            autoPlaySpeed={10000} 
+            autoPlaySpeed={3000} 
             keyBoardControl={true}
             customTransition="transform 500ms ease-in-out"
             transitionDuration={500}
@@ -151,7 +164,7 @@ const responsive = {
             <div className="carousel-image-container">
               <img
                 className="carousel-image"
-                src={image1}
+                src={smoothie}
                 alt=""
                 style={{ width: "400px", height: "400px", borderRadius: "10%" }}
               />
@@ -159,7 +172,7 @@ const responsive = {
             <div className="carousel-image-container">
               <img
                 className="carousel-image"
-                src={image2}
+                src={fries}
                 alt=""
                 style={{ width: "400px", height: "400px", borderRadius: "10%" }}
               />
@@ -167,7 +180,7 @@ const responsive = {
             <div className="carousel-image-container">
               <img
                 className="carousel-image"
-                src={image3}
+                src={tacos}
                 alt=""
                 style={{ width: "400px", height: "400px", borderRadius: "10%" }}
               />
@@ -175,7 +188,7 @@ const responsive = {
             <div className="carousel-image-container">
               <img
                 className="carousel-image"
-                src={image4}
+                src={dumplings}
                 alt=""
                 style={{ width: "400px", height: "400px", borderRadius: "10%" }}
               />
@@ -183,7 +196,7 @@ const responsive = {
             <div className="carousel-image-container">
               <img
                 className="carousel-image"
-                src={image5}
+                src={steak}
                 alt=""
                 style={{ width: "400px", height: "400px", borderRadius: "10%" }}
               />
@@ -191,7 +204,7 @@ const responsive = {
             <div className="carousel-image-container">
               <img
                 className="carousel-image"
-                src={image6}
+                src={soup}
                 alt=""
                 style={{ width: "400px", height: "400px", borderRadius: "10%" }}
               />
@@ -199,7 +212,7 @@ const responsive = {
             <div className="carousel-image-container">
               <img
                 className="carousel-image"
-                src={image7}
+                src={bowl}
                 alt=""
                 style={{ width: "400px", height: "400px", borderRadius: "10%" }}
               />
@@ -217,18 +230,18 @@ const responsive = {
           class="about"
           open={openAbout}
           onClose={() => setOpenAbout(false)}
-          contentStyle={{ borderRadius: '10%', background: '#C6EBC5'}}
-          
+          contentStyle={{ borderRadius: '5%', background: '#C6EBC5', overflowY: 'hidden'}}
         >
           <div class="about">
             
             <div class="text">
             
-              <h2>About Us</h2>
-              
-              <h5>Developers & <span>Hungry Students</span></h5>
+              <h5>Meet the Creators of Recipie Remix</h5>
               <img src={aboutImage} class="pic" />
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita natus ad sed harum itaque ullam enim quas, veniam accusantium, quia animi id eos adipisci iusto molestias asperiores explicabo cum vero atque amet corporis! Soluta illum facere consequuntur magni. Ullam dolorem repudiandae cumque voluptate consequatur consectetur, eos provident necessitatibus reiciendis corrupti!</p>
+              <p>
+                Recipie Remix was founded by six food-loving students with a passion for software development. They had a deep desire to allivate other hungry students of the challeges they faced on a daily  basis.
+              </p>
+              <p>Together, Andree, Tim, Ryan, Louis, Michael, and Khoa form the heart and soul of Recipie Remix. Join us on our culinary adventure as we remix recipes and make cooking a delightful experience for everyone!</p>
             </div>
           </div>
         </Popup>
@@ -240,7 +253,7 @@ const responsive = {
           contentStyle={{ borderRadius: '10%', background: '#C6EBC5'}}
           
         >
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "65vh" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "65vh", paddingTop:"5%" }}>
             <Typography variant="h3" mb={3} fontWeight="bold">
                 Contact Us
             </Typography>
@@ -248,7 +261,7 @@ const responsive = {
                 <strong>Phone:</strong> +1 (234) 567-8901
             </Typography>
             <Typography variant="h6" mb={3}>
-                <strong>Email:</strong> support@example.com
+                <strong>Email:</strong> reciperemix@gmail.com
             </Typography>
             <Formik
               initialValues={{ subject: '', body: '' }}

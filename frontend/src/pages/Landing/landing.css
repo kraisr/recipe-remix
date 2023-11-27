@@ -149,7 +149,6 @@
     cursor: -webkit-grab;
   }
 
-
   @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap");
 /* * {
   margin: 0;
@@ -191,15 +190,15 @@
 }
 .text h2 {
   color: #333;
-  font-size: 90px;
+  font-size: 60px;
   font-weight: 600;
   margin-bottom: 10px;
   text-align: center;
 }
 .text h5 {
   color: #333;
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 25px;
+  font-weight: 600;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -275,6 +274,7 @@
         border: none;
         width: auto;
         padding: 0;
+        margin-left: 20%;
     }
 
     .nav-content .landing-nav-button {
