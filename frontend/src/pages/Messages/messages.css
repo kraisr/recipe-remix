@@ -22,6 +22,9 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
+    height: calc(100vh - 60px); /* Adjust the height to avoid overlap with the Navbar */
+    overflow: hidden; /* This will clip off any content that overflows */
+
 }
 
 /* Search bar at the top of the conversation list */
@@ -47,19 +50,20 @@
     border-radius: 4px;
 }
 
-/* Styles for messages in the chat window */
-.message-bubble {
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 10px;
-    background-color: #f0f0f0;
-    /* You can differentiate sender and receiver messages with additional classes or styles */
-}
+
 
 /* Container for the message input and send button */
 .message-input-container {
     margin-top: auto; /* Keeps the input at the bottom */
     display: flex;
+    position: sticky;
+    padding: 5px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #ccc;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #fff;
+
 }
 
 .message-input-container input[type="text"] {
@@ -80,25 +84,33 @@
 }
 
 .message-list {
-    flex-grow: 1;
-    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
   }
   
   .message-bubble {
-    /* existing styles */
+    max-width: 70%; /* Adjust the maximum width as needed */
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 10px;
+    background-color: #f0f0f0;
     margin-bottom: 10px;
     word-wrap: break-word;
   }
   
   .sent {
-    align-self: flex-end;
-    background-color: rgb(123, 182, 90)
-
+    align-items: flex-end;
+    background-color: rgb(123, 182, 90);
+    margin-left: auto;
   }
   
   .received {
-    align-self: flex-start;
-    background-color: #ECECEC; /* Example color for received messages */
+    align-items: flex-start;
+    background-color: #ECECEC;
+    margin-right: auto;
+
   }
   
   .profile-pic {

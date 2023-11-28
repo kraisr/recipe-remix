@@ -24,7 +24,7 @@ export const getConversations = async (req, res) => {
         const conversations = await Conversation.find({
             participants: { $in: [userId] }
         })
-        .populate('participants', 'name image _id') // include image and _id here
+        .populate('participants', 'username image _id') // include image and _id here
         .populate('lastMessage'); // populate last message
 
         res.status(200).json(conversations);
@@ -32,6 +32,20 @@ export const getConversations = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+export const deleteConversation = async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        await Conversation.findByIdAndDelete(conversationId);
+        await Message.deleteMany({ conversation: conversationId });
+        res.status(200).json({ message: 'Conversation deleted successfully.' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+
 
 export const getMessages = async (req, res) => {
     try {

@@ -44,7 +44,7 @@ function App() {
           <Route path="/profile/:userId" element={isLoggedIn ? <Profile /> : <Navigate to="/" />} />
 
           <Route path="/messages" element={isLoggedIn ? <Messages /> : <Navigate to="/" />} />
-
+          <Route path="/messages/:conversationId" element={isLoggedIn ? <Messages /> : <Navigate to="/" />} />
           <Route path="/settings" element={isLoggedIn ? <Settings /> : <Navigate to="/" />} />
           <Route path="/preferences" element={isLoggedIn ? <Preferences /> : <Navigate to="/" />} />
           <Route path="/shoppingList" element={isLoggedIn ? <ShoppingList /> : <Navigate to="/" />} />

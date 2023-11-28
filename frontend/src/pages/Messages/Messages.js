@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './messages.css';
+import { useParams } from "react-router-dom";
 
 
 const Messages = () => {
@@ -8,12 +9,14 @@ const Messages = () => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
-    const [showStartConversationModal, setShowStartConversationModal] = useState(false);
-    const [selectedUserForConversation, setSelectedUserForConversation] = useState('');
-
+    
+    const { conversationId } = useParams();
     const token = localStorage.getItem('token');
+
     let userId = '';
+
     if (token) {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace('-', '+').replace('_', '/');
@@ -21,11 +24,39 @@ const Messages = () => {
     }
 
 
-    useEffect(() => {
+    // useEffect(() => {
+    //     // This will run once when the component mounts
+    //     const fetchData = async () => {
+    //       await fetchConversations();
+    //       await fetchAllUsers();
+    //     };
         
-        fetchConversations();
-        fetchAllUsers(); // Fetch all users for new conversation 
-    }, []);
+      
+    //     fetchData();
+    //   }, []);
+
+    useEffect(() => {
+        if (token) {
+            fetchConversations();
+            fetchAllUsers();
+        }
+    }, [token]);
+
+
+      useEffect(() => {
+        // This will run whenever the conversations change or when the component mounts
+        const selectConversation = () => {
+          // Find the new conversation based on the conversationId
+          const newConversation = conversations.find(convo => convo._id === conversationId);
+      
+          if (newConversation) {
+            setSelectedConversation(newConversation);
+            fetchMessages(conversationId);
+          }
+        };
+      
+        selectConversation();
+      }, [conversationId, conversations]);
 
     const fetchAllUsers = async () => {
         try {
@@ -90,48 +121,127 @@ const Messages = () => {
         }
     };
 
+    const handleDeleteChat = async (conversationId) => {
+        try {
+            const response = await fetch(`http://localhost:8080/message/conversations/${conversationId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+    
+            if (!response.ok) throw new Error('Failed to delete chat');
+            await fetchConversations(); // Refresh conversations list
+            if (selectedConversation?._id === conversationId) {
+                setSelectedConversation(null); // Deselect conversation if it was deleted
+            }
+        } catch (error) {
+            console.error('Error deleting chat:', error);
+        }
+    };
+    
+
     const handleSelectConversation = (conversation) => {
+        console.log("Selected conversation:", conversation); // Debugging log
         setSelectedConversation(conversation);
         fetchMessages(conversation._id);
     };
 
     
     const getOtherParticipant = (participants) => {
-        const other = participants.find(p => p._id.toString() !== userId.toString());
+        if (!participants || participants.length === 0) {
+            console.error("Participants array is empty or undefined");
+            return {};
+        }
+    
+        const other = participants.find(p => p?._id?.toString() !== userId.toString());
         console.log('Other participant:', other);
         return other || {};
-      };
+    };
       
       
       
+    const handleClearChat = async (conversationId, lastMessageId) => {
+        console.log("Clearing chat for conversation ID:", conversationId); // Debugging log
 
-    const handleStartConversation = async () => {
         try {
-          if (!token) throw new Error('No token found');
-          const response = await fetch('http://localhost:8080/message/conversations/start', {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({ otherUserEmail: selectedUserForConversation })
-          });
-      
-          if (!response.ok) throw new Error('Network response was not ok');
-          const newConversation = await response.json();
-          setConversations(prevConversations => [...prevConversations, newConversation]); // Add the new conversation to the list
-          setSelectedConversation(newConversation); // Set the new conversation as selected
-          setShowStartConversationModal(false); // Close the modal
-          fetchMessages(newConversation._id); // Fetch messages for the new conversation
-          setSelectedUserForConversation(''); // Reset the selected user for conversation
+            if (!selectedConversation) {
+                console.error("No conversation selected");
+                return;
+            }
+            const lastMessageId = selectedConversation.lastMessage ? selectedConversation.lastMessage._id : null;
+
+            if (!lastMessageId) {
+                console.error('No last message found for this conversation');
+                return;
+            }
+    
+            const response = await fetch('http://localhost:8080/message/conversations/clearChat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ conversationId, lastMessageBeforeClear: lastMessageId })
+            });
+    
+            if (!response.ok) throw new Error('Failed to clear chat');
+            await fetchConversations(); // Refresh conversations list
         } catch (error) {
-          console.error("Error starting new conversation:", error);
+            console.error('Error clearing chat:', error);
         }
-      };
+    };
+    const handleStartConversation = async (otherUserEmail) => {
+        try {
+            // Check if there's an existing conversation with this user
+            const existingConversation = conversations.find(convo => 
+                convo.participants.some(participant => participant.email === otherUserEmail)
+            );
+    
+            if (existingConversation) {
+                // If the conversation exists, select it
+                setSelectedConversation(existingConversation);
+                fetchMessages(existingConversation._id);
+            } else {
+                // If not, start a new conversation
+                const response = await fetch('http://localhost:8080/message/conversations/start', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ otherUserEmail })
+                });
+    
+                if (!response.ok) throw new Error('Network response was not ok');
+                const newConversation = await response.json();
+    
+                // Update conversations list and select the new conversation
+                setConversations(prevConversations => [...prevConversations, newConversation]);
+                setSelectedConversation(newConversation);
+                fetchMessages(newConversation._id);
+            }
+    
+            // Clear search term and results
+            setSearchTerm('');
+            setSearchResults([]);
+        } catch (error) {
+            console.error("Error handling conversation:", error);
+        }
+    };
+    
+    
+    
+      const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    };
 
 
-    const handleSendMessage = async (e) => {
-        e.preventDefault();
+    const handleSendMessage = async () => {
         if (!newMessage.trim()) return;
         try {
             const token = localStorage.getItem('token');
@@ -162,53 +272,66 @@ const Messages = () => {
   
     
 
-    const handleCloseModal = () => {
-        setShowStartConversationModal(false);
-        setSelectedUserForConversation('');
+  const handleSearch = (searchTerm) => {
+        setSearchTerm(searchTerm);
+        if (searchTerm.trim() === '') {
+            setSearchResults([]);
+            return;
+        }
+        const filteredUsers = allUsers.filter(user => 
+            user.username.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setSearchResults(filteredUsers);
     };
-
     
-
 
     return (
         <div className="chat-container">
             <div className="conversation-list">
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    onChange={(e) => setSearchTerm(e.target.value || '')}
-
-                />
-                <button onClick={() => setShowStartConversationModal(true)}>Start New Conversation</button>
-                {showStartConversationModal && (
-                    <div className="start-conversation-modal">
-                        <select
-                            value={selectedUserForConversation}
-                            onChange={(e) => setSelectedUserForConversation(e.target.value || '')}
-                        >
-                            <option value="">Select a User</option>
-                            {allUsers.map(user => (
-                                <option key={user._id} value={user.email}>{user.username}</option>
-                            ))}
-                        </select>
-
-                        <button onClick={handleStartConversation}>Start Conversation</button>
-                        <button onClick={handleCloseModal}>Close</button>
-                    </div>
-                )}
+                <div className="search-input-container"> {/* Added this div */}
+                    <input
+                        type="text"
+                        placeholder="Search users..."
+                        value={searchTerm}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        className="search-input" // Add this class
+                    />
+                    {searchResults.length > 0 && (
+                        <div className="search-suggestions-container"> {/* Added this div */}
+                            <ul className="search-suggestions-dropdown"> {/* Added this ul */}
+                                {searchResults.map(user => (
+                                    <li key={user._id} className="suggestion-item" // Changed from div to li
+                                         onClick={() => handleStartConversation(user.email)}>
+                                        {user.username}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
                  {conversations.map((conversation) => {
                     const otherParticipant = getOtherParticipant(conversation.participants);
                     const lastMessageContent = conversation.lastMessage ? conversation.lastMessage.content : "No messages yet";
                     const participantName = otherParticipant.username || 'Unknown';
                     const isActive = selectedConversation?._id === conversation._id ? 'active' : '';
+                    const lastMessageId = conversation.lastMessage ? conversation.lastMessage._id : null; // Define lastMessageId here
+
                      return (
                         <div key={conversation._id} className={`conversation-item ${isActive}`} onClick={() => handleSelectConversation(conversation)}>
-                        <img src={otherParticipant.image || 'default-profile.png'} alt={participantName} className="profile-pic" />
-                        <div className="conversation-info">
-                          <p className="participant-name">{participantName}</p>
-                          <p className="last-message">{lastMessageContent}</p>
+                            <img src={otherParticipant.image || 'default-profile.png'} alt={participantName} className="profile-pic" />
+                            <div className="conversation-info">
+                                <p className="participant-name">{participantName}</p>
+                                <p className="last-message">{lastMessageContent}</p>
                             </div>
-                       
+                            <button 
+                        className="delete-chat-button" 
+                        onClick={(e) => { 
+                            e.stopPropagation(); 
+                            handleDeleteChat(conversation._id); 
+                        }}>
+                        Delete Chat
+                    </button>
+
                         </div>
                     );
                 })}
@@ -224,12 +347,14 @@ const Messages = () => {
                             </div>
                         ))}
                     </div>
-                    <div className="message-input-container">
+            <div className="message-input-container">
               <input
                 type="text"
                 placeholder="Type a message..."
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+
               />
               <button onClick={handleSendMessage}>Send</button>
             </div>
