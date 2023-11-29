@@ -10,6 +10,10 @@ const commentSchema = mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   isLiked: {type: Boolean, default: false},
   rating: {type: Number, default: 0},
+  replies: [{
+    username: { type: String },
+    text: String,
+  }],
 });
 
 function commentCount(count) {
