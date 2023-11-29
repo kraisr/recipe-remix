@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import Post from '../models/Post.js';
+import Comment from '../models/Post.js';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
@@ -396,5 +397,97 @@ export const updateCommentRating = async (req, res) => {
 };
 
 
+export const addReplyToComment = async (req, res) => {
+    try {
+        const { commentId, postId, username, text } = req.body;
+        console.log("commentid: ", commentId);
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // Check if the post exists
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found.' });
+        }
+
+        // Find the comment by ID
+        const comment = post.comments.find(comment => comment._id.toString() === commentId);
+        if (!comment) {
+            return res.status(404).json({ message: 'Comment not found.' });
+        }
+
+        // Create a new reply object
+        const newReply = {
+            user: userId,
+            username: username,
+            text: text,
+        };
+
+        // Add the new reply to the comment's replies array
+        comment.replies.push(newReply);
+
+        console.log(comment);
+        // Save the updated post
+        await post.save();
+
+        res.status(201).json({ message: 'Reply added successfully', post });
+
+    } catch (error) {
+        console.error('Error adding reply to comment:', error);
+        res.status(500).json({ message: 'Failed to add reply to comment.' });
+    }
+};
+
+
+export const fetchCommentById = async (req, res) => {
+    try {
+        
+        const { postId, commentId } = req.body;
+        
+        // Find the post by ID and populate the comments from the user collection
+        const post = await Post.findById(postId).populate('comments.username', 'firstName lastName username').exec();
+        
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found.' });
+        }
+
+        // Iterate through the comments to find the one with the specified commentId
+        const foundComment = post.comments.find(comment => comment._id.toString() === commentId);
+
+        if (!foundComment) {
+            return res.status(404).json({ message: 'Comment not found.' });
+        }
+
+        res.status(200).json({ comment: foundComment });
+    } catch (error) {
+        console.error('Error finding the comment:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+
+export const deleteReply = async (req, res) => {
+    try {
+        const postId = req.body.postId;
+        const commentId = req.body.commentId;
+        const replyId = req.body.replyId;
+
+        const updatedPost = await Post.findByIdAndUpdate(
+            postId,
+            { $pull: { "comments.$[c].replies": { _id: replyId } } },
+            { arrayFilters: [{ "c._id": commentId }], new: true }
+        ).select('-password');
+
+        if (!updatedPost) {
+            return res.status(400).json({ error: "Error updating replies" });
+        }
+
+        res.status(200).json({ message: "Reply deleted successfully", post: updatedPost });
+    } catch (err) {
+        console.error("Error in deleteReply function:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
 
 
