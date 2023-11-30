@@ -886,6 +886,21 @@ export const handleLikeComment = async (req, res) => {
 
       // Find the liked comment in the array and update the rating
       const likedComment = userData.likedComments.find(comment => comment._id.toString() === commentId);
+      if (userData.dislikedComments.map(comments => comments._id === commentId)) {
+      
+        const indexToRemove = userData.dislikedComments.findIndex(comment => comment.id === commentId);
+  
+  
+        if (indexToRemove !== -1) {
+          userData.dislikedComments.splice(indexToRemove, 1);
+        } else {
+          console.error('Comment not found in likedComments array');
+        }
+  
+        await userData.save();
+  
+        
+      } 
 
       if (likedComment) {
         likedComment.rating += 1;
@@ -901,6 +916,8 @@ export const handleLikeComment = async (req, res) => {
       // Respond with a message indicating that the comment is already liked
       return res.status(200).json({ message: 'Comment is already liked by the user' });
     }
+
+    
   } catch (error) {
     console.error("Error in handleLikeComment function:", error);
     return res.status(500).json({ error: error.message });
@@ -979,6 +996,22 @@ export const handleDislikeComment = async (req, res) => {
       userData.dislikedComments = [];
     }
 
+    if (userData.likedComments.map(comments => comments._id === commentId)) {
+      
+      const indexToRemove = userData.likedComments.findIndex(comment => comment.id === commentId);
+
+
+      if (indexToRemove !== -1) {
+        userData.likedComments.splice(indexToRemove, 1);
+      } else {
+        console.error('Comment not found in likedComments array');
+      }
+
+      await userData.save();
+
+      
+    }
+
     // Check if the comment is already liked
     if (!userData.dislikedComments.includes(commentId)) {
       // If not liked, push the commentId to the likedComments array
@@ -988,7 +1021,7 @@ export const handleDislikeComment = async (req, res) => {
       const dislikedComment = userData.dislikedComments.find(comment => comment._id.toString() === commentId);
 
       if (dislikedComment) {
-        dislikedComment.rating -= 1;
+        dislikedComment.rating -= 2;
         console.log(dislikedComment);
       } else {
         console.error('Liked comment not found in likedComments array');
@@ -1023,7 +1056,7 @@ export const removeDisLikedComment = async (req, res) => {
     
     if (user.dislikedComments.map(comments => comments._id === commentId)) {
       
-      const indexToRemove = user.likedComments.findIndex(comment => comment.id === commentId);
+      const indexToRemove = user.dislikedComments.findIndex(comment => comment.id === commentId);
 
 
       if (indexToRemove !== -1) {

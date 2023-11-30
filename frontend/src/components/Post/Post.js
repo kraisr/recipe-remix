@@ -36,6 +36,7 @@ const Post = ({ postId }) => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        console.log("this post's avg rating: ", data.averageRating);
         setPost(data);
       } catch (error) {
         console.error('Error fetching post:', error);
@@ -67,7 +68,7 @@ const Post = ({ postId }) => {
       }
 
       const data = await response.json();
-      console.log("data: ", data);
+      // console.log("data: ", data);
       setCurrentUser(data.username);
     } catch (error) {
       console.error('Error fetching current user:', error);
@@ -93,7 +94,7 @@ const Post = ({ postId }) => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setIsBookmarked(data.isBookmarked);
     } catch (error) {
       console.error('Error fetching post:', error);
@@ -313,7 +314,7 @@ const Post = ({ postId }) => {
           Comment
         </h1>
         {showCommentInput && (
-          <div>
+          <div className="commenting">
             <form action="/form/submit" method="POST">
               <textarea 
               class="comment"
@@ -325,9 +326,9 @@ const Post = ({ postId }) => {
             </form>
             
 
-            <div style={{ position:'relative', left:'75%' }} className="submit-cancel">
-              <button onClick={handleCancelButton}>Cancel </button>
-              <button onClick={handleCommentSubmit}>Submit</button>
+            <div style={{ position:'relative' }} className="submit-cancel">
+              <button className="button-44  comment-cancel-btn" onClick={handleCancelButton}>Cancel </button>
+              <button className="button-44  comment-submit-btn" onClick={handleCommentSubmit}>Submit</button>
             </div>
           </div>
         )}

@@ -166,7 +166,7 @@
 }
 
 .c-post-grid {
-  max-height: 85%; /* Set the maximum height you desire */
+  max-height:75%; /* Set the maximum height you desire */
   overflow-y: auto; /* Add vertical scroll if content exceeds the container height */
   /* border: 1px solid #ccc; Optional: Add a border for better styling */
   padding-right: 10%; /* Optional: Add padding for spacing */
@@ -176,6 +176,8 @@
   min-height: 250px;
   justify-content: flex-start;
   gap: 10px;
+  position: relative;
+  top:5%;
 }
 
 .post-list {

@@ -85,18 +85,71 @@ export const fetchPostById = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+const calculateAverageRating = (post) => {
+    const totalRatings = post.ratings.length;
+    if (totalRatings === 0) {
+        return 0; // or any default value
+    }
+
+    const sumOfRatings = post.ratings.reduce((acc, rating) => acc + rating.value, 0);
+    return sumOfRatings / totalRatings;
+};
 
 export const fetchAllPosts = async (req, res) => {
     try {
+        const { sortingOrder } = req.query;
+
+        let sortCriteria;
+
+        switch (sortingOrder) {
+            case 'newest':
+                sortCriteria = { createdAt: -1 };
+                break;
+            case 'highest':
+                sortCriteria = { averageRating: -1 };
+                break;
+            case 'lowest':
+                sortCriteria = { averageRating: 1 };
+                break;
+            default:
+                sortCriteria = { averageRating: -1 };
+                // handle other cases or set a default sorting order
+        }
+
         const allPosts = await Post.find({})
-                                    .sort({ createdAt: -1 })
-                                    .populate('user', 'firstName lastName username');
-        res.status(200).json(allPosts);
+            .populate('user', 'firstName lastName username');
+
+        // Calculate and add average rating to each post
+        const postsWithAverageRating = allPosts.map((post) => ({
+            ...post.toObject(),
+            averageRating: calculateAverageRating(post),
+        }));
+
+        // Sort posts based on the calculated averageRating
+        console.log("criteria: ", sortingOrder);
+        let posts = "";
+        if (sortingOrder !== 'newest'){
+            postsWithAverageRating.sort((a, b) => sortCriteria.averageRating * (a.averageRating - b.averageRating));
+            posts = postsWithAverageRating;
+        } else {
+            const allPosts = await Post.find({})
+            .sort(sortCriteria)
+            .populate('user', 'firstName lastName username');
+
+            posts = allPosts;
+        }
+
+
+
+        res.status(200).json(posts);
     } catch (error) {
         console.error('Error finding all posts:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
-}
+};
+
+
+
 
 export const fetchPostsByUser = async (req, res) => {
     try {
@@ -384,8 +437,9 @@ export const updateCommentRating = async (req, res) => {
         }
 
         // Update the comment rating
+        console.log(comment.rating);
         comment.rating += ratingChange;
-
+        console.log(comment.rating);
         // Save the updated post
         await post.save();
 

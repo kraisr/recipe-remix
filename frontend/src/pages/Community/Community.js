@@ -32,7 +32,8 @@ const Community = () => {
     const cuisines = ["Italian", "Mexican", "Japanese", "Vegan", "Party Food"];
     const [selectedCuisines, setSelectedCuisines] = useState([]);
     const [userPosts, setUserPosts] = useState([]);
-
+    const [sortBy, setSortBy] = useState('newest');
+    const [showRatingOptions, setshowRatingOptions] = useState(false);
     const handleSearch = async (searchTerm) => {
       setSearchTerm(searchTerm);
     
@@ -54,37 +55,33 @@ const Community = () => {
       }
     };
 
-    const fetchAllPosts = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw Error('No token found');
-            }
-
-            const response = await fetch("http://localhost:8080/posts/fetch-all-posts", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            // console.log("data: ", data);
-            if (Array.isArray(data)) {
-                // Update the recipes state with the user's posts
-                setPosts(data);
-            } else {
-                console.error('Invalid data format:', data);
-            }
-        } catch (error) {
-            console.error('Error fetching user posts:', error);
+    const fetchAllPosts = async (sortingOrder) => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw Error('No token found');
         }
+    
+        const response = await fetch(`http://localhost:8080/posts/fetch-all-posts?sortingOrder=${sortingOrder}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+        });
+    
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+    
+        const data = await response.json();
+        // Update the recipes state with the user's posts
+        setPosts(data);
+      } catch (error) {
+        console.error('Error fetching user posts:', error);
+      }
     };
+    
 
     const fetchUserPosts = async () => {
       try {
@@ -151,6 +148,25 @@ const Community = () => {
       return true;
     }
     return post.tags.some(tag => selectedCuisines.includes(tag));
+  };
+
+  const handleRecentnessClick = () => {
+    setSortBy('newest');
+    fetchAllPosts('newest');
+  };
+
+  const handleRatingsClick = () => {
+    setshowRatingOptions(!showRatingOptions);
+  };
+
+  const handleHighestClick = () => {
+    setSortBy('highest');
+    fetchAllPosts('highest');
+  };
+  
+  const handleLowestClick = () => {
+    setSortBy('lowest');
+    fetchAllPosts('lowest');
   };
 
   return (
@@ -227,9 +243,26 @@ const Community = () => {
               </div>
             </center>
             <div className="center-button">
-              <button className="community-button">Ratings</button>
-              <button className="community-button">Recentness</button>
+              <button className="community-button" onClick={handleRatingsClick}>Ratings</button>
+              
+              <button className="community-button" onClick={handleRecentnessClick}>
+                Recentness
+              </button>
+              
             </div>
+
+            {showRatingOptions && (
+            <div className="div" style={{ display: "flex", justifyContent: "space-between", width: "40%", position: "relative", left: "10%", top: "2%" }}>
+              <button className="community-button" onClick={() => handleHighestClick('highest')}>
+                Highest
+              </button>
+
+              <button className="community-button" onClick={() => handleLowestClick('lowest')}>
+                Lowest
+              </button>
+            </div>
+          )}
+
 
             <div className="c-post-grid">
                 {posts.filter(shouldDisplayPost).map((post) => (

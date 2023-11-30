@@ -45,17 +45,19 @@ const CommentSection = ({ postId, currentUserId }) => {
         
         // Get the user's liked comments
         const likedCommentIds = userData.likedComments.map(comment => comment._id);
-        console.log("ids: ", likedCommentIds);
+        const unlikedCommentIds = userData.dislikedComments.map(comment=>comment._id);
+
         // Update comments with isLiked property
         const updatedComments = data.comments.map(comment => ({
           ...comment,
           isLiked: likedCommentIds.includes(comment._id),
+          isUnliked: unlikedCommentIds.includes(comment._id),
         }));
 
         console.log("updated: ", updatedComments);
   
         setComments(updatedComments);
-        console.log("comments1: ", comments);
+        console.log("rating: ", comments);
       } catch (error) {
         console.error('Error fetching comments:', error);
       }
@@ -146,18 +148,19 @@ const CommentSection = ({ postId, currentUserId }) => {
       const isUnliked = comments.find(comment => comment._id === commentId)?.isUnliked || false;
       let flag = false;
       if (isLiked && !isUnliked) {
-        // If already liked, make a request to remove it from liked comments
+        
         await unlikeComment(commentId, flag);
       } else if (!isLiked && isUnliked) {
         comments.find(comment => comment._id === commentId).rating++; 
-        // If already unliked, make a request to remove it from unliked comments
-        await likeComment(commentId);
-      } else if (isUnliked) {
-        // If already unliked, make a request to remove it from unliked comments
-        await removeUnlikeComment(commentId);
+        await likeComment(commentId, flag);
+      }else if (isLiked) {
+        
+        await unlikeComment(commentId);
       } else {
-        // If not liked or unliked, make a request to like the comment
-        await likeComment(commentId);
+        
+        console.log("hehere");
+        flag = true;
+        await likeComment(commentId, flag);
       }
   
       // Fetch updated comments and user data
@@ -192,42 +195,47 @@ const CommentSection = ({ postId, currentUserId }) => {
     setComments((prevComments) =>
       prevComments.map(comment =>
         comment._id === commentId
-          ? { ...comment, isLiked: true, isUnliked: flag, rating: comment.rating + 1 }
+          ? { ...comment, isLiked: true, isUnliked: false, rating: comment.rating + 1 }
           : comment
       )
     );
   
     // Update the comment rating on the server
-    await updateCommentRating(commentId, 1);
+    if(!flag){
+      await updateCommentRating(commentId, 2);
+    } else{
+      await updateCommentRating(commentId, 1);
+    }
   };
   
   const unlikeComment = async (commentId, flag) => {
     // Make a request to remove it from liked comments
     const response = await fetch(`http://localhost:8080/user/unlike-comment`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({ commentId })
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ commentId })
     });
-  
+
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+        throw new Error('Network response was not ok');
     }
-  
+
     // Update the local state to toggle isLiked and update the rating
     setComments((prevComments) =>
-      prevComments.map(comment =>
-        comment._id === commentId
-          ? { ...comment, isLiked: false, isUnliked: flag, rating: comment.rating - 1 }
-          : comment
-      )
+        prevComments.map(comment =>
+            comment._id === commentId
+                ? { ...comment, isLiked: false, isUnliked: false, rating: comment.rating - 1 }
+                : comment
+        )
     );
-  
+
     // Update the comment rating on the server
     await updateCommentRating(commentId, -1);
-  };
+};
+
 
   const removeUnlikeComment = async (commentId, flag) => {
     // Make a request to remove it from liked comments
@@ -270,13 +278,15 @@ const CommentSection = ({ postId, currentUserId }) => {
         await removeUnlikeComment(commentId, flag);
       } else if (!isUnliked && isLiked) {
         comments.find(comment => comment._id === commentId).rating--; 
-        await dislikeComment(commentId);
+        await dislikeComment(commentId, flag);
       }else if (isUnliked) {
         // If already unliked, make a request to remove it from unliked comments
         await removeUnlikeComment(commentId);
       } else {
         // If not liked or unliked, make a request to like the comment
-        await dislikeComment(commentId);
+        console.log("hehere");
+        flag = true;
+        await dislikeComment(commentId, flag);
       }
   
       // Fetch updated comments and user data
@@ -288,7 +298,7 @@ const CommentSection = ({ postId, currentUserId }) => {
     }
   };
 
-  const dislikeComment = async (commentId) => {
+  const dislikeComment = async (commentId, flag) => {
     // Make a request to like the comment
     const updateUserData = {
       commentId: commentId,
@@ -317,7 +327,12 @@ const CommentSection = ({ postId, currentUserId }) => {
     );
   
     // Update the comment rating on the server
-    await updateCommentRating(commentId, 1);
+    if(flag){
+      await updateCommentRating(commentId, -1);
+    } else{
+      await updateCommentRating(commentId, -2);
+    }
+    
   };
   
   // Function to update comment rating on the server
@@ -430,25 +445,25 @@ const CommentSection = ({ postId, currentUserId }) => {
       <h2>Comments</h2>
       {comments.map((comment) => (
       <div key={comment._id} className="comment-item">
-        <p><b>{comment.username}</b></p>
+        <p className="comment-text"><b>{comment.username}</b></p>
         <div className="comment-text-section">
           <i
             className={`fa-thumbs-up ${comment.isLiked ? 'fa-solid' : 'fa-regular'}`}
             onClick={() => handleLikeComment(comment._id, currentUserId)}
           ></i>
-          <p>{comment.rating}</p>
+          <p className="comment-rating">{comment.rating}</p>
           <i
             className={`fa-thumbs-down ${comment.isUnliked ? 'fa-solid' : 'fa-regular'}`}
             onClick={() => handleDislikeComment(comment._id, currentUserId)}
           ></i>
         </div>
-        <p>{comment.text}</p>
+        <p className="comment-text">{comment.text}</p>
 
         <h1 style={{ fontSize: '15px', cursor: 'pointer' }} onClick={() => handleReplyClick(comment._id)}>
           Reply
         </h1>
         {showReplyInputForComment === comment._id && (
-            <div style={{ fontSize: '20px', cursor: 'pointer' }}>
+            <div className="replying" style={{ fontSize: '20px', cursor: 'pointer' }}>
               <form action="/form/submit" method="POST">
                 <textarea 
                   className="comment"
@@ -458,9 +473,9 @@ const CommentSection = ({ postId, currentUserId }) => {
                 <br/>
               </form>
 
-              <div style={{ position:'relative', left:'75%' }} className="submit-cancel">
-                <button onClick={handleCancelButton}>Cancel </button>
-                <button onClick={() => handleReplySubmit(comment._id)}>Submit</button>
+              <div style={{ position:'relative' }} className="submit-cancel-reply">
+                <button className="button-44  comment-cancel-btn" onClick={handleCancelButton}>Cancel </button>
+                <button className="button-44  comment-submit-btn" onClick={() => handleReplySubmit(comment._id)}>Submit</button>
               </div>
             </div>
         )}
@@ -480,7 +495,7 @@ const CommentSection = ({ postId, currentUserId }) => {
         )}
       </div>
     ))}
-    <button onClick={delete_all_likes}>delete all</button>
+    {/* <button onClick={delete_all_likes}>delete all</button> */}
     </div>
   );
 };

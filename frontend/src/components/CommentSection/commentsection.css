@@ -5,8 +5,8 @@
 }
 
 .comment-item{
-    background-color: #FBF2CF;
-    border-radius: 5%;
+    background-color: #e9e2c2;
+    border-radius: 2%;
     padding:5% 5% 0% 5%;
     margin-top:10%;
     display:flex;
@@ -27,7 +27,7 @@
 .user-info-comment{
     display: flex;
     justify-content: flex-start;
-    /* background-color: rgb(222, 206, 238); */
+    background-color: rgb(222, 206, 238);
     height:0%;
 }
 
@@ -48,8 +48,8 @@
 
 .comment-text-section{
     display: flex;
-    justify-content: space-around;
-    width:20%;
+    justify-content: space-evenly;
+    width:30%;
     font-size: 1.5rem;
 }
 
@@ -60,3 +60,78 @@
 .fa-thumbs-down{
     cursor: pointer;
 }
+
+.comment-rating{
+   
+    position: relative;
+    bottom:30px;
+}
+
+.comment-text-section i {
+    
+    width: 20%;
+    height: 20%;
+}
+
+.comment-text{
+    font-size: 1.5rem;
+}
+
+.comment-cancel-btn{
+    width: 70%;
+    height:30px;
+    font-size: 70%;
+    padding:0;
+    position: relative;
+    
+    margin-bottom:5%;
+}
+
+.comment-submit-btn{
+    width: 70%;
+    height:30px;
+    font-size: 70%;
+    padding:0;
+    position: relative;
+    background-color: #A1C298;
+    margin-bottom:5%;
+    margin-left:5%;
+}
+
+.comment-submit-btn:hover{
+    background-color: #5ab042;
+}
+
+.submit-cancel{
+    display: flex;
+    justify-content: space-between;
+    width:30%;
+    position: relative;
+    left:65%;
+    
+}
+
+.commenting{
+    /* border: red 1px solid; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.commenting textarea, .replying textarea {
+    font-family: sans-serif; 
+    font-size: 1.3rem;
+    border: none;
+    width: 100%;
+    height: 100px; /* Adjust the height as needed */
+    resize: vertical; /* Allow vertical resizing */
+  }
+
+
+  .submit-cancel-reply{
+    display: flex;
+    justify-content: space-between;
+    width:30%;
+    position: relative;
+    left:65%;
+  }
