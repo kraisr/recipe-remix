@@ -32,7 +32,7 @@ const Community = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState({ users: [], posts: [] });
   const navigate = useNavigate();
-  const cuisines = ["Italian", "Mexican", "Japanese", "Vegan", "Party Food"];
+  const cuisines = ["Italian", "Mexican", "Japanese", "Vegan", "Party Food", "None"];
   const [selectedCuisines, setSelectedCuisines] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
 
@@ -146,16 +146,24 @@ const Community = () => {
     fetchUserPosts();
   }, []);
 
+
   const handleCuisineClick = (cuisine) => {
-    setSelectedCuisines(prevSelected => {
-      if (prevSelected.includes(cuisine)) {
-        return prevSelected.filter(item => item !== cuisine);
-      } else {
-        return [...prevSelected, cuisine];
-      }
-    });
+    if (cuisine === "None") {
+      // If "None" is clicked, clear all selections
+      setSelectedCuisines([]);
+    } else {
+      // Existing logic for other cuisines
+      setSelectedCuisines(prevSelected => {
+        if (prevSelected.includes(cuisine)) {
+          return prevSelected.filter(item => item !== cuisine);
+        } else {
+          return [...prevSelected, cuisine];
+        }
+      });
+    }
     console.log("selected cuisines: ", selectedCuisines);
   };
+  
 
   const shouldDisplayPost = (post) => {
     if (selectedCuisines.length === 0) {

@@ -16,7 +16,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   const [selectedImage, setSelectedImage] = useState(question);
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const availableCategories = ["Italian", "Mexican", "Japanese", "Party Food", "Vegan"];
+  const availableCategories = ["Italian", "Mexican", "Japanese", "Party Food", "Comfort Food", "None"];
   const [difficulty, setDifficulty] = useState('');
 
   // Use useEffect to fetch user's recipes when the component mounts
@@ -59,10 +59,22 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   };
 
   const toggleCategory = (category) => {
-    setSelectedCategories(prev => 
-      prev.includes(category) ? prev.filter(cat => cat !== category) : [...prev, category]
-    );
+    if (category === "None") {
+      // If "None" is selected, set selectedCategories to only include "None"
+      setSelectedCategories(["None"]);
+    } else {
+      setSelectedCategories(prev => {
+        if (prev.includes(category)) {
+          return prev.filter(cat => cat !== category);
+        } else {
+          // If another category is selected, ensure "None" is not in the list
+          const newCategories = [...prev.filter(cat => cat !== "None"), category];
+          return newCategories;
+        }
+      });
+    }
   };
+  
   
   const handleRecipeSelection = (event) => {
     const selectedRecipeName = event.target.value;
