@@ -60,15 +60,7 @@ const Messages = () => {
         };
       
         selectConversation();
-       // Start polling for messages every 5 seconds
-    const interval = setInterval(() => {
-        if (selectedConversation) {
-            fetchMessages(selectedConversation._id);
-        }
-    }, 500); // Poll every 5000 milliseconds (5 seconds)
-
-    return () => clearInterval(interval); // Clear interval on component unmount
-}, [conversationId, conversations, selectedConversation]);
+      }, [conversationId, conversations]);
 
     const fetchAllUsers = async () => {
         try {
@@ -136,9 +128,7 @@ const Messages = () => {
 
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-            if (messages.length !== data.length) {
-                setMessages(data);
-            }
+            setMessages(data);
         } catch (error) {
             console.error("Error fetching messages:", error);
         }
