@@ -10,7 +10,14 @@ import {
   fetchAllPosts,
   bookmarkPost,
   removeBookmark,
-  isBookmarked
+  isBookmarked,
+  addCommentToPost,
+  fetchAllComments,
+  deleteComment,
+  updateCommentRating,
+  addReplyToComment,
+  fetchCommentById,
+  deleteReply,
 } from '../controllers/postController.js';
 
 const router = express.Router();
@@ -36,5 +43,19 @@ router.post('/bookmark-post', bookmarkPost);
 router.post('/remove-bookmark', removeBookmark);
 
 router.post('/is-bookmarked', isBookmarked);
+
+router.post('/add-comment', addCommentToPost);
+
+router.get('/fetch-all-comments', fetchAllComments);
+
+router.post('/delete-comment', deleteComment);
+
+router.post('/update-comment-rating', updateCommentRating);
+
+router.post('/add-reply', addReplyToComment);
+
+router.post('/fetch-reply', fetchCommentById);
+
+router.post('/delete-reply', deleteReply)
 
 export default router;

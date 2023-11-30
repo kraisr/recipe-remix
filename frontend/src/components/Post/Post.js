@@ -2,6 +2,10 @@ import { useRef, useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import "./post.css";
 import StarRating from "../StarRating/StarRating";
+
+import CommentSection from "../CommentSection/CommentSection";
+import { v4 as uuidv4 } from 'uuid';
+
 import {
   TwitterShareButton,
   TwitterIcon,
@@ -18,6 +22,12 @@ const Post = ({ postId, isOwner, onDelete }) => {
   const [post, setPost] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const [showCommentInput, setShowCommentInput] = useState(false);
+  const [comment, setComment] = useState("");
+  const [currentUser, setCurrentUser] = useState('');
+
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -183,8 +193,13 @@ const Post = ({ postId, isOwner, onDelete }) => {
     // Optionally, refresh the list of posts or update the state
   };
 
+
   useEffect(() => {
     setIsBookmarked(false);
+
+    // Fetch current user when component mounts
+    getCurrentUser();
+
     async function fetchPostData() {
       try {
         const response = await fetch(`http://localhost:8080/posts/${postId}`);
@@ -192,17 +207,45 @@ const Post = ({ postId, isOwner, onDelete }) => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        console.log("this post's avg rating: ", data.averageRating);
         setPost(data);
       } catch (error) {
         console.error('Error fetching post:', error);
       }
-    };
+    }
 
     if (postId) {
       fetchPostData();
     }
     checkIfBookmarked();
   }, [postId]);
+
+  const getCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw Error('No token found');
+      }
+      const response = await fetch("http://localhost:8080/user/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      // console.log("data: ", data);
+      setCurrentUser(data.username);
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+    }
+    console.log("current user: ", currentUser);
+  };
 
   const checkIfBookmarked = async () => {
     try {
@@ -222,7 +265,7 @@ const Post = ({ postId, isOwner, onDelete }) => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setIsBookmarked(data.isBookmarked);
     } catch (error) {
       console.error('Error fetching post:', error);
@@ -306,6 +349,58 @@ const Post = ({ postId, isOwner, onDelete }) => {
       </div>
     );
   };
+
+  //comments 
+  const handleCommentClick = () => {
+    setShowCommentInput(true);
+  };
+
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
+  };
+
+
+
+  const handleCommentSubmit = async () => {
+    try {
+      const currentTime = new Date();
+      const commentData = {
+        postId: postId,
+        username: currentUser,
+        text: comment,
+        createdAt: currentTime.toISOString(), // Convert to ISO string for consistency
+        rating: 0,
+      };
+  
+      // Make the POST request
+      const response = await fetch("http://localhost:8080/posts/add-comment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(commentData)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const responseData = await response.json();
+      console.log("Comment added successfully:", responseData);
+  
+      setComment("");
+      setShowCommentInput(false);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error adding comment to post:', error);
+    }
+  };
+
+  const handleCancelButton = () => {
+      setComment("");
+      setShowCommentInput(false);
+  }
 
   const RecipeDifficulty = ({ difficultyLevel }) => {
     let color;
@@ -413,6 +508,30 @@ const Post = ({ postId, isOwner, onDelete }) => {
           {showShareModal && renderShareModal()}
         </div>
         <StarRating postId={postId} />
+        <h1 style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleCommentClick}>
+          Comment
+        </h1>
+        {showCommentInput && (
+          <div className="commenting">
+            <form action="/form/submit" method="POST">
+              <textarea 
+              class="comment"
+              value={comment}
+              onChange={handleCommentChange}>
+
+              </textarea>
+              <br/>
+            </form>
+            
+
+            <div style={{ position:'relative' }} className="submit-cancel">
+              <button className="button-44  comment-cancel-btn" onClick={handleCancelButton}>Cancel </button>
+              <button className="button-44  comment-submit-btn" onClick={handleCommentSubmit}>Submit</button>
+            </div>
+          </div>
+        )}
+        <hr />
+        <CommentSection postId={postId}  currentUserId={currentUser} />
       </div>
     ) : null
   );

@@ -9,7 +9,7 @@ dotenv.config(); // This should be at the top of your main file, not inside the 
 export const searchCommunity = async (req, res) => {
   const { term } = req.query;
   const searchRegex = new RegExp(term, 'i'); // 'i' for case-insensitive search
-
+  console.log(term);
   try {
     let users = await User.find({
       $or: [

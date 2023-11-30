@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import Comment from '../models/Post.js';
 import User from '../models/User.js';
 import Post from '../models/Post.js';
 
@@ -227,7 +228,6 @@ export const updateUser = async (req, res) => {
         if (!updatedUser) {
             return res.status(400).json({ error: "User does not exist" });
         }
-
         res.status(200).json({ message: 'Profile updated successfully', user: updatedUser });
 
     } catch (error) {
@@ -858,5 +858,221 @@ export const deleteFolder = async (req, res) => {
   } catch (err) {
       console.error("Error in deleteFolder function:", err);
       res.status(500).json({ error: err.message });
+  }
+};
+
+
+export const handleLikeComment = async (req, res) => {
+  try {
+    const { commentId } = req.body;
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    let userData = await User.findById(userId);
+
+    if (!userData) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (!userData.likedComments) {
+      userData.likedComments = [];
+    }
+
+    // Check if the comment is already liked
+    if (!userData.likedComments.includes(commentId)) {
+      // If not liked, push the commentId to the likedComments array
+      userData.likedComments.push(commentId);
+
+      // Find the liked comment in the array and update the rating
+      const likedComment = userData.likedComments.find(comment => comment._id.toString() === commentId);
+      if (userData.dislikedComments.map(comments => comments._id === commentId)) {
+      
+        const indexToRemove = userData.dislikedComments.findIndex(comment => comment.id === commentId);
+  
+  
+        if (indexToRemove !== -1) {
+          userData.dislikedComments.splice(indexToRemove, 1);
+        } else {
+          console.error('Comment not found in likedComments array');
+        }
+  
+        await userData.save();
+  
+        
+      } 
+
+      if (likedComment) {
+        likedComment.rating += 1;
+        console.log(likedComment);
+      } else {
+        console.error('Liked comment not found in likedComments array');
+      }
+      
+      await userData.save();
+
+      return res.status(200).json({ message: 'Comment liked successfully' });
+    } else {
+      // Respond with a message indicating that the comment is already liked
+      return res.status(200).json({ message: 'Comment is already liked by the user' });
+    }
+
+    
+  } catch (error) {
+    console.error("Error in handleLikeComment function:", error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const clearLikedComments = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    // Use updateOne to set likedComments to an empty array
+    await User.updateOne({ _id: userId }, { $set: { likedComments: [] } });
+    
+    res.status(200).json({ message: 'All liked comments cleared successfully' });
+  } catch (error) {
+    console.error("Error in clearLikedComments function:", error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+
+export const removeLikedComment = async (req, res) => {
+  try {
+    const { commentId } = req.body;
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    // Find the user by userId
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    if (user.likedComments.map(comments => comments._id === commentId)) {
+      
+      const indexToRemove = user.likedComments.findIndex(comment => comment.id === commentId);
+
+
+      if (indexToRemove !== -1) {
+        user.likedComments.splice(indexToRemove, 1);
+      } else {
+        console.error('Comment not found in likedComments array');
+      }
+
+      await user.save();
+
+      return res.status(200).json({ message: 'Comment removed from likedComments successfully' });
+    } else {
+      return res.status(200).json({ message: 'Comment is not in the likedComments array' });
+    }
+  } catch (error) {
+    console.error("Error in removeLikedComment function:", error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+
+export const handleDislikeComment = async (req, res) => {
+  try {
+    const { commentId } = req.body;
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    let userData = await User.findById(userId);
+
+    if (!userData) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (!userData.dislikedComments) {
+      userData.dislikedComments = [];
+    }
+
+    if (userData.likedComments.map(comments => comments._id === commentId)) {
+      
+      const indexToRemove = userData.likedComments.findIndex(comment => comment.id === commentId);
+
+
+      if (indexToRemove !== -1) {
+        userData.likedComments.splice(indexToRemove, 1);
+      } else {
+        console.error('Comment not found in likedComments array');
+      }
+
+      await userData.save();
+
+      
+    }
+
+    // Check if the comment is already liked
+    if (!userData.dislikedComments.includes(commentId)) {
+      // If not liked, push the commentId to the likedComments array
+      userData.dislikedComments.push(commentId);
+
+      // Find the liked comment in the array and update the rating
+      const dislikedComment = userData.dislikedComments.find(comment => comment._id.toString() === commentId);
+
+      if (dislikedComment) {
+        dislikedComment.rating -= 2;
+        console.log(dislikedComment);
+      } else {
+        console.error('Liked comment not found in likedComments array');
+      }
+      
+      await userData.save();
+
+      return res.status(200).json({ message: 'Comment liked successfully' });
+    } else {
+      // Respond with a message indicating that the comment is already liked
+      return res.status(200).json({ message: 'Comment is already liked by the user' });
+    }
+  } catch (error) {
+    console.error("Error in handleLikeComment function:", error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const removeDisLikedComment = async (req, res) => {
+  try {
+    const { commentId } = req.body;
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    // Find the user by userId
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    if (user.dislikedComments.map(comments => comments._id === commentId)) {
+      
+      const indexToRemove = user.dislikedComments.findIndex(comment => comment.id === commentId);
+
+
+      if (indexToRemove !== -1) {
+        user.dislikedComments.splice(indexToRemove, 1);
+      } else {
+        console.error('Comment not found in likedComments array');
+      }
+
+      await user.save();
+
+      return res.status(200).json({ message: 'Comment removed from dislikedComments successfully' });
+    } else {
+      return res.status(200).json({ message: 'Comment is not in the dislikedComments array' });
+    }
+  } catch (error) {
+    console.error("Error in removedisLikedComment function:", error);
+    return res.status(500).json({ error: error.message });
   }
 };

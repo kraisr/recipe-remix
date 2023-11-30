@@ -22,6 +22,9 @@ const theme = createTheme({
 
 
 const Community = () => {
+
+  const [sortBy, setSortBy] = useState('newest');
+  const [showRatingOptions, setshowRatingOptions] = useState(false);
   const [isPostWindowOpen, setIsPostWindowOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [currentPostId, setCurrentPostId] = useState(null);
@@ -69,6 +72,44 @@ const Community = () => {
       if (!token) {
         throw Error('No token found');
       }
+
+    };
+
+    const fetchAllPosts = async (sortingOrder) => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw Error('No token found');
+        }
+    
+        const response = await fetch(`http://localhost:8080/posts/fetch-all-posts?sortingOrder=${sortingOrder}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+        });
+    
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+    
+        const data = await response.json();
+        // Update the recipes state with the user's posts
+        setPosts(data);
+      } catch (error) {
+        console.error('Error fetching user posts:', error);
+      }
+    };
+    
+
+    const fetchUserPosts = async () => {
+      try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+              throw Error('No token found');
+          }
+
 
       const response = await fetch("http://localhost:8080/posts/fetch-all-posts", {
         method: "GET",
@@ -162,7 +203,25 @@ const Community = () => {
     return post.tags.some(tag => selectedCuisines.includes(tag));
   };
 
-  return (
+  const handleRecentnessClick = () => {
+    setSortBy('newest');
+    fetchAllPosts('newest');
+  };
+
+  const handleRatingsClick = () => {
+    setshowRatingOptions(!showRatingOptions);
+  };
+
+  const handleHighestClick = () => {
+    setSortBy('highest');
+    fetchAllPosts('highest');
+  };
+  
+  const handleLowestClick = () => {
+    setSortBy('lowest');
+    fetchAllPosts('lowest');
+  };
+return (
     <div className="community-container">
       <div className="left-panel">
         <center>
@@ -174,7 +233,6 @@ const Community = () => {
         <div className="posted-title">
           <h5>My Posted Recipes</h5>
         </div>
-        {/* <hr /> */}
 
         <div className="recipe-grid">
           {userPosts.map((post) => (
@@ -254,13 +312,11 @@ const Community = () => {
                       <p>{post.timeAgo}</p>
                     </div>
                   </div>
-
                 </div>
               </li>
             </ul>
           ))}
         </div>
-
       </div>
 
       <div className="scroll-wrapper">

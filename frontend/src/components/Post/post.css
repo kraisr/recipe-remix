@@ -124,6 +124,17 @@
   gap: 10px;
 }
 
+
+.comment{
+  min-width: 90%;
+  max-width:90%;
+  min-height: 150px;
+  padding: 10px;
+  background-color: #d0e2bc;
+  border:#d0e2bc;
+}
+
+
 .post-owner-menu {
   position: absolute;
   top: 0;
@@ -162,3 +173,4 @@
 .dropdown-menu-item:hover {
   background-color: #f1f1f1;
 }
+

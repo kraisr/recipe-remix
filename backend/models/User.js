@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { postSchema } from './Post.js';
+import {commentSchema} from './Post.js';
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -118,7 +119,8 @@ const userSchema = new mongoose.Schema({
         recipes: [{
             id: {
                 type: String,
-                required: true,
+                //changed to false, change back
+                required: false,
             },
             totalTime: {
                 type: String,
@@ -286,6 +288,9 @@ const userSchema = new mongoose.Schema({
     },
 
     savedPosts: [postSchema],
+
+    likedComments: [commentSchema],
+    dislikedComments: [commentSchema],
 });
 
 
