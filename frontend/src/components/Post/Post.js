@@ -437,7 +437,7 @@ const Post = ({ postId, isOwner, onDelete }) => {
         {/* Dropdown menu for post owners */}
         {isOwner && (
           <div className="post-owner-menu">
-            <button onClick={toggleDropdown} className="three-dots-button">...</button>
+            <button onClick={toggleDropdown} className="dots-button">...</button>
             {showDropdown && renderDropdownMenu()}
           </div>
         )}
