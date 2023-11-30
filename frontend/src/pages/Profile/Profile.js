@@ -33,6 +33,7 @@ const Profile = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   const { userId } = useParams();
+
   const [userStats, setUserStats] = useState([]);
   const [isProfilePrivate, setIsProfilePrivate] = useState(false);
   const [activeTab, setActiveTab] = useState('posts');
@@ -53,7 +54,31 @@ const Profile = () => {
       return `http://${url}`;
     }
   }
+  
+  const handleStartConversationWithUser = async (otherUserEmail) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token found');
+    const response = await fetch('http://localhost:8080/message/conversations/start', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ otherUserEmail })
+    });
 
+    if (!response.ok) throw new Error('Network response was not ok');
+    const newConversation = await response.json();
+
+    // Redirect to the Messages page with the new conversation selected
+    navigate(`/messages/${newConversation._id}`); // Navigate with conversation ID
+  } catch (error) {
+    console.error("Error starting new conversation:", error);
+  }
+};
+
+  
   const handleLogoutClick = () => {
     // Logout logic
     dispatch(setLogout());
@@ -188,6 +213,15 @@ const Profile = () => {
           </div>
           <div className="profile-info">
             <h2 className="user-name">{name}</h2>
+            {
+          userId && ( // This checks if userId is present in the URL
+          <button 
+          className="message-button" 
+          onClick={() => handleStartConversationWithUser(userEmail)}>
+            Message
+          </button>
+                    )
+            }
             <div className="user-statistics">
               <div className="stat-item">
                 <span className="stat-value">

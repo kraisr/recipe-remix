@@ -23,13 +23,29 @@ export const getConversations = async (req, res) => {
 
         const conversations = await Conversation.find({
             participants: { $in: [userId] }
-        }).populate('participants', 'name');
+        })
+        .populate('participants', 'username image _id') // include image and _id here
+        .populate('lastMessage'); // populate last message
 
         res.status(200).json(conversations);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+
+export const deleteConversation = async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        await Conversation.findByIdAndDelete(conversationId);
+        await Message.deleteMany({ conversation: conversationId });
+        res.status(200).json({ message: 'Conversation deleted successfully.' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+
 
 export const getMessages = async (req, res) => {
     try {
@@ -54,16 +70,26 @@ export const sendMessage = async (req, res) => {
         const newMessage = new Message({
             conversation: req.body.conversationId,
             sender: senderId,
-            content: req.body.content, // changed from 'text' to 'content'
+            content: req.body.content,
             createdAt: new Date()
         });
 
-        await newMessage.save();
-        res.status(201).json(newMessage);
+        // Save the new message
+        const savedMessage = await newMessage.save();
+
+        // Update the conversation's last message
+        await Conversation.findByIdAndUpdate(
+            req.body.conversationId,
+            { lastMessage: savedMessage._id },
+            { new: true }
+        );
+
+        res.status(201).json(savedMessage);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+
 
 export const startConversation = async (req, res) => {
     try {
