@@ -18,6 +18,7 @@
 
 /* Right panel - chat window */
 .chat-window {
+    background-color: #FBF2CF;
     width: 70%;
     display: flex;
     flex-direction: column;
@@ -37,18 +38,7 @@
 }
 
 /* Styles for the conversation modal */
-.start-conversation-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    border-radius: 4px;
-}
+
 
 
 
@@ -63,7 +53,24 @@
     padding-left: 20px;
     padding-right: 20px;
     background-color: #fff;
+    box-shadow: 0 2px 4px rgb(135, 135, 135); /* Optional: adds a subtle shadow for depth */
 
+}
+
+.delete-chat-button {
+  background-color: #FA7070;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 6px;
+  font-size: 0.7rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  margin-bottom: 1%;
 }
 
 .message-input-container input[type="text"] {
@@ -84,6 +91,7 @@
 }
 
 .message-list {
+    padding: 10px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -157,6 +165,18 @@
     text-overflow: ellipsis;
 }
 
+.participant-name-2 {
+  position: sticky;
+  top: 0;
+  background-color: white; /* Or any color that matches your design */
+  z-index: 10; /* Ensures it stays above other elements */
+  width: 100%; /* Full width */
+  text-align: center; /* Center the text */
+  box-shadow: 0 2px 4px rgb(135, 135, 135); /* Optional: adds a subtle shadow for depth */
+  border-bottom: 1px solid #ccc; /* Optional: adds a line to separate from the content */
+}
+
+
 .last-message {
     font-size: 0.85rem;
     color: #555;
@@ -176,10 +196,28 @@
     display: flex;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #ccc;
+    background-color: #FBF2CF;
+    border-bottom: 1px solid #b1b1b1;
     cursor: pointer;
 }
 
+
+
 .conversation-item.active {
-    background-color: #e9e9e9;
+    background-color: #b3ad95;
+}
+
+
+
+.search-input-container2 {
+  position: sticky;
+  top: 0;
+  padding: 10px;
+  background-color: white; /* Or any color that matches your design */
+  z-index: 10; /* Ensures it stays above other elements */
+  width: auto; /* Full width */
+  text-align: center; /* Center the text */
+  box-shadow: 0 2px 4px rgb(135, 135, 135); /* Optional: adds a subtle shadow for depth */
+  border-bottom: 1px solid #ccc; /* Optional: adds a line to separate from the content */
+
 }

@@ -1,4 +1,6 @@
 import { BrowserRouter, Route, Routes, Navigate, useParams } from "react-router-dom";
+import { GiphyFetch } from '@giphy/js-fetch-api'
+
 import React, { useEffect, useRef, useState } from "react";
 import "./app.css";
 import { useSelector } from "react-redux";
