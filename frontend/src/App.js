@@ -1,4 +1,6 @@
 import { BrowserRouter, Route, Routes, Navigate, useParams } from "react-router-dom";
+import { GiphyFetch } from '@giphy/js-fetch-api'
+
 import React, { useEffect, useRef, useState } from "react";
 import "./app.css";
 import { useSelector } from "react-redux";
@@ -44,7 +46,7 @@ function App() {
           <Route path="/profile/:userId" element={isLoggedIn ? <Profile /> : <Navigate to="/" />} />
 
           <Route path="/messages" element={isLoggedIn ? <Messages /> : <Navigate to="/" />} />
-
+          <Route path="/messages/:conversationId" element={isLoggedIn ? <Messages /> : <Navigate to="/" />} />
           <Route path="/settings" element={isLoggedIn ? <Settings /> : <Navigate to="/" />} />
           <Route path="/preferences" element={isLoggedIn ? <Preferences /> : <Navigate to="/" />} />
           <Route path="/shoppingList" element={isLoggedIn ? <ShoppingList /> : <Navigate to="/" />} />

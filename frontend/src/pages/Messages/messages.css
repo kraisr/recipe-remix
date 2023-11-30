@@ -12,14 +12,20 @@
     overflow-y: auto;
     border-right: 1px solid #ccc;
     padding: 10px;
+    height: calc(100vh - 60px); /* Adjust the height as necessary */
+    overflow-y: auto;
 }
 
 /* Right panel - chat window */
 .chat-window {
+    background-color: #FBF2CF;
     width: 70%;
     display: flex;
     flex-direction: column;
     padding: 10px;
+    height: calc(100vh - 60px); /* Adjust the height to avoid overlap with the Navbar */
+    overflow: hidden; /* This will clip off any content that overflows */
+
 }
 
 /* Search bar at the top of the conversation list */
@@ -32,32 +38,39 @@
 }
 
 /* Styles for the conversation modal */
-.start-conversation-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    border-radius: 4px;
-}
 
-/* Styles for messages in the chat window */
-.message-bubble {
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 10px;
-    background-color: #f0f0f0;
-    /* You can differentiate sender and receiver messages with additional classes or styles */
-}
+
+
 
 /* Container for the message input and send button */
 .message-input-container {
     margin-top: auto; /* Keeps the input at the bottom */
     display: flex;
+    position: sticky;
+    padding: 5px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #ccc;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgb(135, 135, 135); /* Optional: adds a subtle shadow for depth */
+
+}
+
+.delete-chat-button {
+  background-color: #FA7070;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 6px;
+  font-size: 0.7rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  margin-bottom: 1%;
 }
 
 .message-input-container input[type="text"] {
@@ -78,39 +91,49 @@
 }
 
 .message-list {
-    flex-grow: 1;
-    overflow-y: auto;
+    padding: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
   }
   
   .message-bubble {
-    /* existing styles */
+    max-width: 70%; /* Adjust the maximum width as needed */
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 10px;
+    background-color: #f0f0f0;
     margin-bottom: 10px;
     word-wrap: break-word;
   }
   
   .sent {
-    align-self: flex-end;
-    background-color: #DCF8C6; /* Example color for sent messages */
+    align-items: flex-end;
+    background-color: rgb(123, 182, 90);
+    margin-left: auto;
   }
   
   .received {
-    align-self: flex-start;
-    background-color: #ECECEC; /* Example color for received messages */
+    align-items: flex-start;
+    background-color: #ECECEC;
+    margin-right: auto;
+
   }
   
   .profile-pic {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    object-fit: cover;
     margin-right: 10px;
   }
   
-  .message-bubble {
+  /* .message-bubble {
     display: flex;
     align-items: center;
-    /* Other existing styles */
   }
-  
+   */
   .message-bubble.sent {
     justify-content: flex-end;
   }
@@ -126,4 +149,75 @@
   .message-bubble.sent .profile-pic {
     display: none;
   }
+
+
+  .conversation-info {
+    flex-grow: 1;
+    overflow: hidden;
+}
   
+
+
+.participant-name {
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.participant-name-2 {
+  position: sticky;
+  top: 0;
+  background-color: white; /* Or any color that matches your design */
+  z-index: 10; /* Ensures it stays above other elements */
+  width: 100%; /* Full width */
+  text-align: center; /* Center the text */
+  box-shadow: 0 2px 4px rgb(135, 135, 135); /* Optional: adds a subtle shadow for depth */
+  border-bottom: 1px solid #ccc; /* Optional: adds a line to separate from the content */
+}
+
+
+.last-message {
+    font-size: 0.85rem;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.timestamp {
+    font-size: 0.75rem;
+    color: #777;
+    margin-left: auto;
+    padding-left: 10px;
+}
+
+.conversation-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #FBF2CF;
+    border-bottom: 1px solid #b1b1b1;
+    cursor: pointer;
+}
+
+
+
+.conversation-item.active {
+    background-color: #b3ad95;
+}
+
+
+
+.search-input-container2 {
+  position: sticky;
+  top: 0;
+  padding: 10px;
+  background-color: white; /* Or any color that matches your design */
+  z-index: 10; /* Ensures it stays above other elements */
+  width: auto; /* Full width */
+  text-align: center; /* Center the text */
+  box-shadow: 0 2px 4px rgb(135, 135, 135); /* Optional: adds a subtle shadow for depth */
+  border-bottom: 1px solid #ccc; /* Optional: adds a line to separate from the content */
+
+}
