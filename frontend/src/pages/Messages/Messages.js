@@ -14,7 +14,7 @@ const Messages = () => {
     const [allUsers, setAllUsers] = useState([]);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    
+
     
     const { conversationId } = useParams();
     const token = localStorage.getItem('token');
@@ -60,7 +60,15 @@ const Messages = () => {
         };
       
         selectConversation();
-      }, [conversationId, conversations]);
+       // Start polling for messages every 5 seconds
+    const interval = setInterval(() => {
+        if (selectedConversation) {
+            fetchMessages(selectedConversation._id);
+        }
+    }, 500); // Poll every 5000 milliseconds (5 seconds)
+
+    return () => clearInterval(interval); // Clear interval on component unmount
+}, [conversationId, conversations, selectedConversation]);
 
     const fetchAllUsers = async () => {
         try {
@@ -128,7 +136,9 @@ const Messages = () => {
 
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-            setMessages(data);
+            if (messages.length !== data.length) {
+                setMessages(data);
+            }
         } catch (error) {
             console.error("Error fetching messages:", error);
         }
@@ -370,7 +380,7 @@ const Messages = () => {
                 onKeyDown={handleKeyDown}
 
               />
-              <button onClick={handleSendMessage}>Send</button>
+            <button onClick={handleSendMessage}>Send</button>
             </div>
           </>    
                 ) : (

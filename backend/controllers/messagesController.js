@@ -71,7 +71,8 @@ export const sendMessage = async (req, res) => {
             conversation: req.body.conversationId,
             sender: senderId,
             content: req.body.content,
-            createdAt: new Date()
+            createdAt: new Date(),
+            messageType: req.body.isGif ? 'gif' : 'text' // Determine if message is a GIF
         });
 
         // Save the new message
