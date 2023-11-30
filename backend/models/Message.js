@@ -1,22 +1,27 @@
 import mongoose from 'mongoose';
 
 const MessageSchema = new mongoose.Schema({
-
   conversation: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Conversation' },
-
+    ref: 'Conversation'
+  },
   sender: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User' },
-
+    ref: 'User'
+  },
   content: { 
     type: String, 
-    required: true },
+    required: true
+  },
+  messageType: {
+    type: String,
+    enum: ['text', 'gif'],
+    default: 'text'
+  },
   createdAt: { 
     type: Date, 
-    default: Date.now }
-    
+    default: Date.now
+  } 
 });
 
 const Message = mongoose.model('Message', MessageSchema);

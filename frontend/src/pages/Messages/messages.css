@@ -169,7 +169,6 @@
   position: sticky;
   top: 0;
   background-color: white; /* Or any color that matches your design */
-  z-index: 10; /* Ensures it stays above other elements */
   width: 100%; /* Full width */
   text-align: center; /* Center the text */
   box-shadow: 0 2px 4px rgb(135, 135, 135); /* Optional: adds a subtle shadow for depth */
@@ -220,4 +219,11 @@
   box-shadow: 0 2px 4px rgb(135, 135, 135); /* Optional: adds a subtle shadow for depth */
   border-bottom: 1px solid #ccc; /* Optional: adds a line to separate from the content */
 
+}
+
+.start-message-prompt {
+
+  text-align: center; /* Center the text */
+  padding-top: 30%;
+  font-style: italic;
 }
