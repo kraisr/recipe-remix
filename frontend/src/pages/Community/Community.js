@@ -66,52 +66,14 @@ const Community = () => {
     }
   };
 
-  const fetchAllPosts = async () => {
+  const fetchAllPosts = async (sortingOrder) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         throw Error('No token found');
       }
 
-    };
-
-    const fetchAllPosts = async (sortingOrder) => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw Error('No token found');
-        }
-    
-        const response = await fetch(`http://localhost:8080/posts/fetch-all-posts?sortingOrder=${sortingOrder}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-        });
-    
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-    
-        const data = await response.json();
-        // Update the recipes state with the user's posts
-        setPosts(data);
-      } catch (error) {
-        console.error('Error fetching user posts:', error);
-      }
-    };
-    
-
-    const fetchUserPosts = async () => {
-      try {
-          const token = localStorage.getItem('token');
-          if (!token) {
-              throw Error('No token found');
-          }
-
-
-      const response = await fetch("http://localhost:8080/posts/fetch-all-posts", {
+      const response = await fetch(`http://localhost:8080/posts/fetch-all-posts?sortingOrder=${sortingOrder}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -124,49 +86,48 @@ const Community = () => {
       }
 
       const data = await response.json();
-      // console.log("data: ", data);
-      if (Array.isArray(data)) {
-        // Update the recipes state with the user's posts
-        setPosts(data);
-      } else {
-        console.error('Invalid data format:', data);
-      }
+      // Update the recipes state with the user's posts
+      setPosts(data);
     } catch (error) {
       console.error('Error fetching user posts:', error);
     }
   };
+    
 
   const fetchUserPosts = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw Error('No token found');
-      }
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw Error('No token found');
+        }
 
-      const response = await fetch("http://localhost:8080/posts/fetch-user-posts", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-      });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+    const response = await fetch("http://localhost:8080/posts/fetch-all-posts", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+    });
 
-      const data = await response.json();
-      // console.log("data: ", data);
-      if (Array.isArray(data.posts)) {
-        // Update the recipes state with the user's posts
-        setUserPosts(data.posts);
-      } else {
-        console.error('Invalid data format:', data.posts);
-      }
-    } catch (error) {
-      console.error('Error fetching user posts:', error);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
-  };
+
+    const data = await response.json();
+    // console.log("data: ", data);
+    if (Array.isArray(data)) {
+      // Update the recipes state with the user's posts
+      setPosts(data);
+    } else {
+      console.error('Invalid data format:', data);
+    }
+  } catch (error) {
+    console.error('Error fetching user posts:', error);
+  }
+};
+
+
 
   const handlePostClick = (postId) => {
     // Find the recipe object
@@ -294,9 +255,26 @@ return (
           </div>
         </center>
         <div className="center-button">
-          <button className="community-button">Ratings</button>
-          <button className="community-button">Recentness</button>
+        <button className="community-button" onClick={handleRatingsClick}>
+          Ratings
+        </button>
+
+        <button className="community-button" onClick={handleRecentnessClick}>
+          Recentness
+        </button>
         </div>
+
+        {showRatingOptions && (
+            <div className="div" style={{ display: "flex", justifyContent: "space-between", width: "40%", position: "relative", left: "10%", top: "2%" }}>
+              <button className="community-button" onClick={() => handleHighestClick('highest')}>
+                Highest
+              </button>
+
+              <button className="community-button" onClick={() => handleLowestClick('lowest')}>
+                Lowest
+              </button>
+            </div>
+          )}
 
         <div className="c-post-grid">
           {posts.filter(shouldDisplayPost).map((post) => (
