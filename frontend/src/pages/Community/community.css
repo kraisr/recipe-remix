@@ -364,12 +364,14 @@
 }
 
 .search-input-container {
+  z-index: 20;
   position: relative;
   width: 90%;
   margin: 1%;
 }
 
 .search-suggestions-container {
+  z-index: 20;
   position: absolute;
   width: 100%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -438,6 +440,7 @@
 }
 
 .comment-rating-button{
+  z-index: 1;
   position: relative;
   top:1px;
 }

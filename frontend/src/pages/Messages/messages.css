@@ -254,6 +254,21 @@
 
 }
 
+.search-input-container {
+  position: sticky;
+  top: 0;
+  font-weight: 500;
+  font-size:large;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: #ffffff;
+  width: 100%; /* Full width */
+  text-align: center; /* Center the text */
+  box-shadow: 0 2px 4px rgb(135, 135, 135); /* Optional: adds a subtle shadow for depth */
+  border-bottom: 1px solid #ccc; /* Optional: adds a line to separate from the content */
+
+}
+
 .start-message-prompt {
 
   text-align: center; /* Center the text */

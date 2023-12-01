@@ -332,25 +332,7 @@ const Messages = () => {
         <div className="chat-container">
             <div className="conversation-list">
                 <div className="search-input-container">
-                    <input
-                        type="text"
-                        placeholder="Search conversations..."
-                        value={searchTerm}
-                        onChange={(e) => handleSearch(e.target.value)}
-                        className="search-input"
-                    />
-                    {searchResults.length > 0 && (
-                        <div className="search-suggestions-container">
-                            <ul className="search-suggestions-dropdown">
-                                {searchResults.map(convo => (
-                                    <li key={convo._id} className="suggestion-item"
-                                        onClick={() => handleSelectConversation(convo)}>
-                                        {convo.participants.map(p => p.name).join(', ')}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
+                    Your Conversations
                 </div>
                  {conversations.map((conversation) => {
                     const otherParticipant = getOtherParticipant(conversation.participants);
