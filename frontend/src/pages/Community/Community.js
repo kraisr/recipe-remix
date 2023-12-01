@@ -260,7 +260,7 @@ return (
           </div>
         </center>
         <div className="center-button">
-        <button className="community-button  comment-rating" onClick={handleRatingsClick}>
+        <button className="community-button  comment-rating-button" onClick={handleRatingsClick}>
           Ratings
         </button>
 
