@@ -23,6 +23,7 @@
   margin-bottom: -8px; */
 }
 
+
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjust minmax values based on your preference */
@@ -406,3 +407,26 @@
   color: #ccc;
 }
 
+
+.lowest-button{
+  position: relative;
+  padding-top: 5%;
+  /* right: 20%; */
+}
+
+.high-low-div{
+  display: flex;
+  flex-direction: column;
+  background-color: #4CAF50;
+  width:10px;
+  padding:3%;
+  position: relative;
+  bottom:100px;
+  border-radius: 6%;
+  height:10%;
+}
+
+.comment-rating{
+  position: relative;
+  top:1px;
+}

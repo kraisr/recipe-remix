@@ -454,10 +454,15 @@ const Post = ({ postId, isOwner, onDelete }) => {
             postId={postToDelete?.id}
           />
         )}
+        <div className="name-rating-div">
+          <div className="name-container">
+            <h1>{post.name}</h1>
+            
+            
+          </div>
 
-        <div className="name-container">
-          <h1>{post.name}</h1>
         </div>
+        
 
         <div className="image-container">
           <img src={post.image} alt={post.name} className="recipe-image" />
@@ -466,6 +471,11 @@ const Post = ({ postId, isOwner, onDelete }) => {
         <div className="difficulty-container">
           <span className="window-title">Difficulty:</span>
           <RecipeDifficulty difficultyLevel={post.difficulty} />
+        </div>
+
+        <div className="average-rating">
+        <span className="window-title">Average Rating: </span>
+        {post.averageRating}
         </div>
 
         <div className="tags-container">

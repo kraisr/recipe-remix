@@ -260,7 +260,7 @@ return (
           </div>
         </center>
         <div className="center-button">
-        <button className="community-button" onClick={handleRatingsClick}>
+        <button className="community-button  comment-rating" onClick={handleRatingsClick}>
           Ratings
         </button>
 
@@ -270,12 +270,12 @@ return (
         </div>
 
         {showRatingOptions && (
-            <div className="div" style={{ display: "flex", justifyContent: "space-between", width: "40%", position: "relative", left: "10%", top: "2%" }}>
+            <div className="high-low-div" style={{ display: "flex", justifyContent: "space-between", width: "30%", position: "relative", left: "10%", top: "2%" }}>
               <button className="community-button" onClick={() => handleHighestClick('highest')}>
                 Highest
               </button>
 
-              <button className="community-button" onClick={() => handleLowestClick('lowest')}>
+              <button className="community-button lowest-button" onClick={() => handleLowestClick('lowest')}>
                 Lowest
               </button>
             </div>
