@@ -17,17 +17,127 @@
 }
 .category-selection {
   display: flex;
-  overflow-x: auto;
-  margin-top: 15px;
+  flex-wrap: wrap;
+  gap: 10px; /* Space between tags */
+  justify-content: center; /* Center tags horizontally */
+  align-items: center; /* Center tags vertically */
+  padding: 10px;
+  margin: auto; /* Center the container itself if necessary */
 }
 
 .category-bubble {
-  padding: 5px 10px;
-  border-radius: 15px;
-  background-color: #e0e0e0;
-  margin-right: 10px;
+  padding: 8px 16px;
+  background-color: #f0f0f0; /* Light grey background */
+  border-radius: 15px; /* Rounded corners for bubbles */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: all 0.2s ease-in-out; /* Smooth transition for hover effects */
   cursor: pointer;
-  white-space: nowrap;
+  user-select: none; /* Prevent text selection */
+  font-weight: bold; /* Optional: make text bold */
+}
+
+.category-bubble:hover {
+  background-color: #e0e0e0; /* Slightly darker on hover */
+  transform: translateY(-3px); /* Move up a bit on hover */
+}
+
+/* Optional: Add a playful tilt to each tag for a more dynamic look */
+.category-bubble:nth-child(odd):hover {
+  transform: rotate(-4deg);
+}
+
+.category-bubble:nth-child(even):hover {
+  transform: rotate(5deg);
+}
+
+/* Responsive design: Ensure the container takes full width on smaller screens */
+@media (max-width: 600px) {
+  .category-container {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box; /* Include padding in the width */
+  }
+}
+
+.custom-tag-input {
+  height: 40px; /* Match the height of your other inputs */
+  margin-right: 8px; /* Space between input and button */
+  padding: 0 12px; /* Inner padding for text */
+  border: 1px solid #ccc; /* Border to match design */
+  border-radius: 20px; /* Rounded corners */
+}
+
+.custom-tag-input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 25%; /* Adjust as needed */
+}
+
+/* Styling the button for adding custom tags to match other buttons */
+.add-tag-button {
+  padding: 8px 16px; /* Padding within the button */
+  background-color: #93c491; /* Color to match your design */
+  color: white; /* Text color */
+  border: none; /* Remove default border */
+  border-radius: 20px; /* Rounded corners */
+  cursor: pointer; /* Hand cursor on hover */
+  font-family: 'Poppins';
+
+}
+
+.custom-tag-input {
+  flex-grow: 1;
+  margin-right: 10px; /* Space between input and button */
+}
+
+.error-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ff0000;
+  border-radius: 8px;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.error-popup p {
+  color: #ff0000;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+
+.tags-container {
+  position: relative;
+}
+
+.tags-title {
+  text-align: center;
+  font-size: 24px; /* Adjust size as needed */
+  margin-bottom: 20px; /* Space below the title */
+  font-weight: bold;
+  color: #333; /* Adjust color as needed */
+}
+
+.tag-error-message {
+  color: red; /* Error message color */
+  text-align: center;
+  margin-top: 10px;
+}
+
+.category-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px; /* Space above the fixed input box */
+}
+
+.add-tag-button:hover {
+  background-color: #45a049; /* Darker shade on hover */
 }
 
 .category-bubble.selected {

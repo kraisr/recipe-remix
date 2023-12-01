@@ -28,13 +28,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjust minmax values based on your preference */
   gap: 10px;
-  padding: 10px;
+ /* padding: 10px; */
   max-height: 30%;
-  
+  overflow-y: scroll;
   padding-right: 10%;
   padding-left: 10%;
   text-align:center;
-  min-height: 250px;
   justify-content: flex-start;
 }
 
@@ -45,6 +44,18 @@
   padding: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  padding: 5px 10px; /* Reduce padding */
+  font-size: .96rem; /* Reduce font size */
+/* Adjust margin for spacing */
+  display: inline-block; /* Ensure it flows with text wrapping */
+}
+
+.category-title{
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  margin: 0; /* Removes default margins */
+  padding: 0;
 }
 
 .category-item:hover {

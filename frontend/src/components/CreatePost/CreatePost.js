@@ -16,9 +16,72 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   const [selectedImage, setSelectedImage] = useState(question);
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const availableCategories = ["Italian", "Mexican", "Japanese", "Party Food", "Vegan"];
+  const availableCategories = ["None","Italian", "Mexican", "Japanese", "Party Food"];
   const [difficulty, setDifficulty] = useState('');
+  const [customTags, setCustomTags] = useState([]); // State for custom tags
+  const [customTagInput, setCustomTagInput] = useState(''); // State for the input field of the custom tag
+  const [tagError, setTagError] = useState('');
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  
 
+const addCustomTag = () => {
+  // Error handling examples:
+  if (customTagInput.trim() === '') {
+    setTagError('Please enter a tag.');
+  } else if (allCategories.includes(customTagInput.trim())) {
+    setTagError('This tag already exists.');
+  } else if (isExplicit(customTagInput.trim())) {
+    setTagError('Explicit tags are not allowed.');
+  } else if (selectedCategories.length >= 5) {
+    setTagError(`You can only select up to 5 tags.`);
+  } else {
+    if (customTagInput && !availableCategories.includes(customTagInput) && !customTags.includes(customTagInput)) {
+      setCustomTags(prevTags => [...prevTags, customTagInput]);
+      setCustomTagInput('');
+    }    setTagError(''); // Clear any existing errors
+  }
+};
+
+const handleTagSelection = (tag) => {
+  if (selectedCategories.includes(tag)) {
+    // Logic to remove the tag from the selection
+    setSelectedCategories(selectedCategories.filter(t => t !== tag));
+  } else if (selectedCategories.length < 5) {
+    // Logic to add the tag to the selection
+    setSelectedCategories([...selectedCategories, tag]);
+  } else {
+    // Set error message and show popup
+    setErrorMessage(`You can only select up to 5 tags.`);
+    setShowErrorPopup(true);
+  }
+};
+
+{showErrorPopup && (
+  <div className="error-popup">
+    <p>{errorMessage}</p>
+    <button onClick={() => setShowErrorPopup(false)}>Close</button>
+  </div>
+)}
+
+// Logic to hide the popup and clear the error message
+const closeErrorPopup = () => {
+  setShowErrorPopup(false);
+  setErrorMessage('');
+};
+
+
+  const handleCustomTagChange = (event) => {
+    setCustomTagInput(event.target.value);
+  };
+  // Combine predefined categories with custom tags for rendering
+  const allCategories = [...availableCategories, ...customTags];
+
+  const isExplicit = (tag) => {
+    // You would implement your own logic here
+    const explicitWords = ['explicitWord1', 'explicitWord2']; // Example list of explicit words
+    return explicitWords.includes(tag.toLowerCase());
+  };
   // Use useEffect to fetch user's recipes when the component mounts
   useEffect(() => {
     fetchUserRecipes(); 
@@ -59,11 +122,53 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
   };
 
   const toggleCategory = (category) => {
-    setSelectedCategories(prev => 
-      prev.includes(category) ? prev.filter(cat => cat !== category) : [...prev, category]
-    );
+    if (category === "None") {
+      // If "None" is selected, set selectedCategories to only include "None"
+      setSelectedCategories(["None"]);
+    } else {
+      setSelectedCategories(prev => {
+        if (prev.includes(category)) {
+          return prev.filter(cat => cat !== category);
+        } else {
+          // If another category is selected, ensure "None" is not in the list
+          const newCategories = [...prev.filter(cat => cat !== "None"), category];
+          return newCategories;
+        }
+      });
+    }
   };
   
+  const renderCategorySelection = () => {
+    return (
+      <div className="category-selection">
+        <div className="tags-container">
+          <div className="tags-title">Pick Your Tags!</div>
+          <div className="category-container">
+            {allCategories.map((category, index) => (
+              <div 
+                key={index} 
+                className={`category-bubble ${selectedCategories.includes(category) ? 'selected' : ''}`} 
+                onClick={() => toggleCategory(category)}
+              >
+                {category}
+              </div>
+            ))}
+          </div>
+          <div className="custom-tag-input-container">
+            <input 
+              type="text" 
+              value={customTagInput} 
+              onChange={handleCustomTagChange} 
+              placeholder="Enter custom tag"
+              className="custom-tag-input"
+            />
+            <button onClick={addCustomTag} className="add-tag-button">Add Tag</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const handleRecipeSelection = (event) => {
     const selectedRecipeName = event.target.value;
     const index = recipeNames.indexOf(selectedRecipeName);
@@ -269,7 +374,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
               Back
             </Button>
           )}
-          {currentStep < 3 && (
+          {currentStep < 4 && (
             <Button
               variant="contained"
               sx={{
@@ -283,7 +388,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
               Next
             </Button>
           )}
-          {currentStep === 3 && (
+          {currentStep === 4 && (
             <Button
               variant="contained"
               sx={{
@@ -350,19 +455,15 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
                 <input type="file" onChange={handleImageChange} />
               </div>
             )}
-             <div className="category-selection">
-              {availableCategories.map((category, index) => (
-                <div 
-                  key={index} 
-                  className={`category-bubble ${selectedCategories.includes(category) ? 'selected' : ''}`} 
-                  onClick={() => toggleCategory(category)}>
-                  {category}
-                </div>
-              ))}
-            </div>
           </div>
         );
-        case 2:
+        case 2: 
+        return (
+          <div className="category-selection">
+          {renderCategorySelection()}
+        </div>
+        );
+        case 3:
           return (
             <div>
               <TextField
@@ -387,7 +488,7 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
               />
             </div>
           );
-        case 3:
+        case 4:
           return (
             <><TextField
               fullWidth
@@ -419,10 +520,12 @@ function CreatePost({ isOpen, onRequestClose, recipes, onSubmit }) {
     }
   };
 
-  return (
+
+return (
     <div className={`create-post-window ${isOpen ? 'open' : 'closed'}`}>
       {renderCurrentStep()}
       {renderButtons()}
+      {tagError && <div className="tag-error-message">{tagError}</div>}
     </div>
   );
 }
