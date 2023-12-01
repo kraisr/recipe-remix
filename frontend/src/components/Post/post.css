@@ -162,7 +162,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10; /* Ensure it's above other elements */
+   z-index: 1; 
 }
 
 .dropdown-menu {
@@ -192,5 +192,13 @@
 
 .dropdown-menu-item:hover {
   background-color: #f1f1f1;
+}
+
+.dots-button {
+  background: none;
+  border: none;
+  font-size: large;
+  font-weight: bold;
+  z-index: -1;
 }
 

@@ -14,7 +14,7 @@ const Messages = () => {
     const [allUsers, setAllUsers] = useState([]);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    
+
     
     const { conversationId } = useParams();
     const token = localStorage.getItem('token');
@@ -370,7 +370,7 @@ const Messages = () => {
                 onKeyDown={handleKeyDown}
 
               />
-              <button onClick={handleSendMessage}>Send</button>
+            <button onClick={handleSendMessage}>Send</button>
             </div>
           </>    
                 ) : (

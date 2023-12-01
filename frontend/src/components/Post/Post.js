@@ -337,9 +337,6 @@ const Post = ({ postId, isOwner, onDelete }) => {
 
     return (
       <div className="share-modal">
-        <TwitterShareButton title={twitter} url={url} via="RecipeRemix">
-          <TwitterIcon size={32} round />
-        </TwitterShareButton>
         <EmailShareButton subject={post.name} body={content}>
           <EmailIcon size={32} round />
         </EmailShareButton>
@@ -440,7 +437,7 @@ const Post = ({ postId, isOwner, onDelete }) => {
         {/* Dropdown menu for post owners */}
         {isOwner && (
           <div className="post-owner-menu">
-            <button onClick={toggleDropdown} className="three-dots-button">...</button>
+            <button onClick={toggleDropdown} className="dots-button">...</button>
             {showDropdown && renderDropdownMenu()}
           </div>
         )}
