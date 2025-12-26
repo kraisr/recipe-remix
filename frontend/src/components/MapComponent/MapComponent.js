@@ -81,7 +81,8 @@ function MapComponent({ startingPoint, isOpenNow, distance }) {
             const request = {
                 location: new window.google.maps.LatLng(startingPoint.lat, startingPoint.lng),
                 radius: distance,
-                type: ['grocery_or_supermarket'],
+                type: "supermarket",
+                keyword: "grocery",
                 openNow: isOpenNow
             };
 
