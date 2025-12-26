@@ -3,6 +3,8 @@
 A full-stack recipe and meal-planning app that helps you **turn what you already have into meals reducing leftovers and potential food waste**.  
 Track pantry ingredients, discover recipes with dietary filters, save favorites, build shopping lists, share your recipes, and connect with a community.
 
+**Quick start:** [Run with Docker](#option-a-recommended-run-with-docker) · [Manual setup](#option-b-manual-setup-install-dependencies-locally)
+
 ---
 
 ## Tech stack
@@ -57,29 +59,18 @@ https://github.com/user-attachments/assets/2c666330-8a38-4174-a156-e880c15b30b4
 
 ## Run locally
 
-### 1) Install
+### Option A (Recommended): Run with Docker
 
-Clone the repository and enter into the new directory
+**Prereqs:** Docker Desktop
+
+1) Clone the repository and enter into the new directory:
 
 ```bash
 git clone https://github.com/kraisr/Recipe-Remix && cd Recipe-Remix
 ```
 
-Enter the backend directory and install dependencies
+2) Create backend/.env:
 
-```bash
-cd backend && npm ci
-```
-
-Enter the frontend directory and install dependencies
-
-```bash
-cd ../frontend && npm ci
-```
-
-### 2) Set environment variables
-
-Create backend/.env:
 ```bash
 MONGO_URL=your_mongo_url
 
@@ -95,20 +86,69 @@ SUGGESTIC_USER_ID=your_suggestic_user_id
 GIPHY_TOKEN=your_giphy_token
 ```
 
-### 3) Start the apps
+3) Start the full stack (frontend + backend + local MongoDB):
 
-Terminal 1 (backend):
+```bash
+docker compose up --build
+```
+
+4) Open:
+
+- Frontend: http://localhost:3000
+
+- Backend: http://localhost:8080
+
+5) Stop containers (keeps DB data):
+
+```bash
+docker compose down
+```
+
+- Reset everything including local DB data:
+
+```bash
+docker compose down -v
+```
+
+### Option B: Manual setup (install dependencies locally)
+
+1) Clone the repository and enter into the new directory:
+
+```bash
+git clone https://github.com/kraisr/Recipe-Remix && cd Recipe-Remix
+```
+
+- Enter the backend directory and install dependencies:
+
+```bash
+cd backend && npm ci
+```
+
+- Enter the frontend directory and install dependencies:
+
+```bash
+cd ../frontend && npm ci
+```
+
+2) Set environment variables:
+
+- Create backend/.env (see template above)
+
+3) Start the apps:
+
+- Terminal 1 (backend):
 ```bash
 cd backend && npm start
 ```
 
 
-Terminal 2 (frontend):
+- Terminal 2 (frontend):
 ```bash
 cd frontend && npm start
 ```
 
+4) Open:
 
-Frontend: http://localhost:3000
+- Frontend: http://localhost:3000
 
-Backend: http://localhost:8080
+- Backend: http://localhost:8080
