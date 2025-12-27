@@ -17,6 +17,8 @@ Track pantry ingredients, discover recipes with dietary filters, save favorites,
 
 ## Key features
 
+- **Google Sign-In**: optional OAuth login alongside email/password.
+- **2FA (email code)**: optional two-factor auth for additional account security.
 - **Pantry-first recipe discovery**: search recipes by ingredients you already have.
 - **Saved recipes & folders**: bookmark recipes and organize them into custom folders.
 - **Shopping list**: turn recipes into an actionable grocery list.
