@@ -96,6 +96,12 @@ GIPHY_TOKEN=your_giphy_token
 docker compose up --build
 ```
 
+- or if using Atlas:
+
+```bash
+docker compose -f docker-compose.atlas.yml up --build
+```
+
 4) Open:
 
 - Frontend: http://localhost:3000
