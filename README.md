@@ -73,6 +73,8 @@ git clone https://github.com/kraisr/Recipe-Remix && cd Recipe-Remix
 
 2) Create backend/.env:
 
+- Get Suggestic API token [here](https://suggestic.com/api.html)
+
 ```bash
 MONGO_URL=your_mongo_url
 
@@ -84,6 +86,7 @@ GOOGLE_REFRESH_TOKEN=your_google_oauth_refresh_token
 
 SUGGESTIC_TOKEN=your_suggestic_token
 SUGGESTIC_USER_ID=your_suggestic_user_id
+
 GIPHY_TOKEN=your_giphy_token
 ```
 
