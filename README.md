@@ -79,7 +79,6 @@ JWT_SECRET=replace-with-a-long-random-string
 GOOGLE_CLIENT_ID=your_google_oauth_client_id
 GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
 GOOGLE_REFRESH_TOKEN=your_google_oauth_refresh_token
-GOOGLE_ACCESS_TOKEN=your_google_oauth_access_token
 
 SUGGESTIC_TOKEN=your_suggestic_token
 SUGGESTIC_USER_ID=your_suggestic_user_id
