@@ -8,15 +8,15 @@
 A full-stack recipe and meal-planning app that helps you **turn what you already have into meals reducing leftovers and potential food waste**.  
 Track pantry ingredients, discover recipes with dietary filters, save favorites, build shopping lists, share your recipes, and connect with a community.
 
-**Quick start:** [Run with Docker](#option-a-recommended-run-with-docker) · [Manual setup](#option-b-manual-setup-install-dependencies-locally)
+🚀 **Quick start:** [Run with Docker](#option-a-recommended-run-with-docker) · [Manual setup](#option-b-manual-setup-install-dependencies-locally)
 
 ---
 
-## Tech stack
+## 🛠 Tech stack
 
 - **Frontend:** React, Redux, MUI, TailwindCSS  
 - **Backend:** Node.js, Express, MongoDB, JWT  
-- **APIs:** Suggestic (recipe search), Google Maps/Places, Nodemailer
+- **APIs:** Suggestic (recipe search), Google Maps, Nodemailer
 
 ---
 
