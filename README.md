@@ -14,9 +14,10 @@ Track pantry ingredients, discover recipes with dietary filters, save favorites,
 
 ## 🛠 Tech stack
 
-- **Frontend:** React, Redux, MUI, TailwindCSS  
-- **Backend:** Node.js, Express, MongoDB, JWT  
-- **APIs:** Suggestic (recipe search), Google Maps, Nodemailer
+- **Frontend:** React, React Router, Redux Toolkit (redux-persist), MUI
+- **Backend:** Node.js, Express, MongoDB (Mongoose), JWT + bcrypt, Nodemailer, node-cron
+- **APIs:** Suggestic (GraphQL), Google Maps (JS API), Google Sign-In
+- **Dev/Infra:** Docker Compose
 
 ---
 
