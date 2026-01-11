@@ -35,14 +35,10 @@ export const sendCode = async (req, res) => {
             auth: {
                 type: "OAuth2",
                 user: "app.reciperemix@gmail.com",
-                // clientId: "process.env.GOOGLE_CLIENT_ID",
-                // clientSecret: "process.env.GOOGLE_CLIENT_SECRET",
-                // refreshToken: "process.env.GOOGLE_REFRESH_TOKEN",
-                // accessToken: "process.env.GOOGLE_ACCESS_TOKEN",
-                clientId: "290841881270-560ekdio0feevgbulfvhnscked96d591.apps.googleusercontent.com",
-                clientSecret: "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",
-                refreshToken: "1//04tEgHU7kg71CCgYIARAAGAQSNwF-L9Ir0SrHYGgqa3WdIc79dCSO4OSKRE8LPDeHuX1SYZYO0u-Wc-Mz17qdrnBUtjce2k_G9DU",
-                accessToken: "ya29.a0AfB_byALvW9T_yXCxn4Hyqr-9w8i-Bw2koqxMiWUrm63ySheTy7zX6nqY_UOBZqy6DzaePkQ8aq1Q5WWAkSXbdJt-2JY06QCsAgb-7iZAanxHzKM1wWNLY_hnl7qGV1j3EFlCTE6h30_O2oURSwP_fsx59414lo8gNl-aCgYKAVwSAQ4SFQGOcNnCmZL9UZ79WGmkFzl2-Cx8gA0171",
+                clientId: "process.env.GOOGLE_CLIENT_ID",
+                clientSecret: "process.env.GOOGLE_CLIENT_SECRET",
+                refreshToken: "process.env.GOOGLE_REFRESH_TOKEN",
+                accessToken: "process.env.GOOGLE_ACCESS_TOKEN",
             }
         });
         
